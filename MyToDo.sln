@@ -1,8 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Domain", "MyToDo.Domain\MyToDo.Domain.csproj", "{E2CD62F0-054E-4055-961C-FCF52714C9EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Application", "MyToDo.Application\MyToDo.Application.csproj", "{56C9854D-314E-465D-BA72-EEECB1DF0BCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Infrastructure", "MyToDo.Infrastructure\MyToDo.Infrastructure.csproj", "{EC20ED6F-73BC-4560-864D-12583B35ACC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2CD62F0-054E-4055-961C-FCF52714C9EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2CD62F0-054E-4055-961C-FCF52714C9EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2CD62F0-054E-4055-961C-FCF52714C9EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2CD62F0-054E-4055-961C-FCF52714C9EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56C9854D-314E-465D-BA72-EEECB1DF0BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C9854D-314E-465D-BA72-EEECB1DF0BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C9854D-314E-465D-BA72-EEECB1DF0BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C9854D-314E-465D-BA72-EEECB1DF0BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC20ED6F-73BC-4560-864D-12583B35ACC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC20ED6F-73BC-4560-864D-12583B35ACC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC20ED6F-73BC-4560-864D-12583B35ACC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC20ED6F-73BC-4560-864D-12583B35ACC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
