@@ -1,10 +1,17 @@
-﻿namespace MyToDo.Domain.Entities;
+﻿using MyToDo.Domain.Primitives;
+
+namespace MyToDo.Domain.Entities;
 
 /// <summary>
 /// Task list entity.
 /// </summary>
-public class TaskList : BaseEntity
+public class TaskList : Entity
 {
+    public TaskList(Guid id, string title) : base(id)
+    {
+        Title = title;
+    }
+    
     /// <summary>
     /// Task list title.
     /// </summary>
