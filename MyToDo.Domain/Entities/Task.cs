@@ -9,6 +9,8 @@ namespace MyToDo.Domain.Entities;
 /// </summary>
 public sealed class Task : AggregateRoot
 {
+    private readonly List<Comment> _comments = new();
+
     private Task(
         Guid id,
         string title,
@@ -52,4 +54,6 @@ public sealed class Task : AggregateRoot
     public Member Creator { get; private set; }
     
     public Member? Executor { get; private set; }
+
+    public IReadOnlyCollection<Comment> Comments => _comments;
 }
