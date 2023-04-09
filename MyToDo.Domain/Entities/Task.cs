@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Primitives;
+﻿using MyToDo.Domain.Enums;
+using MyToDo.Domain.Primitives;
 using TaskStatus = MyToDo.Domain.Enums.TaskStatus;
 
 namespace MyToDo.Domain.Entities;
@@ -6,27 +7,35 @@ namespace MyToDo.Domain.Entities;
 /// <summary>
 /// Task entity.
 /// </summary>
-public sealed class Task : Entity
+public sealed class Task : AggregateRoot
 {
-    public Task(
+    private Task(
         Guid id,
         string title,
+        string description,
         TaskStatus status,
+        Priority priority,
         DateTime deadline,
-        Guid userId,
-        Guid listId) : base(id)
+        Guid creatorId,
+        Guid? executorId) : base(id)
     {
         Title = title;
+        Description = description;
         Status = status;
+        Priority = priority;
         Deadline = deadline;
-        UserId = userId;
-        ListId = listId;
+        CreatorId = creatorId;
+        ExecutorId = executorId;
         CreatedOn = DateTime.UtcNow;
     }
     
-    public string Title { get; private set; } = null!;
+    public string Title { get; private set; }
+
+    public string Description { get; private set; }
     
     public TaskStatus Status { get; private set; }
+
+    public Priority Priority { get; private set; }
     
     public DateTime Deadline { get; private set; }
 
@@ -34,13 +43,13 @@ public sealed class Task : Entity
     
     public DateTime? LastUpdatedOn { get; private set; }
     
-    public DateTime? ClosedOn { get; private set; }
+    public DateTime? CompletedOn { get; private set; }
     
-    public Guid UserId { get; private set; }
+    public Guid? ExecutorId { get; private set; }
     
-    public Guid ListId { get; private set; }
+    public Guid CreatorId { get; private set; }
+
+    public Member Creator { get; private set; }
     
-    public User User { get; private set; } = null!;
-    
-    public TaskList TaskList { get; private set; } = null!;
+    public Member? Executor { get; private set; }
 }
