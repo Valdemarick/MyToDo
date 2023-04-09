@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Enums;
+﻿using Microsoft.Extensions.Internal;
+using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Primitives;
 using MyToDo.Domain.Shared;
@@ -20,7 +21,7 @@ public sealed class Task : AggregateRoot
         TaskStatus status,
         Priority priority,
         TaskType taskType,
-        DateTime deadline,
+        DateTimeOffset deadline,
         Guid creatorId,
         Guid? executorId) : base(id)
     {
@@ -45,13 +46,13 @@ public sealed class Task : AggregateRoot
     
     public TaskType TaskType { get; private set; }
     
-    public DateTime Deadline { get; private set; }
+    public DateTimeOffset Deadline { get; private set; }
 
-    public DateTime CreatedOn { get; private set; }
+    public DateTimeOffset CreatedOn { get; private set; }
     
-    public DateTime? LastUpdatedOn { get; private set; }
+    public DateTimeOffset? LastUpdatedOn { get; private set; }
     
-    public DateTime? CompletedOn { get; private set; }
+    public DateTimeOffset? CompletedOn { get; private set; }
     
     public Guid? ExecutorId { get; private set; }
     
@@ -63,16 +64,29 @@ public sealed class Task : AggregateRoot
 
     public IReadOnlyCollection<Comment> Comments => _comments;
 
-    public void Complete()
+    public Result Complete(ISystemClock clock)
     {
+        if (Status is TaskStatus.Completed)
+        {
+            return Result.Failure(DomainErrors.Task.TaskIsAlreadyCompleted);
+        }
+        
         Status = TaskStatus.Completed;
+        CompletedOn = clock.UtcNow;
+        
+        return Result.Success();
     }
 
     public Result StartWorkOnTask()
     {
-        if (Status == TaskStatus.Completed)
+        if (Status is TaskStatus.InProgress)
         {
-            return Result.Failure(DomainErrors.Task.TaskAlreadyInProgress);
+            return Result.Failure(DomainErrors.Task.TaskIsAlreadyInProgress);
+        }
+
+        if (Status is TaskStatus.Completed)
+        {
+            return Result.Failure(DomainErrors.Task.TaskIsCompleted);
         }
 
         Status = TaskStatus.InProgress;
@@ -84,7 +98,7 @@ public sealed class Task : AggregateRoot
     {
         if (Status is TaskStatus.Open or TaskStatus.InProgress)
         {
-            return Result.Failure(DomainErrors.Task.TaskNotCompleted);
+            return Result.Failure(DomainErrors.Task.TaskIsNotCompleted);
         }
 
         Status = TaskStatus.Reopen;
@@ -114,7 +128,7 @@ public sealed class Task : AggregateRoot
             executorId);
     }
 
-    public void AssignTask(Member executor)
+    public void Assign(Member executor)
     {
         Executor = executor;
     }
