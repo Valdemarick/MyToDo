@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Persistence.Specifications;
+using MyToDo.Persistence.Specifications.TaskSpecifications;
 using Task = MyToDo.Domain.Entities.Task;
 
 namespace MyToDo.Persistence.Repositories;
@@ -15,8 +17,9 @@ internal sealed class TaskRepository : ITaskRepository
 
     public async Task<Task?> GetWithCommentsAsync(Guid taskId, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Set<Task>()
-            .Include(t => t.Comments)
+        return await SpecificationEvaluator.GetQuery(
+                _dbContext.Set<Task>(),
+                new TaskByIdWithCommentsSpecificationForRead(taskId))
             .FirstOrDefaultAsync(t => t.Id == taskId, cancellationToken);
     }
 

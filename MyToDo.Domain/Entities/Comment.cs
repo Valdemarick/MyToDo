@@ -2,7 +2,7 @@
 
 namespace MyToDo.Domain.Entities;
 
-public sealed class Comment : Entity
+public sealed class Comment : BaseEntity
 {
     public Comment(Guid id) 
         : base(id)
