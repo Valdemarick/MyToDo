@@ -2,9 +2,7 @@
 
 namespace MyToDo.Domain.Abstractions;
 
-public interface ITaskRepository : IRepository<Task>
+public interface ITaskRepository : IBaseRepository<Task>
 {
     Task<Task?> GetWithCommentsAsync(Guid taskId, CancellationToken cancellationToken = default);
-
-    void Add(Task task);
 }

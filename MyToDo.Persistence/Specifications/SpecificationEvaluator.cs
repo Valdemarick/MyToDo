@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Primitives;
 
 namespace MyToDo.Persistence.Specifications;
@@ -7,7 +8,7 @@ internal static class SpecificationEvaluator
 {
     public static IQueryable<TEntity> GetQuery<TEntity>(
         IQueryable<TEntity> source,
-        BaseSpecification<TEntity>? specification) where TEntity : BaseEntity
+        IBaseSpecification<TEntity>? specification) where TEntity : BaseEntity
     {
         var query = source;
 
@@ -16,9 +17,9 @@ internal static class SpecificationEvaluator
             return query;
         }
 
-        if (specification.Criteria is not null)
+        if (specification.CriteriaExpression is not null)
         {
-            query = query.Where(specification.Criteria);
+            query = query.Where(specification.CriteriaExpression);
         }
 
         query = specification.IncludeExpressions.Aggregate(
