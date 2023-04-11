@@ -21,5 +21,9 @@ public static class DomainErrors
         public static readonly Error TaskIsAlreadyCompleted = new Error(
             "Task.TaskIsAlreadyCompleted",
             "Can't complete task due to it's already completed");
+
+        public static readonly Error TaskDoesNotHaveThisComment = new Error(
+            "Task.TaskDoesNotHaveThisComment",
+            "Can't remove comment cause the task does not have it");
     }
 }

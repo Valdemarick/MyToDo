@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Internal;
 using Moq;
+using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Entities;
 using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
@@ -12,11 +13,11 @@ namespace MyToDo.Tests.UnitTests.Entities;
 
 public class TaskTests
 {
-    private readonly Mock<ISystemClock> _mockClock;
+    private readonly Mock<IDateTimeOffsetProvider> _dateTimeProviderMock;
 
     public TaskTests()
     {
-        _mockClock = new Mock<ISystemClock>();
+        _dateTimeProviderMock = new Mock<IDateTimeOffsetProvider>();
     }
 
     [Fact]
@@ -24,13 +25,15 @@ public class TaskTests
     {
         // Arrange
         var task = CreateDefaultTask();
+        var lastUpdateOn = SetupDateTimeProvider();
         
         // Act
-        var result = task.StartWorkOnTask();
+        var result = task.StartWorkOnTask(_dateTimeProviderMock.Object);
         
         //Assert
         result.IsSuccess.ShouldBeTrue();
         task.Status.ShouldBe(TaskStatus.InProgress);
+        task.LastUpdatedOn.ShouldBe(lastUpdateOn);
     }
 
     [Fact]
@@ -38,14 +41,17 @@ public class TaskTests
     {
         // Arrange
         var task = CreateDefaultTask();
-        task.Complete(_mockClock.Object);
+        task.Complete(_dateTimeProviderMock.Object);
+        var lastUpdateOn = SetupDateTimeProvider();
 
         // Act
-        var result = task.StartWorkOnTask();
+        var result = task.StartWorkOnTask(_dateTimeProviderMock.Object);
         
         // Assert
         result.IsFailure.ShouldBeTrue();
         result.Error.ShouldBe(DomainErrors.Task.TaskIsCompleted);
+        
+        task.LastUpdatedOn.ShouldNotBe(lastUpdateOn);
     }
 
     [Fact]
@@ -53,14 +59,17 @@ public class TaskTests
     {
         // Arrange
         var task = CreateDefaultTask();
-        task.StartWorkOnTask();
+        var lastUpdateOn = SetupDateTimeProvider();
+        
+        task.StartWorkOnTask(_dateTimeProviderMock.Object);
         
         // Act
-        var result = task.StartWorkOnTask();
+        var result = task.StartWorkOnTask(_dateTimeProviderMock.Object);
         
         // Assert
         result.IsFailure.ShouldBeTrue();
         result.Error.ShouldBe(DomainErrors.Task.TaskIsAlreadyInProgress);
+        task.LastUpdatedOn.ShouldBe(lastUpdateOn);
     }
 
     [Fact]
@@ -68,12 +77,10 @@ public class TaskTests
     {
         // Arrange
         var task = CreateDefaultTask();
-        var completedOn = DateTimeOffset.UtcNow;
-
-        _mockClock.Setup(x => x.UtcNow).Returns(completedOn);
+        var completedOn = SetupDateTimeProvider();
         
         // Act
-        var result = task.Complete(_mockClock.Object);
+        var result = task.Complete(_dateTimeProviderMock.Object);
         
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -86,14 +93,19 @@ public class TaskTests
     {
         // Arrange
         var task = CreateDefaultTask();
-        task.Complete(_mockClock.Object);
+        var completedOn = SetupDateTimeProvider();
+        
+        task.Complete(_dateTimeProviderMock.Object);
+        _dateTimeProviderMock.Setup(x => x.UtcNow).Returns(DateTimeOffset.Now.AddHours(1));
         
         // Act
-        var result = task.Complete(_mockClock.Object);
+        var result = task.Complete(_dateTimeProviderMock.Object);
         
         // Assert
         result.IsFailure.ShouldBeTrue();
         result.Error.ShouldBe(DomainErrors.Task.TaskIsAlreadyCompleted);
+        
+        task.CompletedOn.ShouldBe(completedOn);
     }
 
     [Fact]
@@ -101,14 +113,16 @@ public class TaskTests
     {
         // Arrange
         var task = CreateDefaultTask();
-
+        var lastUpdateOn = SetupDateTimeProvider();
+        
         var executor = Member.Create(Guid.NewGuid());
         
         // Act
-        task.Assign(executor);
+        task.Assign(executor, _dateTimeProviderMock.Object);
         
         // Assert
         task.Executor.ShouldBe(executor);
+        task.LastUpdatedOn.ShouldBe(lastUpdateOn);
     }
 
     private Task CreateDefaultTask()
@@ -122,5 +136,14 @@ public class TaskTests
                 DateTime.UtcNow,
                 Guid.NewGuid(),
                 Guid.NewGuid());
+    }
+
+    private DateTimeOffset SetupDateTimeProvider()
+    {
+        var completedOn = DateTimeOffset.UtcNow;
+
+        _dateTimeProviderMock.Setup(x => x.UtcNow).Returns(completedOn);
+
+        return completedOn;
     }
 }
