@@ -11,9 +11,15 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
     {
     }
 
+    public async Task<Task?> GetByIdAsync(Guid taskId, bool isTracking = false, CancellationToken cancellationToken = default)
+    {
+        return await ApplySpecification(new TaskByIdSpecification(taskId, isTracking))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<Task?> GetWithCommentsAsync(Guid taskId, CancellationToken cancellationToken = default)
     {
         return await ApplySpecification(new TaskByIdWithCommentsBaseSpecification(taskId))
-            .FirstOrDefaultAsync(t => t.Id == taskId, cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

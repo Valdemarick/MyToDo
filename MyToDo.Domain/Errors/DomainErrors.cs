@@ -25,5 +25,17 @@ public static class DomainErrors
         public static readonly Error TaskDoesNotHaveThisComment = new Error(
             "Task.TaskDoesNotHaveThisComment",
             "Can't remove comment cause the task does not have it");
+
+        public static readonly Error TaskNotFound = new Error(
+            "Task.TaskNotFound",
+            "There is no such task");
     }
+    
+    public static class Member
+    {
+        public static readonly Error MemberNotFound = new Error(
+            "Member. MemberNotFound",
+            "There is not such member");
+    }
+        
 }
