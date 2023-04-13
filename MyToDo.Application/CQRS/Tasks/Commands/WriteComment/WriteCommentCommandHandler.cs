@@ -42,7 +42,7 @@ internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentC
         task.AddComment(Comment.Create(
             request.Text,
             request.TaskId,
-            request.MemberId,
+            member,
             _dateTimeOffsetProvider), _dateTimeOffsetProvider);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
