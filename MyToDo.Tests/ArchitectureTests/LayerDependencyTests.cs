@@ -34,7 +34,7 @@ public class LayerDependencyTests
     public void PersistenceLayer_ShouldNot_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        var assembly = typeof(Persistence.AssemblyReference).Assembly;
+        var assembly = Persistence.AssemblyReference.Assembly;
 
         var otherProjects = new[]
         {
@@ -59,7 +59,7 @@ public class LayerDependencyTests
     public void InfrastructureLayer_ShouldNot_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        var assembly = typeof(Persistence.AssemblyReference).Assembly;
+        var assembly = Infrastructure.AssemblyReference.Assembly;
 
         var otherProjects = new[]
         {
@@ -82,7 +82,7 @@ public class LayerDependencyTests
     public void ApplicationLayer_ShouldNot_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        var assembly = typeof(Persistence.AssemblyReference).Assembly;
+        var assembly = Application.AssemblyReference.Assembly;
 
         var otherProjects = new[]
         {

@@ -6,4 +6,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MyToDo.Application\MyToDo.Application.csproj" />
+      <ProjectReference Include="..\MyToDo.Infrastructure\MyToDo.Infrastructure.csproj" />
+      <ProjectReference Include="..\MyToDo.Persistence\MyToDo.Persistence.csproj" />
+    </ItemGroup>
+
 </Project>

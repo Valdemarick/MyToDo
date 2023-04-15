@@ -4,7 +4,7 @@ using MyToDo.Persistence.Specifications;
 
 namespace MyToDo.Persistence.Repositories;
 
-internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
+public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
     where TEntity : AggregateRoot
 {
     protected readonly ApplicationDbContext DbContext;
