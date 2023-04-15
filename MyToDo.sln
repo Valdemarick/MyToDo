@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Persistence", "MyToD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Tests", "MyToDo.Tests\MyToDo.Tests.csproj", "{71858FD8-0BAF-4729-A3AC-C46795D08313}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Web", "MyToDo.Web\MyToDo.Web.csproj", "{4739128D-8A06-48DF-9ABD-A485C4B09850}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{71858FD8-0BAF-4729-A3AC-C46795D08313}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71858FD8-0BAF-4729-A3AC-C46795D08313}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71858FD8-0BAF-4729-A3AC-C46795D08313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4739128D-8A06-48DF-9ABD-A485C4B09850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4739128D-8A06-48DF-9ABD-A485C4B09850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4739128D-8A06-48DF-9ABD-A485C4B09850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4739128D-8A06-48DF-9ABD-A485C4B09850}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
