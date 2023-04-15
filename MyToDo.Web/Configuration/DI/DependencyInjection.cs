@@ -20,10 +20,23 @@ internal static class DependencyInjection
             serviceConfigurator.Configure(services, configuration);
         }
 
-        return services;
+        return services
+            .ResolveDependencies();
 
         static bool IsAssignedToType<T>(TypeInfo typeInfo) =>
             typeof(T).IsAssignableFrom(typeInfo) &&
             typeInfo is { IsInterface: false, IsAbstract: false };
+    }
+
+    private static IServiceCollection ResolveDependencies(this IServiceCollection services)
+    {
+        return services.Scan(scan =>
+            scan.FromAssemblies(
+                    Infrastructure.AssemblyReference.Assembly,
+                    Persistence.AssemblyReference.Assembly,
+                    Web.AssemblyReference.Assembly)
+                .AddClasses(false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
     }
 }
