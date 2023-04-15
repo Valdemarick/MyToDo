@@ -5,7 +5,7 @@ using MyToDo.Persistence.Repositories;
 
 namespace MyToDo.Web.Configuration.DI;
 
-internal sealed class PersistenceServiceConfigurator : IServiceConfigurator
+internal sealed class PersistenceLayerServiceConfigurator : IServiceConfigurator
 {
     public void Configure(IServiceCollection services, IConfiguration configuration)
     {

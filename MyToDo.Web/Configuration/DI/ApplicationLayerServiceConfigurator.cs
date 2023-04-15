@@ -2,7 +2,7 @@
 
 namespace MyToDo.Web.Configuration.DI;
 
-internal sealed class ApplicationServiceConfigurator : IServiceConfigurator
+internal sealed class ApplicationLayerServiceConfigurator : IServiceConfigurator
 {
     public void Configure(IServiceCollection services, IConfiguration configuration)
     {

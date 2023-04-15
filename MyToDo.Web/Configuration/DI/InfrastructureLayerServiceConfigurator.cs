@@ -3,7 +3,7 @@ using MyToDo.Infrastructure.DateTime;
 
 namespace MyToDo.Web.Configuration.DI;
 
-internal sealed class InfrastructureServiceConfigurator : IServiceConfigurator
+internal sealed class InfrastructureLayerServiceConfigurator : IServiceConfigurator
 {
     public void Configure(IServiceCollection services, IConfiguration configuration)
     {
