@@ -43,4 +43,11 @@ public sealed class Comment : BaseEntity
 
         return comment;
     }
+
+    public void UpdateText(string updatedText, IDateTimeOffsetProvider dateTimeOffsetProvider)
+    {
+        Text = updatedText;
+
+        LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
+    }
 }

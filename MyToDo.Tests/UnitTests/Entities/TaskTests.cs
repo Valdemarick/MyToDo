@@ -11,7 +11,7 @@ using TaskStatus = MyToDo.Domain.Enums.TaskStatus;
 
 namespace MyToDo.Tests.UnitTests.Entities;
 
-public class TaskTests
+public sealed class TaskTests
 {
     private readonly Mock<IDateTimeOffsetProvider> _dateTimeProviderMock;
 

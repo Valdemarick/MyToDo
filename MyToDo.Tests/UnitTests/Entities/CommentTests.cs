@@ -1,0 +1,45 @@
+﻿using Moq;
+using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Entities;
+using Shouldly;
+using Xunit;
+
+namespace MyToDo.Tests.UnitTests.Entities;
+
+public sealed class CommentTests
+{
+    private readonly Mock<IDateTimeOffsetProvider> _dateTimeOffsetProviderMock;
+
+    public CommentTests()
+    {
+        _dateTimeOffsetProviderMock = new Mock<IDateTimeOffsetProvider>();
+    }
+
+    [Fact]
+    public void UpdateText_Should_UpdateTextAndLastUpdatedOn()
+    {   
+        // Arrange
+        var comment = CreateDefaultComment();
+        var updatedText = Guid.NewGuid().ToString();
+        var lastUpdatedOn = DateTimeOffset.UtcNow;
+
+        _dateTimeOffsetProviderMock.Setup(x => x.UtcNow)
+            .Returns(lastUpdatedOn);
+
+        // Act
+        comment.UpdateText(updatedText, _dateTimeOffsetProviderMock.Object);
+        
+        // Assert
+        comment.Text.ShouldBe(updatedText);
+        comment.LastUpdatedOn.ShouldBe(lastUpdatedOn);
+    }
+
+    private Comment CreateDefaultComment()
+    {
+        return Comment.Create(
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid(),
+            Member.Create(Guid.NewGuid()),
+            _dateTimeOffsetProviderMock.Object);
+    }
+}
