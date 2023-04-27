@@ -4,6 +4,10 @@ public abstract class BaseEntity : IEquatable<BaseEntity>
 {
     protected BaseEntity(Guid id) => Id = id;
 
+    protected BaseEntity()
+    {
+    }
+
     public Guid Id { get; private init; }
 
     public static bool operator ==(BaseEntity? first, BaseEntity? second)

@@ -6,4 +6,8 @@ public abstract class AggregateRoot : BaseEntity
         : base(id)
     {
     }
+
+    protected AggregateRoot()
+    {
+    }
 }

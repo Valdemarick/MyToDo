@@ -17,7 +17,8 @@ public static class DependencyInjection
         });
 
         services.AddTransient<ITaskRepository, TaskRepository>()
-            .AddTransient<IMemberRepository, MemberRepository>();
+            .AddTransient<IMemberRepository, MemberRepository>()
+            .AddTransient<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

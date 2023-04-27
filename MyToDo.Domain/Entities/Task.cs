@@ -34,6 +34,10 @@ public sealed class Task : AggregateRoot
         ExecutorId = executorId;
         CreatedOn = DateTime.UtcNow;
     }
+
+    protected Task()
+    {
+    }
     
     public string Title { get; private set; }
 

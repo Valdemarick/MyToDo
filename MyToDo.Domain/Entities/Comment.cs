@@ -19,6 +19,10 @@ public sealed class Comment : BaseEntity
         _members.Add(member);
     }
 
+    protected Comment()
+    {
+    }
+
     public string Text { get; private set; }
     
     public DateTimeOffset CreatedOn { get; private set; }
