@@ -52,7 +52,7 @@ public sealed class Result : BaseResult
     public static Result Failure(Error error) => new(false, error);
     
     
-    public static Result<TValue> Success<TValue>(TValue value) => new Result<TValue>(value, true, null!);
+    public static Result<TValue> Success<TValue>(TValue value) => new Result<TValue>(value, true, Error.None);
 
     public static Result<TValue> Failure<TValue>(Error error) => new Result<TValue>(default(TValue)!, false, error);
 }
