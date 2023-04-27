@@ -8,6 +8,14 @@ public sealed class Member : AggregateRoot
     {
     }
 
+    public string Name { get; private set; }
+    
+    public string Surname { get; private set; }
+
+    public string FullName => $"{Surname} {Name}";
+    
+    public DateTimeOffset RegisteredOn { get; private set; }
+
     public static Member Create(Guid id)
     {
         return new Member(id);

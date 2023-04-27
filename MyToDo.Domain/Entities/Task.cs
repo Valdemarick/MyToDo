@@ -22,7 +22,6 @@ public sealed class Task : AggregateRoot
         TaskStatus status,
         Priority priority,
         TaskType taskType,
-        DateTimeOffset deadline,
         Guid creatorId,
         Guid? executorId) : base(id)
     {
@@ -31,7 +30,6 @@ public sealed class Task : AggregateRoot
         Status = status;
         Priority = priority;
         TaskType = taskType;
-        Deadline = deadline;
         CreatorId = creatorId;
         ExecutorId = executorId;
         CreatedOn = DateTime.UtcNow;
@@ -47,8 +45,6 @@ public sealed class Task : AggregateRoot
     
     public TaskType TaskType { get; private set; }
     
-    public DateTimeOffset Deadline { get; private set; }
-
     public DateTimeOffset CreatedOn { get; private set; }
     
     public DateTimeOffset? LastUpdatedOn { get; private set; }
@@ -110,12 +106,10 @@ public sealed class Task : AggregateRoot
     }
 
     public static Task Create(
-        Guid id,
         string title,
         string description,
         Priority priority,
         TaskType taskType,
-        DateTimeOffset deadline,
         Guid creatorId,
         Guid? executorId)
     {
@@ -126,7 +120,6 @@ public sealed class Task : AggregateRoot
             TaskStatus.Open,
             priority,
             taskType,
-            deadline,
             creatorId,
             executorId);
     }
@@ -166,5 +159,11 @@ public sealed class Task : AggregateRoot
     {
         Title = newTitle;
         LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
+    }
+
+    public void Close(IDateTimeOffsetProvider dateTimeOffsetProvider)
+    {
+        Status = TaskStatus.Completed;
+        LastUpdatedOn = CompletedOn = dateTimeOffsetProvider.UtcNow;
     }
 }

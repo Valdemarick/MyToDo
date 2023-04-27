@@ -11,7 +11,7 @@ public sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
     {
     }
 
-    public async Task<Task?> GetByIdAsync(Guid taskId, bool isTracking = false, CancellationToken cancellationToken = default)
+    public async Task<Task?> GetByIdAsync(Guid taskId, CancellationToken cancellationToken = default, bool isTracking = false)
     {
         return await ApplySpecification(new TaskByIdSpecification(taskId, isTracking))
             .FirstOrDefaultAsync(cancellationToken);
@@ -21,5 +21,13 @@ public sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
     {
         return await ApplySpecification(new TaskByIdWithCommentsBaseSpecification(taskId))
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<List<Task>> GetPageAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    {
+        return await ApplySpecification(new TaskPageSpecification())
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
     }
 }

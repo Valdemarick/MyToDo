@@ -41,7 +41,7 @@ public abstract class BaseResult
     }
 }
 
-public class Result : BaseResult
+public sealed class Result : BaseResult
 {
     private Result(bool isSuccess, Error error) : base(isSuccess, error)
     {
@@ -50,13 +50,18 @@ public class Result : BaseResult
     public static Result Success() => new(true, Error.None);
 
     public static Result Failure(Error error) => new(false, error);
+    
+    
+    public static Result<TValue> Success<TValue>(TValue value) => new Result<TValue>(value, true, null!);
+
+    public static Result<TValue> Failure<TValue>(Error error) => new Result<TValue>(default(TValue)!, false, error);
 }
 
-public class Result<TValue> : BaseResult
+public sealed class Result<TValue> : BaseResult
 {
     private readonly TValue? _value;
     
-    private Result(TValue value, bool isSuccess, Error error) : base(isSuccess, error)
+    internal Result(TValue value, bool isSuccess, Error error) : base(isSuccess, error)
     {
         _value = value;
     }
@@ -72,9 +77,5 @@ public class Result<TValue> : BaseResult
         ? _value!
         : throw new InvalidOperationException("You attempted to get value of failure result");
 
-    public static implicit operator Result<TValue>(Result result) => new Result<TValue>(result);
-
-    private static Result<TValue> Success(TValue value) => new(value, true, null!);
-
-    private static Result<TValue> Failure(Error error) => new(default(TValue)!, false, error);
+    public static implicit operator Result<TValue>(Result result) => new(result);
 }

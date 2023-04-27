@@ -1,22 +1,21 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
-using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
-namespace MyToDo.Application.CQRS.Tasks.Commands.WriteComment;
+namespace MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
 
-internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentCommand>
+internal sealed class AssignTaskCommandHandler : ICommandHandler<AssignTaskCommand>
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
 
-    public WriteCommentCommandHandler(
-        ITaskRepository taskRepository,
+    public AssignTaskCommandHandler(
+        ITaskRepository taskRepository, 
         IMemberRepository memberRepository,
-        IUnitOfWork unitOfWork,
+        IUnitOfWork unitOfWork, 
         IDateTimeOffsetProvider dateTimeOffsetProvider)
     {
         _taskRepository = taskRepository;
@@ -25,26 +24,21 @@ internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentC
         _dateTimeOffsetProvider = dateTimeOffsetProvider;
     }
 
-    public async Task<Result> Handle(WriteCommentCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AssignTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = await _taskRepository.GetByIdAsync(request.TaskId, cancellationToken, isTracking: true);
+        var task = await _taskRepository.GetByIdAsync(request.Id, cancellationToken, isTracking: true);
         if (task is null)
         {
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        var member = await _memberRepository.GetByIdAsync(request.MemberId, cancellationToken);
-        if (member is null)
+        var executor = await _memberRepository.GetByIdAsync(request.ExecutorId, cancellationToken);
+        if (executor is null)
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
         
-        task.AddComment(Comment.Create(
-            request.Text,
-            request.TaskId,
-            member,
-            _dateTimeOffsetProvider), _dateTimeOffsetProvider);
-
+        task.Assign(executor, _dateTimeOffsetProvider);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

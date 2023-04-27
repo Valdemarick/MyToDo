@@ -41,7 +41,7 @@ public sealed class WriteCommentCommandHandlerTests
             member.Id);
 
         _taskRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == task.Id),
-                It.Is<bool>(isTracking => isTracking), It.IsAny<CancellationToken>()))
+                It.IsAny<CancellationToken>(), It.Is<bool>(isTracking => isTracking)))
             .ReturnsAsync(task);
 
         _memberRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == member.Id),
@@ -79,7 +79,7 @@ public sealed class WriteCommentCommandHandlerTests
             member.Id);
 
         _taskRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>(),
-                It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                It.IsAny<CancellationToken>(), It.IsAny<bool>()))
             .ReturnsAsync((Task)null!);
 
         _memberRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == member.Id),
@@ -108,7 +108,7 @@ public sealed class WriteCommentCommandHandlerTests
         var memberId = Guid.NewGuid();
 
         _taskRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == task.Id),
-                It.Is<bool>(isTracking => isTracking), It.IsAny<CancellationToken>()))
+                It.IsAny<CancellationToken>(), It.Is<bool>(isTracking => isTracking)))
             .ReturnsAsync(task);
 
         _memberRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>(),
@@ -136,12 +136,10 @@ public sealed class WriteCommentCommandHandlerTests
     private Task CreateDefaultTask()
     {
         return Task.Create(
-            Guid.NewGuid(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Priority.Normal,
             TaskType.Task,
-            DateTime.UtcNow,
             Guid.NewGuid(),
             Guid.NewGuid());
     }

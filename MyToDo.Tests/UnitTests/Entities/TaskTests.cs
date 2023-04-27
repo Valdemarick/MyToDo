@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Internal;
-using Moq;
+﻿using Moq;
 using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Entities;
 using MyToDo.Domain.Enums;
@@ -128,13 +127,11 @@ public sealed class TaskTests
     private Task CreateDefaultTask()
     {
         return Task.Create(
-            Guid.NewGuid(),
             Guid.NewGuid().ToString(),
                 Guid.NewGuid().ToString(),
                 Priority.Normal,
                 TaskType.Task,
-                DateTime.UtcNow,
-                Guid.NewGuid(),
+            Guid.NewGuid(),
                 Guid.NewGuid());
     }
 
