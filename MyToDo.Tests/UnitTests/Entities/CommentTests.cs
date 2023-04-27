@@ -39,7 +39,10 @@ public sealed class CommentTests
         return Comment.Create(
             Guid.NewGuid().ToString(),
             Guid.NewGuid(),
-            Member.Create(Guid.NewGuid()),
+            Member.Create(Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToString()),
             _dateTimeOffsetProviderMock.Object);
     }
 }

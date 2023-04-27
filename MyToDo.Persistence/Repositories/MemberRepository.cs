@@ -19,4 +19,12 @@ public sealed class MemberRepository : BaseRepository<Member>, IMemberRepository
                 new MemberByIdSpecification(memberId))
             .FirstOrDefaultAsync(cancellationToken);
     }
+
+    public async Task<Member?> GetByEmail(string email, CancellationToken cancellationToken = default)
+    {
+        return await SpecificationEvaluator.GetQuery(
+                DbContext.Set<Member>(),
+                new MemberByEmailSpecification(email))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }

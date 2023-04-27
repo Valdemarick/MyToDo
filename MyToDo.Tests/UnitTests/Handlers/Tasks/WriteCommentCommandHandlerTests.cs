@@ -146,6 +146,9 @@ public sealed class WriteCommentCommandHandlerTests
 
     private Member CreateDefaultMember()
     {
-        return Member.Create(Guid.NewGuid());
+        return Member.Create(Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString());
     }
 }

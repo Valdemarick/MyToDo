@@ -114,7 +114,10 @@ public sealed class TaskTests
         var task = CreateDefaultTask();
         var lastUpdateOn = SetupDateTimeProvider();
         
-        var executor = Member.Create(Guid.NewGuid());
+        var executor = Member.Create(Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString());
         
         // Act
         task.Assign(executor, _dateTimeProviderMock.Object);

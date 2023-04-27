@@ -4,20 +4,40 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class Member : AggregateRoot
 {
-    private Member(Guid id) : base(id)
+    private Member(
+        string firstName,
+        string lastName,
+        string email,
+        string hashedPassword) : base(Guid.NewGuid())
     {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        HashedPassword = hashedPassword;
     }
 
-    public string Name { get; private set; }
+    public string FirstName { get; private set; }
     
-    public string Surname { get; private set; }
+    public string LastName { get; private set; }
+    
+    public string Email { get; private set; }
 
-    public string FullName => $"{Surname} {Name}";
+    public string HashedPassword { get; private set; }
+
+    public string FullName => $"{LastName} {FirstName}";
     
     public DateTimeOffset RegisteredOn { get; private set; }
 
-    public static Member Create(Guid id)
+    public static Member Create(
+        string firstName,
+        string lastName,
+        string email,
+        string hashedPassword)
     {
-        return new Member(id);
+        return new Member(
+            firstName,
+            lastName,
+            email,
+            hashedPassword);
     }
 }

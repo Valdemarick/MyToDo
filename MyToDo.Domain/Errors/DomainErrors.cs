@@ -36,6 +36,13 @@ public static class DomainErrors
         public static readonly Error MemberNotFound = new Error(
             "Member. MemberNotFound",
             "There is not such member");
+
+        public static readonly Error EmailIsAlreadyOccupied = new(
+            "Member. Email is already occupied",
+            "This email is already occupied");
+
+        public static readonly Error PasswordIsWrong = new(
+            "Member. Password is wrong",
+            "Password is wrong");
     }
-        
 }
