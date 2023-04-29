@@ -1,4 +1,6 @@
-using MyToDo.Web.Configuration.DI;
+using MyToDo.Application;
+using MyToDo.Infrastructure;
+using MyToDo.Persistence;
 using MyToDo.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,9 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.ConfigureServices(
-    builder.Configuration,
-    typeof(IServiceConfigurator).Assembly);
+
+builder.Services.AddApplicationLayer()
+    .AddPersistenceLayer(builder.Configuration)
+    .AddInfrastructureLayer();
 
 var app = builder.Build();
 
