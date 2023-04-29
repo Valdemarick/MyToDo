@@ -9,15 +9,15 @@ internal sealed class TaskProfile : Profile
     public TaskProfile()
     {
         CreateMap<Task, TaskDto>()
-            .ForMember(dest => dest.CreatorName,
+            .ForCtorParam(nameof(TaskDto.CreatorName),
                 opt => opt
                     .MapFrom(src => src.Creator.FullName))
-            .ForMember(dest => dest.ExecutorName,
+            .ForCtorParam(nameof(TaskDto.ExecutorName),
                 opt => opt
-                    .MapFrom(src => src.Creator.FullName));
+                    .MapFrom(src => src.Executor != null ? src.Executor.FullName : null));
 
         CreateMap<Task, PagedTaskDto>()
-            .ForMember(dest => dest.CreatorName,
+            .ForCtorParam(nameof(PagedTaskDto.CreatorName),
                 opt => opt
                     .MapFrom(src => src.Creator.FullName));
     }    
