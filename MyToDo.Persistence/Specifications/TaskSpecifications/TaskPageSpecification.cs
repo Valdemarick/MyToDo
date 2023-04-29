@@ -8,5 +8,6 @@ internal sealed class TaskPageSpecification : BaseSpecification<Task>
         : base(null!, isTracking)
     {
         AddInclude(t => t.Creator);
+        AddInclude(t => t.Executor!);
     }
 }
