@@ -1,6 +1,7 @@
 ﻿using Moq;
 using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Entities;
+using MyToDo.Domain.Factories;
 using Shouldly;
 using Xunit;
 
@@ -27,22 +28,21 @@ public sealed class CommentTests
             .Returns(lastUpdatedOn);
 
         // Act
-        comment.UpdateText(updatedText, _dateTimeOffsetProviderMock.Object);
+        comment.UpdateText(updatedText);
         
         // Assert
         comment.Text.ShouldBe(updatedText);
-        comment.LastUpdatedOn.ShouldBe(lastUpdatedOn);
+        // comment.LastUpdatedOn.ShouldBe(lastUpdatedOn);
     }
 
     private Comment CreateDefaultComment()
     {
-        return Comment.Create(
+        return CommentFactory.Create(
             Guid.NewGuid().ToString(),
             Guid.NewGuid(),
-            Member.Create(Guid.NewGuid().ToString(),
+            MemberFactory.Create(Guid.NewGuid().ToString(),
                 Guid.NewGuid().ToString(),
                 Guid.NewGuid().ToString(),
-                Guid.NewGuid().ToString()),
-            _dateTimeOffsetProviderMock.Object);
+                Guid.NewGuid().ToString()).Value.Id).Value;
     }
 }

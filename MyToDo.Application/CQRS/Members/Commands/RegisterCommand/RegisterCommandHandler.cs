@@ -3,6 +3,7 @@ using MyToDo.Application.Abstractions.Security;
 using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
+using MyToDo.Domain.Factories;
 using MyToDo.Domain.Shared;
 
 namespace MyToDo.Application.CQRS.Members.Commands.RegisterCommand;
@@ -33,13 +34,17 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand>
         
         var hashedPassword = _passwordHasher.Hash(request.Password);
 
-        var member = Member.Create(
+        var createMemberResult = MemberFactory.Create(
             request.FirstName,
             request.LastName,
             request.Email,
             hashedPassword);
+        if (createMemberResult.IsFailure)
+        {
+            return Result.Failure(createMemberResult.Error);
+        }
 
-        _memberRepository.Add(member);
+        _memberRepository.Add(createMemberResult.Value);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

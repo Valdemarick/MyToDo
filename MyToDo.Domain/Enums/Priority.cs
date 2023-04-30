@@ -2,11 +2,13 @@
 
 public enum Priority
 {
-    Low = 0,
+    Unknown = 0,
     
-    Normal = 1,
+    Low = 1,
     
-    High = 2,
+    Normal = 2,
     
-    Critical = 3,
+    High = 3,
+    
+    Critical = 4,
 }

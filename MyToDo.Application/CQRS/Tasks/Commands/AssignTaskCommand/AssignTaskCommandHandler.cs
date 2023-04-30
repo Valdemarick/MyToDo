@@ -10,18 +10,15 @@ internal sealed class AssignTaskCommandHandler : ICommandHandler<AssignTaskComma
     private readonly ITaskRepository _taskRepository;
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
 
     public AssignTaskCommandHandler(
         ITaskRepository taskRepository, 
         IMemberRepository memberRepository,
-        IUnitOfWork unitOfWork, 
-        IDateTimeOffsetProvider dateTimeOffsetProvider)
+        IUnitOfWork unitOfWork)
     {
         _taskRepository = taskRepository;
         _memberRepository = memberRepository;
         _unitOfWork = unitOfWork;
-        _dateTimeOffsetProvider = dateTimeOffsetProvider;
     }
 
     public async Task<Result> Handle(AssignTaskCommand request, CancellationToken cancellationToken)
@@ -38,7 +35,7 @@ internal sealed class AssignTaskCommandHandler : ICommandHandler<AssignTaskComma
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
         
-        task.Assign(executor, _dateTimeOffsetProvider);
+        task.Assign(executor);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

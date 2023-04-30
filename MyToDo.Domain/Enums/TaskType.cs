@@ -2,9 +2,11 @@
 
 public enum TaskType
 {
-    Task = 0,
+    Unknown = 0,
     
-    Bug = 1,
+    Task = 1,
     
-    Idea = 2,
+    Bug = 2,
+    
+    Idea = 3,
 }

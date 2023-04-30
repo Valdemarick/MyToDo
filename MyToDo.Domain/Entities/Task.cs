@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Internal;
-using MyToDo.Domain.Abstractions;
+﻿using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Primitives;
@@ -14,16 +13,16 @@ namespace MyToDo.Domain.Entities;
 public sealed class Task : AggregateRoot
 {
     private readonly List<Comment> _comments = new();
+    private readonly List<Tag> _tags = new();
 
     private Task(
-        Guid id,
         string title,
         string description,
         TaskStatus status,
         Priority priority,
         TaskType taskType,
         Guid creatorId,
-        Guid? executorId) : base(id)
+        Guid? executorId) : base(Guid.NewGuid())
     {
         Title = title;
         Description = description;
@@ -32,7 +31,6 @@ public sealed class Task : AggregateRoot
         TaskType = taskType;
         CreatorId = creatorId;
         ExecutorId = executorId;
-        CreatedOn = DateTime.UtcNow;
     }
 
     protected Task()
@@ -54,16 +52,15 @@ public sealed class Task : AggregateRoot
     public DateTimeOffset? LastUpdatedOn { get; private set; }
     
     public DateTimeOffset? CompletedOn { get; private set; }
-    
+
+    public Member? Executor { get; private set; }
     public Guid? ExecutorId { get; private set; }
     
+    public Member Creator { get; private set; }
     public Guid CreatorId { get; private set; }
 
-    public Member Creator { get; private set; }
-    
-    public Member? Executor { get; private set; }
-
-    public IReadOnlyCollection<Comment> Comments => _comments;
+    public IEnumerable<Comment> Comments => _comments;
+    public IEnumerable<Tag> Tags => _tags;
 
     public Result Complete(IDateTimeOffsetProvider dateTimeOffsetProvider)
     {
@@ -96,7 +93,7 @@ public sealed class Task : AggregateRoot
         return Result.Success();
     }
 
-    public Result Reopen(IDateTimeOffsetProvider dateTimeOffsetProvider)
+    public Result Reopen()
     {
         if (Status is TaskStatus.Open or TaskStatus.InProgress)
         {
@@ -104,12 +101,64 @@ public sealed class Task : AggregateRoot
         }
 
         Status = TaskStatus.Reopen;
-        LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
+        CompletedOn = null;
 
         return Result.Success();
     }
 
-    public static Task Create(
+    public void Assign(Member executor)
+    {
+        Executor = executor;
+    }
+
+    public void AddComment(Comment comment)
+    {
+        _comments.Add(comment);
+    }
+
+    public Result RemoveComment(Comment comment)
+    {
+        if (_comments.All(c => c.Id != comment.Id))
+        {
+            return Result.Failure(DomainErrors.Task.TaskDoesNotHaveThisComment);
+        }
+
+        _comments.Remove(comment);
+
+        return Result.Success();
+    }
+
+    public void UpdateDescription(string newDescription)
+    {
+        Description = newDescription;
+    }
+
+    public void UpdateTitle(string newTitle)
+    {
+        Title = newTitle;
+    }
+
+    public void Close()
+    {
+        Status = TaskStatus.Completed;
+    }
+
+    public void SetCreatedOn(DateTimeOffset dateTimeOffset)
+    {
+        CreatedOn = dateTimeOffset;
+    }
+
+    public void SetLastUpdatedOn(DateTimeOffset dateTimeOffset)
+    {
+        LastUpdatedOn = dateTimeOffset;
+    }
+
+    public void SetCompletedOn(DateTimeOffset dateTimeOffset)
+    {
+        CompletedOn = dateTimeOffset;
+    }
+    
+    internal static Task Create(
         string title,
         string description,
         Priority priority,
@@ -118,7 +167,6 @@ public sealed class Task : AggregateRoot
         Guid? executorId)
     {
         return new Task(
-            Guid.NewGuid(),
             title,
             description,
             TaskStatus.Open,
@@ -126,48 +174,5 @@ public sealed class Task : AggregateRoot
             taskType,
             creatorId,
             executorId);
-    }
-
-    public void Assign(Member executor, IDateTimeOffsetProvider dateTimeOffsetProvider)
-    {
-        Executor = executor;
-        LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
-    }
-
-    public void AddComment(Comment comment, IDateTimeOffsetProvider dateTimeOffsetProvider)
-    {
-        _comments.Add(comment);
-        LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
-    }
-
-    public Result RemoveComment(Comment comment, IDateTimeOffsetProvider dateTimeOffsetProvider)
-    {
-        if (_comments.All(c => c.Id != comment.Id))
-        {
-            return Result.Failure(DomainErrors.Task.TaskDoesNotHaveThisComment);
-        }
-
-        _comments.Remove(comment);
-        LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
-
-        return Result.Success();
-    }
-
-    public void UpdateDescription(string newDescription, IDateTimeOffsetProvider dateTimeOffsetProvider)
-    {
-        Description = newDescription;
-        LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
-    }
-
-    public void UpdateTitle(string newTitle, IDateTimeOffsetProvider dateTimeOffsetProvider)
-    {
-        Title = newTitle;
-        LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
-    }
-
-    public void Close(IDateTimeOffsetProvider dateTimeOffsetProvider)
-    {
-        Status = TaskStatus.Completed;
-        LastUpdatedOn = CompletedOn = dateTimeOffsetProvider.UtcNow;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
-using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
+using MyToDo.Domain.Factories;
 using MyToDo.Domain.Shared;
 
 namespace MyToDo.Application.CQRS.Tasks.Commands.WriteComment;
@@ -11,18 +11,15 @@ internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentC
     private readonly ITaskRepository _taskRepository;
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
 
     public WriteCommentCommandHandler(
         ITaskRepository taskRepository,
         IMemberRepository memberRepository,
-        IUnitOfWork unitOfWork,
-        IDateTimeOffsetProvider dateTimeOffsetProvider)
+        IUnitOfWork unitOfWork)
     {
         _taskRepository = taskRepository;
         _memberRepository = memberRepository;
         _unitOfWork = unitOfWork;
-        _dateTimeOffsetProvider = dateTimeOffsetProvider;
     }
 
     public async Task<Result> Handle(WriteCommentCommand request, CancellationToken cancellationToken)
@@ -38,12 +35,17 @@ internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentC
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
-        
-        task.AddComment(Comment.Create(
+
+        var createCommentResult = CommentFactory.Create(
             request.Text,
             request.TaskId,
-            member,
-            _dateTimeOffsetProvider), _dateTimeOffsetProvider);
+            request.MemberId);
+        if (createCommentResult.IsFailure)
+        {
+            return Result.Failure(createCommentResult.Error);
+        }
+        
+        task.AddComment(createCommentResult.Value);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

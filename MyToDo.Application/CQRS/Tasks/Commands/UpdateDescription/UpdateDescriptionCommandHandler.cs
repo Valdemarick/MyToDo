@@ -9,16 +9,13 @@ internal sealed class UpdateDescriptionCommandHandler : ICommandHandler<UpdateDe
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
 
     public UpdateDescriptionCommandHandler(
         ITaskRepository taskRepository,
-        IUnitOfWork unitOfWork, 
-        IDateTimeOffsetProvider dateTimeOffsetProvider)
+        IUnitOfWork unitOfWork)
     {
         _taskRepository = taskRepository;
         _unitOfWork = unitOfWork;
-        _dateTimeOffsetProvider = dateTimeOffsetProvider;
     }
 
     public async Task<Result> Handle(UpdateDescriptionCommand request, CancellationToken cancellationToken)
@@ -29,7 +26,7 @@ internal sealed class UpdateDescriptionCommandHandler : ICommandHandler<UpdateDe
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        task.UpdateDescription(request.Description, _dateTimeOffsetProvider);
+        task.UpdateDescription(request.Description);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

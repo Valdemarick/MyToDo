@@ -5,11 +5,13 @@
 /// </summary>
 public enum TaskStatus
 {
-    Open = 0,
+    Unknown = 0,
     
-    InProgress = 1,
+    Open = 1,
     
-    Completed = 2,
+    InProgress = 2,
     
-    Reopen = 3,
+    Completed = 3,
+    
+    Reopen = 4,
 }
