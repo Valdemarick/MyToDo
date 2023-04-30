@@ -21,16 +21,16 @@ public sealed class Task : AggregateRoot
         TaskStatus status,
         Priority priority,
         TaskType taskType,
-        Guid creatorId,
-        Guid? executorId) : base(Guid.NewGuid())
+        TaskCreator creator,
+        TaskExecutor? executor) : base(Guid.NewGuid())
     {
         Title = title;
         Description = description;
         Status = status;
         Priority = priority;
         TaskType = taskType;
-        CreatorId = creatorId;
-        ExecutorId = executorId;
+        Creator = creator;
+        Executor = executor;
     }
 
     protected Task()
@@ -53,10 +53,10 @@ public sealed class Task : AggregateRoot
     
     public DateTimeOffset? CompletedOn { get; private set; }
 
-    public Member? Executor { get; private set; }
+    public TaskExecutor? Executor { get; private set; }
     public Guid? ExecutorId { get; private set; }
     
-    public Member Creator { get; private set; }
+    public TaskCreator Creator { get; private set; }
     public Guid CreatorId { get; private set; }
 
     public IEnumerable<Comment> Comments => _comments;
@@ -106,7 +106,7 @@ public sealed class Task : AggregateRoot
         return Result.Success();
     }
 
-    public void Assign(Member executor)
+    public void Assign(TaskExecutor executor)
     {
         Executor = executor;
     }
@@ -163,8 +163,8 @@ public sealed class Task : AggregateRoot
         string description,
         Priority priority,
         TaskType taskType,
-        Guid creatorId,
-        Guid? executorId)
+        TaskCreator creator,
+        TaskExecutor? executor)
     {
         return new Task(
             title,
@@ -172,7 +172,7 @@ public sealed class Task : AggregateRoot
             TaskStatus.Open,
             priority,
             taskType,
-            creatorId,
-            executorId);
+            creator,
+            executor);
     }
 }

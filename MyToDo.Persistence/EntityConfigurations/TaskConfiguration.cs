@@ -27,13 +27,13 @@ internal sealed class TaskConfiguration : IEntityTypeConfiguration<Task>
 
         builder.Property(t => t.TaskType).IsRequired();
 
-        builder.HasOne<Member>(t => t.Creator)
-            .WithMany(m => m.Tasks);
+        builder.HasOne<TaskExecutor>(t => t.Executor)
+            .WithOne(m => m.Task);
 
-        builder.HasOne<Member>(t => t.Executor)
-            .WithMany(m => m.Tasks);
+        builder.HasOne<TaskCreator>(t => t.Creator)
+            .WithOne(m => m.Task);
 
-        builder.HasMany<Tag>(t => t.Tags)
+        builder.HasMany(t => t.Tags)
             .WithMany(t => t.Tasks);
 
         builder.HasMany(t => t.Comments)

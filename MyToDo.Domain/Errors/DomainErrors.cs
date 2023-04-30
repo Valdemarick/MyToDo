@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Shared;
+﻿using System.Runtime.InteropServices.JavaScript;
+using MyToDo.Domain.Shared;
 
 namespace MyToDo.Domain.Errors;
 
@@ -50,7 +51,7 @@ public static class DomainErrors
             "Task. DescriptionValidationError",
             "Task Description Validation Error");
 
-        public static readonly Error TaskCreatorIdValidationError = new(
+        public static readonly Error TaskCreatorValidationError = new(
             "Task. CreatorIdValidationError",
             "Task CreatorId Validation Error");
 
@@ -110,5 +111,27 @@ public static class DomainErrors
         public static readonly Error TagNameValidationError = new(
             "Tag. NameValidationError",
             "Name is invalid");
+    }
+    
+    public static class TaskCreator
+    {
+        public static readonly Error MemberIdValidationError = new(
+            "TaskCreator. MemberIdValidationError",
+            "MemberId is invalid");
+
+        public static readonly Error FullNameValidationError = new(
+            "TaskCreator. FullNameValidationError",
+            "FullName is invalid");
+    }
+    
+    public static class TaskExecutor
+    {
+        public static readonly Error MemberIdValidationError = new(
+            "TaskExecutor. MemberIdValidationError",
+            "MemberId is invalid");
+        
+        public static readonly Error FullNameValidationError = new(
+            "TaskExecutor. FullNameValidationError",
+            "FullName is invalid");
     }
 }

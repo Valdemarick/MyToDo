@@ -4,8 +4,6 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class Member : AggregateRoot
 {
-    private readonly List<Task> _tasks = new();
-
     private Member(
         string firstName,
         string lastName,
@@ -33,8 +31,6 @@ public sealed class Member : AggregateRoot
     public string FullName => $"{LastName} {FirstName}";
     
     public DateTimeOffset RegisteredOn { get; private set; }
-
-    public IEnumerable<Task> Tasks => _tasks;
 
     public void SetRegisteredOn(DateTimeOffset dateTimeOffset)
     {

@@ -22,12 +22,12 @@ internal sealed class MemberConfiguration : IEntityTypeConfiguration<Member>
 
         builder.Property(m => m.RegisteredOn).IsRequired();
 
-        builder.HasMany(m => m.Tasks)
-            .WithOne(t => t.Creator)
-            .HasForeignKey(t => t.CreatorId);
+        builder.HasMany<TaskExecutor>()
+            .WithOne()
+            .HasForeignKey(te => te.MemberId);
 
-        builder.HasMany(m => m.Tasks)
-            .WithOne(t => t.Executor)
-            .HasForeignKey(t => t.ExecutorId);
+        builder.HasMany<TaskCreator>()
+            .WithOne()
+            .HasForeignKey(tc => tc.MemberId);
     }
 }

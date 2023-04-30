@@ -1,6 +1,8 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
+using MyToDo.Domain.Factories;
 using MyToDo.Domain.Shared;
 
 namespace MyToDo.Application.CQRS.Tasks.Commands.CreateTask;
@@ -23,10 +25,34 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
 
     public async Task<Result> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
-        var member = await _memberRepository.GetByIdAsync(request.CreatorId, cancellationToken);
-        if (member is null)
+        var creator = await _memberRepository.GetByIdAsync(request.CreatorId, cancellationToken);
+        if (creator is null)
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);
+        }
+
+        var createTaskCreator = TaskCreatorFactory.Create(creator.FullName, creator.Id);
+        if (createTaskCreator.IsFailure)
+        {
+            return Result.Failure(createTaskCreator.Error);
+        }
+
+        TaskExecutor? taskExecutor = null;
+        if (request.ExecutorId.HasValue)
+        {
+            var executor = await _memberRepository.GetByIdAsync(request.ExecutorId.Value, cancellationToken);
+            if (executor is null)
+            {
+                return Result.Failure(DomainErrors.Member.MemberNotFound);
+            }
+
+            var createTaskExecutor = TaskExecutorFactory.Create(executor.FullName, executor.Id);
+            if (createTaskCreator.IsFailure)
+            {
+                return Result.Failure(createTaskExecutor.Error);
+            }
+
+            taskExecutor = createTaskExecutor.Value;
         }
 
         var createTaskResult = Domain.Factories.TaskFactory.Create(
@@ -34,8 +60,8 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
             request.Description,
             request.Priority,
             request.TaskType,
-            request.CreatorId,
-            request.ExecutorId);
+            createTaskCreator.Value,
+            taskExecutor);
         if (createTaskResult.IsFailure)
         {
             return Result.Failure(createTaskResult.Error);

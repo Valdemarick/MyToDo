@@ -1,6 +1,7 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Errors;
+using MyToDo.Domain.Factories;
 using MyToDo.Domain.Shared;
 
 namespace MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
@@ -29,13 +30,20 @@ internal sealed class AssignTaskCommandHandler : ICommandHandler<AssignTaskComma
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        var executor = await _memberRepository.GetByIdAsync(request.ExecutorId, cancellationToken);
-        if (executor is null)
+        var member = await _memberRepository.GetByIdAsync(request.MemberId, cancellationToken);
+        if (member is null)
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
+
+        var createTaskExecutorResult = TaskExecutorFactory.Create(member.FullName, request.MemberId);
+        if (createTaskExecutorResult.IsFailure)
+        {
+            return Result.Failure(createTaskExecutorResult.Error);
+        }
         
-        task.Assign(executor);
+        task.Assign(createTaskExecutorResult.Value);
+        
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

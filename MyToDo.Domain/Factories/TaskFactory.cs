@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Enums;
+﻿using MyToDo.Domain.Entities;
+using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 using Task = MyToDo.Domain.Entities.Task;
@@ -12,8 +13,8 @@ public static class TaskFactory
         string? description,
         Priority priority,
         TaskType taskType,
-        Guid creatorId,
-        Guid? executorId)
+        TaskCreator creator,
+        TaskExecutor? executor)
     {
         if (priority is Priority.Unknown)
         {
@@ -35,14 +36,9 @@ public static class TaskFactory
             return Result.Failure(DomainErrors.Task.TaskDescriptionValidationError);
         }
 
-        if (creatorId == Guid.Empty)
+        if (creator is null)
         {
-            return Result.Failure(DomainErrors.Task.TaskCreatorIdValidationError);
-        }
-
-        if (executorId.HasValue && executorId == Guid.Empty)
-        {
-            return Result.Failure(DomainErrors.Task.TaskExecutorIdValidationError);
+            return Result.Failure(DomainErrors.Task.TaskCreatorValidationError);
         }
 
         var task = Task.Create(
@@ -50,8 +46,8 @@ public static class TaskFactory
             description,
             priority,
             taskType,
-            creatorId,
-            executorId);
+            creator,
+            executor);
 
         return Result.Success(task);
     }

@@ -6,18 +6,20 @@ using MyToDo.Domain.Shared;
 
 namespace MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 
-internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand>
+internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string>
 {
     private readonly IMemberRepository _memberRepository;
     private readonly IPasswordHasher _passwordHasher;
 
-    public LoginCommandHandler(IMemberRepository memberRepository, IPasswordHasher passwordHasher)
+    public LoginCommandHandler(
+        IMemberRepository memberRepository, 
+        IPasswordHasher passwordHasher)
     {
         _memberRepository = memberRepository;
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<Result> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var member = await _memberRepository.GetByEmail(request.Email, cancellationToken);
         if (member is null)
