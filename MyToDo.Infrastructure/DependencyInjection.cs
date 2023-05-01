@@ -11,7 +11,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services)
     {
         services.AddTransient<IPasswordHasher, PasswordHasher>()
-            .AddTransient<IDateTimeOffsetProvider, DateTimeOffsetProvider>();
+            .AddTransient<IDateTimeOffsetProvider, DateTimeOffsetProvider>()
+            .AddTransient<IJwtProvider, JwtProvider>();
 
         return services;
     }

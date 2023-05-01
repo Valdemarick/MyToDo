@@ -20,7 +20,7 @@ public sealed class MembersController : BaseController
             return BadRequest(result.Error);
         }
 
-        return Ok();
+        return Ok(result.Value);
     }
 
     [HttpPost("registration")]

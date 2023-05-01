@@ -1,6 +1,7 @@
 using MyToDo.Application;
 using MyToDo.Infrastructure;
 using MyToDo.Persistence;
+using MyToDo.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplicationLayer()
     .AddInfrastructureLayer()
-    .AddPersistenceLayer(builder.Configuration);
+    .AddPersistenceLayer(builder.Configuration)
+    .AddWebApiLayer();
 
 var app = builder.Build();
 
@@ -25,6 +27,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

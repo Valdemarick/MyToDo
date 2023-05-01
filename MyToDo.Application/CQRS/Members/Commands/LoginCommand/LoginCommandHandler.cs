@@ -10,13 +10,16 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string
 {
     private readonly IMemberRepository _memberRepository;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtProvider _jwtProvider;
 
     public LoginCommandHandler(
         IMemberRepository memberRepository, 
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher, 
+        IJwtProvider jwtProvider)
     {
         _memberRepository = memberRepository;
         _passwordHasher = passwordHasher;
+        _jwtProvider = jwtProvider;
     }
 
     public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -28,7 +31,13 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string
         }
 
         var isPasswordCorrect = _passwordHasher.Verify(member.HashedPassword, request.Password);
-        
-        return !isPasswordCorrect ? Result.Failure(DomainErrors.Member.PasswordIsWrong) : Result.Success();
+        if (!isPasswordCorrect)
+        {
+            return Result.Failure(DomainErrors.Member.PasswordIsWrong);
+        }
+
+        var token = await _jwtProvider.GenerateTokenAsync(member);
+
+        return Result.Success(token);
     }
 }
