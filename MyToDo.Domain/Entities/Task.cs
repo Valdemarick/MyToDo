@@ -75,7 +75,7 @@ public sealed class Task : AggregateRoot
         return Result.Success();
     }
 
-    public Result StartWorkOnTask(IDateTimeOffsetProvider dateTimeOffsetProvider)
+    public Result StartWorkingOnTask(IDateTimeOffsetProvider dateTimeOffsetProvider)
     {
         if (Status is TaskStatus.InProgress)
         {
@@ -156,6 +156,30 @@ public sealed class Task : AggregateRoot
     public void SetCompletedOn(DateTimeOffset dateTimeOffset)
     {
         CompletedOn = dateTimeOffset;
+    }
+
+    public Result AddTag(Tag tag)
+    {
+        if (_tags.Contains(tag))
+        {
+            return Result.Failure(DomainErrors.Task.TaskAlreadyHaveThisTag);
+        }
+        
+        _tags.Add(tag);
+
+        return Result.Success();
+    }
+
+    public Result RemoveTag(Tag tag)
+    {
+        if (!_tags.Contains(tag))
+        {
+            return Result.Failure(DomainErrors.Task.TaskDoesNotContainThisTag);
+        }
+
+        _tags.Remove(tag);
+
+        return Result.Success();
     }
     
     internal static Task Create(

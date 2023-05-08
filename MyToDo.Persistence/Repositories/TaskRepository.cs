@@ -23,6 +23,12 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<Task?> GetWithTagsAsync(Guid taskId, bool isTracking = false, CancellationToken cancellationToken = default)
+    {
+        return await ApplySpecification(new TaskWithTagsSpecification(taskId, isTracking))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<List<Task>> GetPageAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
         return await ApplySpecification(new TaskPageSpecification())

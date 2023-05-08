@@ -58,6 +58,14 @@ public static class DomainErrors
         public static readonly Error TaskExecutorIdValidationError = new(
             "Task. ExecutorIdValidationError",
             "Task Executor Id Validation Error");
+
+        public static readonly Error TaskAlreadyHaveThisTag = new(
+            "Task. Tag duplication",
+            "Task already have this tag");
+
+        public static readonly Error TaskDoesNotContainThisTag = new(
+            "Task. Attempt to remove not linked tag",
+            "Task does not have this tag");
     }
     
     public static class Member
