@@ -2,7 +2,7 @@
 
 namespace MyToDo.Persistence;
 
-public sealed class UnitOfWork : IUnitOfWork
+internal sealed class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _dbContext;
     

@@ -2,7 +2,7 @@
 
 namespace MyToDo.Infrastructure.Security;
 
-public class PermissionRequirement : IAuthorizationRequirement
+internal class PermissionRequirement : IAuthorizationRequirement
 {
     public PermissionRequirement(string permission) => Permission = permission;
     

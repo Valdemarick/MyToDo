@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace MyToDo.Infrastructure.Security;
 
-public sealed class PermissionAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
+internal sealed class PermissionAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
 {
     public PermissionAuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
         : base(options)
