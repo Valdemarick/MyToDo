@@ -23,6 +23,10 @@ public sealed class ApplicationDbContext : DbContext
 
     public DbSet<Member> Members => Set<Member>();
 
+    public DbSet<Role> Roles => Set<Role>();
+
+    public DbSet<Tag> Tags => Set<Tag>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -31,6 +35,9 @@ public sealed class ApplicationDbContext : DbContext
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         SetTaskDateTimeOffset();
+        SetCommentDateTimeOffset();
+        SetMemberDateTimeOffset();
+        SetTagCommentDateTimeOffset();
 
         return await base.SaveChangesAsync(cancellationToken);
     }

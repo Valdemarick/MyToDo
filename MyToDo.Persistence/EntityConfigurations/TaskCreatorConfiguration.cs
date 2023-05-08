@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyToDo.Domain.Entities;
+using MyToDo.Persistence.Constants;
 using Task = MyToDo.Domain.Entities.Task;
 
 namespace MyToDo.Persistence.EntityConfigurations;
@@ -9,6 +10,8 @@ internal sealed class TaskCreatorConfiguration : IEntityTypeConfiguration<TaskCr
 {
     public void Configure(EntityTypeBuilder<TaskCreator> builder)
     {
+        builder.ToTable(TableNames.TaskCreator);
+        
         builder.HasKey(tc => tc.Id);
         builder.HasIndex(tc => tc.Id).IsUnique();
 

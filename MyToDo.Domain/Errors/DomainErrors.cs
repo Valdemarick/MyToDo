@@ -89,6 +89,10 @@ public static class DomainErrors
         public static readonly Error PasswordValidationError = new(
             "Member. PasswordValidationError",
             "Password is invalid");
+
+        public static readonly Error RoleValidationError = new(
+            "Member. Role validation error",
+            "Role validation error");
     }
     
     public static class Comment
@@ -111,6 +115,14 @@ public static class DomainErrors
         public static readonly Error TagNameValidationError = new(
             "Tag. NameValidationError",
             "Name is invalid");
+
+        public static readonly Error TagNameIsAlreadyOccupied = new(
+            "Tag. Tag name is occupied",
+            "The tag with such name already exists");
+
+        public static readonly Error TagNotFound = new(
+            "Tag. Tag not found",
+            "Tag not found");
     }
     
     public static class TaskCreator
@@ -133,5 +145,12 @@ public static class DomainErrors
         public static readonly Error FullNameValidationError = new(
             "TaskExecutor. FullNameValidationError",
             "FullName is invalid");
+    }
+    
+    public static class Role
+    {
+        public static readonly Error RoleNotFound = new(
+            "Role. Role not found",
+            "Role not found");
     }
 }

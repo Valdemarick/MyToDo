@@ -33,7 +33,7 @@ public sealed class Task : AggregateRoot
         Executor = executor;
     }
 
-    protected Task()
+    private Task()
     {
     }
     

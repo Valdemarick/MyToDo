@@ -8,15 +8,18 @@ public sealed class Member : AggregateRoot
         string firstName,
         string lastName,
         string email,
-        string hashedPassword) : base(Guid.NewGuid())
+        string hashedPassword,
+        Role role) : base(Guid.NewGuid())
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         HashedPassword = hashedPassword;
+
+        RoleId = role.Id;
     }
 
-    protected Member()
+    private Member()
     {
     }
 
@@ -31,6 +34,9 @@ public sealed class Member : AggregateRoot
     public string FullName => $"{LastName} {FirstName}";
     
     public DateTimeOffset RegisteredOn { get; private set; }
+    
+    public Guid RoleId { get; private set; }
+    public Role Role { get; private set; }
 
     public void SetRegisteredOn(DateTimeOffset dateTimeOffset)
     {
@@ -41,12 +47,14 @@ public sealed class Member : AggregateRoot
         string firstName,
         string lastName,
         string email,
-        string hashedPassword)
+        string hashedPassword,
+        Role role)
     {
         return new Member(
             firstName,
             lastName,
             email,
-            hashedPassword);
+            hashedPassword,
+            role);
     }
 }

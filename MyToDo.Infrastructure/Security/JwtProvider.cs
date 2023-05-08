@@ -4,27 +4,44 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyToDo.Application.Abstractions.Security;
+using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Entities;
-using Task = System.Threading.Tasks.Task;
+using MyToDo.Infrastructure.Constants;
+using MyToDo.Infrastructure.Providers.Abstractions;
 
 namespace MyToDo.Infrastructure.Security;
 
 internal sealed class JwtProvider : IJwtProvider
 {
     private readonly JwtOptions _jwtOptions;
+    private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
+    private readonly IPermissionProvider _permissionProvider;
 
-    public JwtProvider(IOptions<JwtOptions> jwtOptions)
+    public JwtProvider(
+        IOptions<JwtOptions> jwtOptions, 
+        IDateTimeOffsetProvider dateTimeOffsetProvider, 
+        IPermissionProvider permissionProvider)
     {
         _jwtOptions = jwtOptions.Value;
+        _dateTimeOffsetProvider = dateTimeOffsetProvider;
+        _permissionProvider = permissionProvider;
     }
 
-    public Task<string> GenerateTokenAsync(Member member)
+    public async Task<string> GenerateTokenAsync(Member member)
     {
         var claims = new List<Claim>()
         {
-            new Claim(JwtRegisteredClaimNames.Sub, member.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, member.Email)
+            new(JwtRegisteredClaimNames.Sub, member.Id.ToString()),
+            new(JwtRegisteredClaimNames.Email, member.Email)
         };
+
+        var memberPermissions = (await _permissionProvider.GetMemberPermissionsAsync(member.Id))
+            .ToList();
+
+        foreach (var memberPermission in memberPermissions)
+        {
+            claims.Add(new Claim(CustomClaims.Permissions, memberPermission.Name));
+        }
 
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
@@ -41,6 +58,6 @@ internal sealed class JwtProvider : IJwtProvider
         var tokenValue = new JwtSecurityTokenHandler()
             .WriteToken(token);
 
-        return Task.FromResult(tokenValue);
+        return tokenValue;
     }
 }

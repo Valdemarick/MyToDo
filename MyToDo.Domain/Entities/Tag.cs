@@ -1,4 +1,6 @@
-﻿using MyToDo.Domain.Primitives;
+﻿using MyToDo.Domain.Errors;
+using MyToDo.Domain.Primitives;
+using MyToDo.Domain.Shared;
 
 namespace MyToDo.Domain.Entities;
 
@@ -16,7 +18,7 @@ public sealed class Tag : AggregateRoot
         Tasks = new List<Task>();
     }
 
-    public string Name { get; }
+    public string Name { get; private set; }
     
     public IEnumerable<Task> Tasks { get; }
     
@@ -34,8 +36,20 @@ public sealed class Tag : AggregateRoot
         LastUpdatedOn = dateTimeOffset;
     }
 
-    internal static Tag Create(string name)
+    public static Tag Create(string name)
     {
         return new Tag(name);
+    }
+
+    public Result UpdateName(string? name)
+    {
+        if (name is null)
+        {
+            return Result.Failure(DomainErrors.Tag.TagNameIsAlreadyOccupied);
+        }
+
+        Name = name;
+
+        return Result.Success();
     }
 }

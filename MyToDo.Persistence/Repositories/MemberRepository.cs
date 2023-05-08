@@ -6,7 +6,7 @@ using MyToDo.Persistence.Specifications.MemberSpecifications;
 
 namespace MyToDo.Persistence.Repositories;
 
-public sealed class MemberRepository : BaseRepository<Member>, IMemberRepository
+internal sealed class MemberRepository : BaseRepository<Member>, IMemberRepository
 {
     public MemberRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

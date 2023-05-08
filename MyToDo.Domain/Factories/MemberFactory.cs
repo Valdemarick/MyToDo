@@ -10,7 +10,8 @@ public static class MemberFactory
         string? firstName,
         string? lastName,
         string? email,
-        string? hashedPassword)
+        string? hashedPassword,
+        Role? role)
     {
         if (firstName is null)
         {
@@ -32,11 +33,17 @@ public static class MemberFactory
             return Result.Failure(DomainErrors.Member.PasswordValidationError);
         }
 
+        if (role is null)
+        {
+            return Result.Failure(DomainErrors.Member.RoleValidationError);
+        }
+
         var member = Member.Create(
             firstName,
             lastName,
             email,
-            hashedPassword);
+            hashedPassword,
+            role);
 
         return Result.Success(member);
     }

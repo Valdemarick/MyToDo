@@ -13,7 +13,7 @@ public sealed class Comment : BaseEntity
         TaskId = taskId;
     }
 
-    protected Comment()
+    private Comment()
     {
     }
 

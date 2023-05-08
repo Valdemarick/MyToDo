@@ -7,6 +7,8 @@ using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescription;
 using MyToDo.Application.CQRS.Tasks.Commands.WriteComment;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskById;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskPage;
+using MyToDo.Domain.Enums;
+using MyToDo.Infrastructure.Security;
 
 namespace MyToDo.WebApi.Controllers;
 
@@ -17,6 +19,7 @@ public sealed class TasksController : BaseController
     }
     
     [HttpGet("page")]
+    [NeededPermission(Permission.TaskRead)]
     public async Task<IActionResult> GetPageAsync([FromQuery] GetTaskPageQuery query)
     {
         var result = await Mediator.Send(query);
@@ -29,6 +32,7 @@ public sealed class TasksController : BaseController
     }
     
     [HttpGet("{id:guid}")]
+    [NeededPermission(Permission.TaskRead)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
     {
         var result = await Mediator.Send(new GetTaskByIdQuery(id));

@@ -6,7 +6,7 @@ using MyToDo.Infrastructure.Security;
 
 namespace MyToDo.WebApi.OptionsSetup;
 
-internal sealed class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
+internal sealed class JwtBearerOptionsSetup : IConfigureNamedOptions<JwtBearerOptions>
 {
     private readonly JwtOptions _jwtOptions;
 
@@ -15,7 +15,17 @@ internal sealed class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions
         _jwtOptions = jwtOptions.Value;
     }
 
+    public void Configure(string? name, JwtBearerOptions options)
+    {
+        ConfigureOptions(options);
+    }
+
     public void Configure(JwtBearerOptions options)
+    {
+        ConfigureOptions(options);
+    }
+
+    private void ConfigureOptions(JwtBearerOptions options)
     {
         options.TokenValidationParameters = new()
         {

@@ -66,7 +66,7 @@ namespace MyToDo.Persistence.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("MyToDo.Domain.Entities.Member", b =>
@@ -94,6 +94,9 @@ namespace MyToDo.Persistence.Migrations
                     b.Property<DateTimeOffset>("RegisteredOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -102,7 +105,120 @@ namespace MyToDo.Persistence.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Members");
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Members", (string)null);
+                });
+
+            modelBuilder.Entity("MyToDo.Domain.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Permissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("25cbfeb0-5009-4a9e-bbf1-3ab7776a64d4"),
+                            Name = "TaskRead"
+                        },
+                        new
+                        {
+                            Id = new Guid("c39bb671-4cbb-4324-9dd5-2c6ea9cb0a41"),
+                            Name = "TaskManagement"
+                        },
+                        new
+                        {
+                            Id = new Guid("93cfef56-f157-4ff2-84d2-32ae0ff38abf"),
+                            Name = "CommentLeaving"
+                        },
+                        new
+                        {
+                            Id = new Guid("3b627c14-9078-403e-baaa-4f481904bafa"),
+                            Name = "UserManagement"
+                        },
+                        new
+                        {
+                            Id = new Guid("61ff1cff-0f9e-4320-90a9-620399172afa"),
+                            Name = "UserRead"
+                        },
+                        new
+                        {
+                            Id = new Guid("2c51f088-d02c-4532-9fbe-3075ff8b77e2"),
+                            Name = "TagRead"
+                        },
+                        new
+                        {
+                            Id = new Guid("a6a4b4ee-820d-4e48-9099-3c51233ecc5a"),
+                            Name = "TagManagement"
+                        });
+                });
+
+            modelBuilder.Entity("MyToDo.Domain.Entities.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("31265c07-cbae-4009-a7e5-50fac2b71c43"),
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("8326d391-66a0-4213-a774-e505ea8457dd"),
+                            Name = "Contributor"
+                        },
+                        new
+                        {
+                            Id = new Guid("6cf54ee0-a83c-4c1e-8ccc-9b4a2eae75c7"),
+                            Name = "User"
+                        });
+                });
+
+            modelBuilder.Entity("MyToDo.Domain.Entities.RolePermission", b =>
+                {
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("PermissionId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermission");
                 });
 
             modelBuilder.Entity("MyToDo.Domain.Entities.Tag", b =>
@@ -129,7 +245,7 @@ namespace MyToDo.Persistence.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("MyToDo.Domain.Entities.Task", b =>
@@ -184,7 +300,7 @@ namespace MyToDo.Persistence.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("MyToDo.Domain.Entities.TaskCreator", b =>
@@ -207,7 +323,7 @@ namespace MyToDo.Persistence.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("TaskCreator");
+                    b.ToTable("TaskCreators", (string)null);
                 });
 
             modelBuilder.Entity("MyToDo.Domain.Entities.TaskExecutor", b =>
@@ -230,7 +346,7 @@ namespace MyToDo.Persistence.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("TaskExecutor");
+                    b.ToTable("TaskExecutors", (string)null);
                 });
 
             modelBuilder.Entity("TagTask", b =>
@@ -272,6 +388,32 @@ namespace MyToDo.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("MyToDo.Domain.Entities.Member", b =>
+                {
+                    b.HasOne("MyToDo.Domain.Entities.Role", "Role")
+                        .WithMany("Members")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("MyToDo.Domain.Entities.RolePermission", b =>
+                {
+                    b.HasOne("MyToDo.Domain.Entities.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyToDo.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyToDo.Domain.Entities.Task", b =>
@@ -322,6 +464,11 @@ namespace MyToDo.Persistence.Migrations
                         .HasForeignKey("TasksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyToDo.Domain.Entities.Role", b =>
+                {
+                    b.Navigation("Members");
                 });
 
             modelBuilder.Entity("MyToDo.Domain.Entities.Task", b =>
