@@ -32,7 +32,7 @@ public static class DomainErrors
             "There is no such task");
 
         public static readonly Error TaskStatusValidationError = new(
-            "Task. StatusValidationError",
+            "Task. TypeValidationError",
             "Status Validation Error");
 
         public static readonly Error TaskPriorityValidationError = new(
@@ -43,11 +43,11 @@ public static class DomainErrors
             "Task. TypeValidationError",
             "Task Type Validation Error");
 
-        public static readonly Error TaskTitleValidationError = new(
+        public static readonly Error TitleValidationError = new(
             "Task. TitleValidationError",
             "Task Title Validation Error");
 
-        public static readonly Error TaskDescriptionValidationError = new(
+        public static readonly Error DescriptionValidationError = new(
             "Task. DescriptionValidationError",
             "Task Description Validation Error");
 
@@ -66,6 +66,34 @@ public static class DomainErrors
         public static readonly Error TaskDoesNotContainThisTag = new(
             "Task. Attempt to remove not linked tag",
             "Task does not have this tag");
+
+        public static readonly Error TagIdValidationError = new(
+            "Task. TagId validation error",
+            "TagId validation error");
+
+        public static readonly Error IdValidationError = new(
+            "Task. Id validation error",
+            "Id validation error");
+
+        public static readonly Error MemberIdValidationError = new(
+            "Task. MemberId validation error",
+            "MemberId validation error");
+
+        public static readonly Error CreatorIdValidationError = new(
+            "Task. CreatorId validation error",
+            "CreatorId validation error");
+
+        public static readonly Error TypeValidationError = new(
+            "Task. Type validation error",
+            "Type validation error");
+
+        public static readonly Error PriorityValidationError = new(
+            "Task. Priority validation error",
+            "Priority validation error");
+
+        public static readonly Error CommentTextValidationError = new(
+            "Task. CommentText validation error",
+            "CommentText validation error");
     }
     
     public static class Member
@@ -101,6 +129,10 @@ public static class DomainErrors
         public static readonly Error RoleValidationError = new(
             "Member. Role validation error",
             "Role validation error");
+
+        public static readonly Error RoleIdValidationError = new(
+            "Member. RoleId validation error",
+            "RoleId validation error");
     }
     
     public static class Comment
@@ -131,6 +163,10 @@ public static class DomainErrors
         public static readonly Error TagNotFound = new(
             "Tag. Tag not found",
             "Tag not found");
+
+        public static readonly Error IdValidationError = new(
+            "Tag. Id validation error",
+            "Id validation error");
     }
     
     public static class TaskCreator

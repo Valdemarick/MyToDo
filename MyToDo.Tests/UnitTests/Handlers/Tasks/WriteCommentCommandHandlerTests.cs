@@ -39,14 +39,14 @@ public sealed class WriteCommentCommandHandlerTests
     //
     //     var command = new WriteCommentCommand(
     //         Guid.NewGuid().ToString(),
-    //         task.Id,
-    //         member.Id);
+    //         task.TaskId,
+    //         member.TaskId);
     //
-    //     _taskRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == task.Id),
+    //     _taskRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == task.TaskId),
     //             It.IsAny<CancellationToken>(), It.Is<bool>(isTracking => isTracking)))
     //         .ReturnsAsync(task);
     //
-    //     _memberRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == member.Id),
+    //     _memberRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == member.TaskId),
     //             It.IsAny<CancellationToken>()))
     //         .ReturnsAsync(member);
     //
@@ -77,13 +77,13 @@ public sealed class WriteCommentCommandHandlerTests
     //     var command = new WriteCommentCommand(
     //         Guid.NewGuid().ToString(),
     //         taskId,
-    //         member.Id);
+    //         member.TaskId);
     //
     //     _taskRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>(),
     //             It.IsAny<CancellationToken>(), It.IsAny<bool>()))
     //         .ReturnsAsync((Task)null!);
     //
-    //     _memberRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == member.Id),
+    //     _memberRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == member.TaskId),
     //             It.IsAny<CancellationToken>()))
     //         .ReturnsAsync(member);
     //
@@ -107,7 +107,7 @@ public sealed class WriteCommentCommandHandlerTests
     //     var task = CreateValidTask();
     //     var memberId = Guid.NewGuid();
     //
-    //     _taskRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == task.Id),
+    //     _taskRepositoryMock.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id == task.TaskId),
     //             It.IsAny<CancellationToken>(), It.Is<bool>(isTracking => isTracking)))
     //         .ReturnsAsync(task);
     //
@@ -116,7 +116,7 @@ public sealed class WriteCommentCommandHandlerTests
     //         .ReturnsAsync((Member)null!);
     //
     //     var command = new WriteCommentCommand(Guid.NewGuid().ToString(),
-    //         task.Id,
+    //         task.TaskId,
     //         memberId);
     //
     //     var commandHandler = new WriteCommentCommandHandler(

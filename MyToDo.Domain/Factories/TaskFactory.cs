@@ -28,12 +28,12 @@ public static class TaskFactory
 
         if (title is null)
         {
-            return Result.Failure(DomainErrors.Task.TaskTitleValidationError);
+            return Result.Failure(DomainErrors.Task.TitleValidationError);
         }
 
         if (description is null)
         {
-            return Result.Failure(DomainErrors.Task.TaskDescriptionValidationError);
+            return Result.Failure(DomainErrors.Task.DescriptionValidationError);
         }
 
         if (creator is null)

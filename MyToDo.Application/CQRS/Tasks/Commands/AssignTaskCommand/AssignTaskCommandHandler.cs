@@ -24,7 +24,7 @@ internal sealed class AssignTaskCommandHandler : ICommandHandler<AssignTaskComma
 
     public async Task<Result> Handle(AssignTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = await _taskRepository.GetByIdAsync(request.Id, cancellationToken, isTracking: true);
+        var task = await _taskRepository.GetByIdAsync(request.TaskId, cancellationToken, isTracking: true);
         if (task is null)
         {
             return Result.Failure(DomainErrors.Task.TaskNotFound);
