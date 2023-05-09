@@ -17,11 +17,11 @@ public sealed class TagsController : BaseController
 
     [HttpGet]
     [NeededPermission(Permission.TagRead)]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
         var query = new GetAllTagsQuery();
 
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query, cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
@@ -32,9 +32,10 @@ public sealed class TagsController : BaseController
 
     [HttpPost]
     [NeededPermission(Permission.TagManagement)]
-    public async Task<IActionResult> CreateTagAsync([FromBody] CreateTagCommand command)
+    public async Task<IActionResult> CreateTagAsync([FromBody] CreateTagCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command, cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
@@ -45,9 +46,10 @@ public sealed class TagsController : BaseController
 
     [HttpPut]
     [NeededPermission(Permission.TagManagement)]
-    public async Task<IActionResult> UpdateTagAsync([FromBody] UpdateTagCommand command)
+    public async Task<IActionResult> UpdateTagAsync([FromBody] UpdateTagCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command, cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
@@ -58,9 +60,10 @@ public sealed class TagsController : BaseController
 
     [HttpDelete("{id:guid}")]
     [NeededPermission(Permission.TagManagement)]
-    public async Task<IActionResult> DeleteTagAsync(DeleteTagCommand command)
+    public async Task<IActionResult> DeleteTagAsync(DeleteTagCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command, cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);

@@ -62,7 +62,7 @@ public sealed class Task : AggregateRoot
     public IEnumerable<Comment> Comments => _comments;
     public IEnumerable<Tag> Tags => _tags;
 
-    public Result Complete(IDateTimeOffsetProvider dateTimeOffsetProvider)
+    public Result Complete()
     {
         if (Status is TaskStatus.Completed)
         {
@@ -70,12 +70,11 @@ public sealed class Task : AggregateRoot
         }
         
         Status = TaskStatus.Completed;
-        CompletedOn = dateTimeOffsetProvider.UtcNow;
 
         return Result.Success();
     }
 
-    public Result StartWorkingOnTask(IDateTimeOffsetProvider dateTimeOffsetProvider)
+    public Result StartWorkingOnTask()
     {
         if (Status is TaskStatus.InProgress)
         {
@@ -88,8 +87,7 @@ public sealed class Task : AggregateRoot
         }
 
         Status = TaskStatus.InProgress;
-        LastUpdatedOn = dateTimeOffsetProvider.UtcNow;
-        
+
         return Result.Success();
     }
 

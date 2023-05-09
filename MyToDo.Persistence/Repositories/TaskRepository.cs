@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Persistence.Specifications.TaskSpecifications;
 using Task = MyToDo.Domain.Entities.Task;
 

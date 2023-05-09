@@ -1,5 +1,6 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;

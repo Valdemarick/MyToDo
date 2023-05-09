@@ -9,14 +9,14 @@ namespace MyToDo.Persistence;
 
 public sealed class ApplicationDbContext : DbContext
 {
-    private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
+    private readonly IDateTimeService _dateTimeService;
     
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options, 
-        IDateTimeOffsetProvider dateTimeOffsetProvider) 
+        IDateTimeService dateTimeService) 
         : base(options)
     {
-        _dateTimeOffsetProvider = dateTimeOffsetProvider;
+        _dateTimeService = dateTimeService;
     }
 
     public DbSet<Task> Tasks => Set<Task>();
@@ -51,16 +51,16 @@ public sealed class ApplicationDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entity.SetCreatedOn(_dateTimeOffsetProvider.UtcNow);
+                    entity.SetCreatedOn(_dateTimeService.UtcNow);
                     break;
                 case EntityState.Modified:
-                    entity.SetLastUpdatedOn(_dateTimeOffsetProvider.UtcNow);
+                    entity.SetLastUpdatedOn(_dateTimeService.UtcNow);
                     break;
             }
 
             if (entity.Status is TaskStatus.Completed)
             {
-                entity.SetCompletedOn(_dateTimeOffsetProvider.UtcNow);
+                entity.SetCompletedOn(_dateTimeService.UtcNow);
             }
         }
     }
@@ -74,10 +74,10 @@ public sealed class ApplicationDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entity.SetCreatedOn(_dateTimeOffsetProvider.UtcNow);
+                    entity.SetCreatedOn(_dateTimeService.UtcNow);
                     break;
                 case EntityState.Modified:
-                    entity.SetLastUpdatedOn(_dateTimeOffsetProvider.UtcNow);
+                    entity.SetLastUpdatedOn(_dateTimeService.UtcNow);
                     break;
             }
         }
@@ -92,10 +92,10 @@ public sealed class ApplicationDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entity.SetCreatedOn(_dateTimeOffsetProvider.UtcNow);
+                    entity.SetCreatedOn(_dateTimeService.UtcNow);
                     break;
                 case EntityState.Modified:
-                    entity.SetLastUpdatedOn(_dateTimeOffsetProvider.UtcNow);
+                    entity.SetLastUpdatedOn(_dateTimeService.UtcNow);
                     break;
             }
         }
@@ -109,7 +109,7 @@ public sealed class ApplicationDbContext : DbContext
 
             if (entry.State is EntityState.Added)
             {
-                entity.SetRegisteredOn(_dateTimeOffsetProvider.UtcNow);
+                entity.SetRegisteredOn(_dateTimeService.UtcNow);
             }
         }
     }

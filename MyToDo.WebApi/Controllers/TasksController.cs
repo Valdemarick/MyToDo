@@ -20,9 +20,10 @@ public sealed class TasksController : BaseController
     
     [HttpGet("page")]
     [NeededPermission(Permission.TaskRead)]
-    public async Task<IActionResult> GetPageAsync([FromQuery] GetTaskPageQuery query)
+    public async Task<IActionResult> GetPageAsync([FromQuery] GetTaskPageQuery query,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query, cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
@@ -33,9 +34,11 @@ public sealed class TasksController : BaseController
     
     [HttpGet("{id:guid}")]
     [NeededPermission(Permission.TaskRead)]
-    public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
+    public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetTaskByIdQuery(id));
+        var result = await Mediator.Send(new GetTaskByIdQuery(id),
+            cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
@@ -45,9 +48,11 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateTaskCommand command)
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> CreateAsync([FromBody] CreateTaskCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command, cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
@@ -56,10 +61,13 @@ public sealed class TasksController : BaseController
         return Ok();
     }
 
-    [HttpPost("assign")]
-    public async Task<IActionResult> AssignTaskAsync([FromBody] AssignTaskCommand command)
+    [HttpPut("assignToMember")]
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> AssignTaskAsync([FromBody] AssignTaskCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command,
+            cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
@@ -68,8 +76,10 @@ public sealed class TasksController : BaseController
         return Ok();
     }
 
-    [HttpPost("updateDescription")]
-    public async Task<IActionResult> UpdateDescriptionAsync([FromBody] UpdateDescriptionCommand command)
+    [HttpPut("updateDescription")]
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> UpdateDescriptionAsync([FromBody] UpdateDescriptionCommand command,
+        CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command);
         if (result.IsFailure)
@@ -80,10 +90,12 @@ public sealed class TasksController : BaseController
         return Ok();
     }
     
-    [HttpPost("comments")]
-    public async Task<IActionResult> WriteCommentAsync([FromBody] WriteCommentCommand command)
+    [HttpPut("comments")]
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> WriteCommentAsync([FromBody] WriteCommentCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command, cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
@@ -92,10 +104,12 @@ public sealed class TasksController : BaseController
         return Ok();
     }
     
-    [HttpPost("close")]
-    public async Task<IActionResult> CloseTaskAsync([FromBody] CloseTaskCommand command)
+    [HttpPut("close")]
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> CloseTaskAsync([FromBody] CloseTaskCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command, cancellationToken);
         if (result.IsFailure)
         {
             return BadRequest(result.Error);

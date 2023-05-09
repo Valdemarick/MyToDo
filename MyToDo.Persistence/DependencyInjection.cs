@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Persistence.Repositories;
 
 namespace MyToDo.Persistence;

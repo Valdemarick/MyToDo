@@ -1,8 +1,8 @@
 ﻿using MyToDo.Domain.Entities;
 
-namespace MyToDo.Infrastructure.Providers.Abstractions;
+namespace MyToDo.Infrastructure.Services.Abstractions;
 
-internal interface IPermissionProvider
+internal interface IPermissionService
 {
     Task<IEnumerable<Permission>> GetMemberPermissionsAsync(Guid memberId);
 }

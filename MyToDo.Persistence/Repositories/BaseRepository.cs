@@ -1,4 +1,5 @@
 ﻿using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Primitives;
 using MyToDo.Persistence.Specifications;
 

@@ -1,6 +1,7 @@
 ﻿using Moq;
 using MyToDo.Application.CQRS.Tasks.Commands.WriteComment;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Entities;
 using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
@@ -18,7 +19,7 @@ public sealed class WriteCommentCommandHandlerTests
     private readonly Mock<ITaskRepository> _taskRepositoryMock;
     private readonly Mock<IMemberRepository> _memberRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<IDateTimeOffsetProvider> _dateTimeOffsetProviderMock;
+    private readonly Mock<IDateTimeService> _dateTimeOffsetProviderMock;
 
     // public WriteCommentCommandHandlerTests()
     // {

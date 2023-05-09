@@ -1,5 +1,6 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
@@ -9,13 +10,13 @@ internal sealed class StartWorkingOnTaskCommandHandler : ICommandHandler<StartWo
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
 
-    public StartWorkingOnTaskCommandHandler(ITaskRepository taskRepository, IUnitOfWork unitOfWork, IDateTimeOffsetProvider dateTimeOffsetProvider)
+    public StartWorkingOnTaskCommandHandler(
+        ITaskRepository taskRepository, 
+        IUnitOfWork unitOfWork)
     {
         _taskRepository = taskRepository;
         _unitOfWork = unitOfWork;
-        _dateTimeOffsetProvider = dateTimeOffsetProvider;
     }
 
     public async Task<Result> Handle(StartWorkingOnTaskCommand request, CancellationToken cancellationToken)
@@ -26,7 +27,7 @@ internal sealed class StartWorkingOnTaskCommandHandler : ICommandHandler<StartWo
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        task.StartWorkingOnTask(_dateTimeOffsetProvider);
+        task.StartWorkingOnTask();
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         return Result.Success();

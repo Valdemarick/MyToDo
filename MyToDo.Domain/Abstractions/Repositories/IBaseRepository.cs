@@ -1,6 +1,6 @@
 ﻿using MyToDo.Domain.Primitives;
 
-namespace MyToDo.Domain.Abstractions;
+namespace MyToDo.Domain.Abstractions.Repositories;
 
 public interface IBaseRepository<TEntity>
     where TEntity : AggregateRoot

@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyToDo.Domain.Entities;
-using MyToDo.Infrastructure.Providers.Abstractions;
+using MyToDo.Infrastructure.Services.Abstractions;
 using MyToDo.Persistence;
 
 namespace MyToDo.Infrastructure.Providers;
 
-internal sealed class PermissionProvider : IPermissionProvider
+internal sealed class PermissionService : IPermissionService
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public PermissionProvider(ApplicationDbContext dbContext)
+    public PermissionService(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }

@@ -14,11 +14,11 @@ namespace MyToDo.Tests.UnitTests.Entities;
 
 public sealed class TaskTests
 {
-    private readonly Mock<IDateTimeOffsetProvider> _dateTimeProviderMock;
+    private readonly Mock<IDateTimeService> _dateTimeProviderMock;
 
     public TaskTests()
     {
-        _dateTimeProviderMock = new Mock<IDateTimeOffsetProvider>();
+        _dateTimeProviderMock = new Mock<IDateTimeService>();
     }
 
     // [Fact]

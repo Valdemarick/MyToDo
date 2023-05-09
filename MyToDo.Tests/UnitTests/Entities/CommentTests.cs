@@ -9,11 +9,11 @@ namespace MyToDo.Tests.UnitTests.Entities;
 
 public sealed class CommentTests
 {
-    private readonly Mock<IDateTimeOffsetProvider> _dateTimeOffsetProviderMock;
+    private readonly Mock<IDateTimeService> _dateTimeOffsetProviderMock;
 
     public CommentTests()
     {
-        _dateTimeOffsetProviderMock = new Mock<IDateTimeOffsetProvider>();
+        _dateTimeOffsetProviderMock = new Mock<IDateTimeService>();
     }
 
     // [Fact]

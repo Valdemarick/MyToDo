@@ -7,24 +7,24 @@ using MyToDo.Application.Abstractions.Security;
 using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Entities;
 using MyToDo.Infrastructure.Constants;
-using MyToDo.Infrastructure.Providers.Abstractions;
+using MyToDo.Infrastructure.Services.Abstractions;
 
 namespace MyToDo.Infrastructure.Security;
 
 internal sealed class JwtProvider : IJwtProvider
 {
     private readonly JwtOptions _jwtOptions;
-    private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
-    private readonly IPermissionProvider _permissionProvider;
+    private readonly IDateTimeService _dateTimeService;
+    private readonly IPermissionService _permissionService;
 
     public JwtProvider(
         IOptions<JwtOptions> jwtOptions, 
-        IDateTimeOffsetProvider dateTimeOffsetProvider, 
-        IPermissionProvider permissionProvider)
+        IDateTimeService dateTimeService, 
+        IPermissionService permissionService)
     {
         _jwtOptions = jwtOptions.Value;
-        _dateTimeOffsetProvider = dateTimeOffsetProvider;
-        _permissionProvider = permissionProvider;
+        _dateTimeService = dateTimeService;
+        _permissionService = permissionService;
     }
 
     public async Task<string> GenerateTokenAsync(Member member)
@@ -35,7 +35,7 @@ internal sealed class JwtProvider : IJwtProvider
             new(JwtRegisteredClaimNames.Email, member.Email)
         };
 
-        var memberPermissions = (await _permissionProvider.GetMemberPermissionsAsync(member.Id))
+        var memberPermissions = (await _permissionService.GetMemberPermissionsAsync(member.Id))
             .ToList();
 
         foreach (var memberPermission in memberPermissions)
@@ -52,7 +52,7 @@ internal sealed class JwtProvider : IJwtProvider
             _jwtOptions.Audience,
             claims,
             null,
-            System.DateTime.UtcNow.AddHours(_jwtOptions.ExpiresIn),
+            _dateTimeService.UtcNow.AddHours(_jwtOptions.ExpiresIn),
             signingCredentials);
 
         var tokenValue = new JwtSecurityTokenHandler()

@@ -1,6 +1,6 @@
 ﻿using Task = MyToDo.Domain.Entities.Task;
 
-namespace MyToDo.Domain.Abstractions;
+namespace MyToDo.Domain.Abstractions.Repositories;
 
 public interface ITaskRepository : IBaseRepository<Task>
 {

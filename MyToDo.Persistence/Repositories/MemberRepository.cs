@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Entities;
 using MyToDo.Persistence.Specifications;
 using MyToDo.Persistence.Specifications.MemberSpecifications;

@@ -2,6 +2,7 @@
 using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Application.Common.Dtos.Tasks;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
