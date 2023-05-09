@@ -21,6 +21,7 @@ public sealed class Task : AggregateRoot
         TaskStatus status,
         Priority priority,
         TaskType taskType,
+        DateTime deadLine,
         TaskCreator creator,
         TaskExecutor? executor) : base(Guid.NewGuid())
     {
@@ -29,6 +30,7 @@ public sealed class Task : AggregateRoot
         Status = status;
         Priority = priority;
         TaskType = taskType;
+        DeadLine = deadLine;
         Creator = creator;
         Executor = executor;
     }
@@ -47,11 +49,13 @@ public sealed class Task : AggregateRoot
     
     public TaskType TaskType { get; private set; }
     
-    public DateTimeOffset CreatedOn { get; private set; }
+    public DateTime CreatedOn { get; private set; }
     
-    public DateTimeOffset? LastUpdatedOn { get; private set; }
+    public DateTime DeadLine { get; private set; }
     
-    public DateTimeOffset? CompletedOn { get; private set; }
+    public DateTime? LastUpdatedOn { get; private set; }
+    
+    public DateTime? CompletedOn { get; private set; }
 
     public TaskExecutor? Executor { get; private set; }
     public Guid? ExecutorId { get; private set; }
@@ -141,19 +145,19 @@ public sealed class Task : AggregateRoot
         Status = TaskStatus.Completed;
     }
 
-    public void SetCreatedOn(DateTimeOffset dateTimeOffset)
+    public void SetCreatedOn(DateTime dateTime)
     {
-        CreatedOn = dateTimeOffset;
+        CreatedOn = dateTime;
     }
 
-    public void SetLastUpdatedOn(DateTimeOffset dateTimeOffset)
+    public void SetLastUpdatedOn(DateTime dateTime)
     {
-        LastUpdatedOn = dateTimeOffset;
+        LastUpdatedOn = dateTime;
     }
 
-    public void SetCompletedOn(DateTimeOffset dateTimeOffset)
+    public void SetCompletedOn(DateTime dateTime)
     {
-        CompletedOn = dateTimeOffset;
+        CompletedOn = dateTime;
     }
 
     public Result AddTag(Tag tag)
@@ -185,6 +189,7 @@ public sealed class Task : AggregateRoot
         string description,
         Priority priority,
         TaskType taskType,
+        DateTime deadline,
         TaskCreator creator,
         TaskExecutor? executor)
     {
@@ -194,6 +199,7 @@ public sealed class Task : AggregateRoot
             TaskStatus.Open,
             priority,
             taskType,
+            deadline,
             creator,
             executor);
     }

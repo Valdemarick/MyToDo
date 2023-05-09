@@ -94,6 +94,10 @@ public static class DomainErrors
         public static readonly Error CommentTextValidationError = new(
             "Task. CommentText validation error",
             "CommentText validation error");
+
+        public static readonly Error DeadlineValidationError = new(
+            "Task. Deadline validation error",
+            "Deadline validation error");
     }
     
     public static class Member

@@ -13,6 +13,7 @@ public static class TaskFactory
         string? description,
         Priority priority,
         TaskType taskType,
+        DateTime deadline,
         TaskCreator creator,
         TaskExecutor? executor)
     {
@@ -41,11 +42,17 @@ public static class TaskFactory
             return Result.Failure(DomainErrors.Task.TaskCreatorValidationError);
         }
 
+        if (deadline == default)
+        {
+            return Result.Failure(DomainErrors.Task.DeadlineValidationError);
+        }
+
         var task = Task.Create(
             title,
             description,
             priority,
             taskType,
+            deadline,
             creator,
             executor);
 

@@ -9,4 +9,5 @@ public sealed record CreateTaskCommand(
     Guid CreatorId,
     Guid? ExecutorId,
     TaskType TaskType,
-    Priority Priority) : ICommand;
+    Priority Priority,
+    DateTime Deadline) : ICommand;

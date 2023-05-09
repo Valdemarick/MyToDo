@@ -30,6 +30,8 @@ internal sealed class TaskConfiguration : IEntityTypeConfiguration<Task>
 
         builder.Property(t => t.TaskType).IsRequired();
 
+        builder.Property(t => t.DeadLine).IsRequired();
+
         builder.HasOne<TaskExecutor>(t => t.Executor)
             .WithOne(m => m.Task);
 

@@ -61,6 +61,7 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
             request.Description,
             request.Priority,
             request.TaskType,
+            request.Deadline,
             createTaskCreator.Value,
             taskExecutor);
         if (createTaskResult.IsFailure)
