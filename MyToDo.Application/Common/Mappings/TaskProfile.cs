@@ -19,6 +19,10 @@ internal sealed class TaskProfile : Profile
         CreateMap<Task, PagedTaskDto>()
             .ForCtorParam(nameof(PagedTaskDto.CreatorName),
                 opt => opt
-                    .MapFrom(src => src.Creator.FullName));
+                    .MapFrom(src => src.Creator.FullName))
+            .ForCtorParam(nameof(PagedTaskDto.ExecutorName),
+                opt => opt
+                    .MapFrom(src => src.Executor != null ? 
+                        src.Executor.FullName : null));
     }    
 }

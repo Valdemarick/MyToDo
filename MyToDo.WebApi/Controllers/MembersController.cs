@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 using MyToDo.Application.CQRS.Members.Commands.RegisterCommand;
+using MyToDo.Application.CQRS.Members.Queries.GetAllMembersQuery;
 using MyToDo.Domain.Enums;
 using MyToDo.Infrastructure.Security;
 
@@ -11,6 +12,18 @@ public sealed class MembersController : BaseController
 {
     public MembersController(IMediator mediator) : base(mediator)
     {
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new GetAllMembersQuery(), cancellationToken);
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+        
+        return Ok(result.Value);
     }
 
     [HttpPost("login")]
@@ -27,7 +40,7 @@ public sealed class MembersController : BaseController
     }
 
     [HttpPost("registration")]
-    [NeededPermission(Permission.UserManagement)]
+    // [NeededPermission(Permission.UserManagement)]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterCommand command,
         CancellationToken cancellationToken)
     {

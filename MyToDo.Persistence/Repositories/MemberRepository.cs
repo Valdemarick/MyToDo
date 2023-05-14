@@ -13,6 +13,12 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
     {
     }
 
+    public async Task<List<Member>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Set<Member>()
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Member?> GetByIdAsync(Guid memberId, CancellationToken cancellationToken = default)
     {
         return await SpecificationEvaluator.GetQuery(

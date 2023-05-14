@@ -3,7 +3,9 @@
 public sealed record PagedTaskDto(
     Guid Id,
     string Title,
-    string CreatorName, 
-    DateTimeOffset CreatedOn,
-    DateTimeOffset? LastUpdatedOn);
+    string CreatorName,
+    string? ExecutorName,
+    DateTime CreatedOn,
+    DateTime? LastUpdatedOn,
+    DateTime Deadline);
     

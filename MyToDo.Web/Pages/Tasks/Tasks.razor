@@ -1,0 +1,46 @@
+﻿@page "/tasks"
+@using MyToDo.Application.Common.Dtos.Tasks
+@using MyToDo.Web.Services.Abstractions
+@inject ITaskService TaskService
+
+<h3>Задачи</h3>
+
+<button class="btn btn-primary" @onclick="RedirectToCreateTaskPage">
+    <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
+</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Исполнитель</th>
+            <th>Создатель</th>
+            <th>Срок исполнения</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in _tasks)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@(task.ExecutorName ?? "Неизвестный")</td>
+                <td>@task.CreatorName</td>
+                <td>@task.Deadline></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<PagedTaskDto> _tasks = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tasks = await TaskService.GetAllTasksAsync();
+    }
+
+    private void RedirectToCreateTaskPage()
+    {
+        
+    }
+}

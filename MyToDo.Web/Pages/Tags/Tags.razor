@@ -1,0 +1,49 @@
+﻿@page "/tags"
+@using MyToDo.Application.Common.Dtos.Tags
+@using MyToDo.Web.Services.Abstractions
+@inject ITagService TagService
+
+<h3>Теги</h3>
+
+<button class="btn btn-primary">
+    <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
+</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tag in _tags)
+        {
+            <tr>
+                <td>@tag.Name</td>
+                <td>
+                    <button class="btn btn-primary">
+                        <i class="bi bi-pencil-square"></i>Обновить
+                    </button>
+                    <button class="btn btn-primary" @onclick="() => DeleteTag(tag.Id)">
+                        <i class="bi bi-trash3-fill"></i>Удалить
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<TagDto> _tags = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tags = await TagService.GetAllTagsAsync();
+    }
+
+    private async Task DeleteTag(Guid id)
+    {
+        await TagService.DeleteAsync(id);
+    }
+}

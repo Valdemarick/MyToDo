@@ -19,7 +19,7 @@ public sealed class TasksController : BaseController
     }
     
     [HttpGet("page")]
-    [NeededPermission(Permission.TaskRead)]
+    // [NeededPermission(Permission.TaskRead)]
     public async Task<IActionResult> GetPageAsync([FromQuery] GetTaskPageQuery query,
         CancellationToken cancellationToken)
     {
@@ -33,7 +33,7 @@ public sealed class TasksController : BaseController
     }
     
     [HttpGet("{id:guid}")]
-    [NeededPermission(Permission.TaskRead)]
+    // [NeededPermission(Permission.TaskRead)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
@@ -48,7 +48,7 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPost]
-    [NeededPermission(Permission.TaskManagement)]
+    // [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateTaskCommand command,
         CancellationToken cancellationToken)
     {
@@ -62,7 +62,7 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPut("assignToMember")]
-    [NeededPermission(Permission.TaskManagement)]
+    // [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> AssignTaskAsync([FromBody] AssignTaskCommand command,
         CancellationToken cancellationToken)
     {
@@ -77,7 +77,7 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPut("updateDescription")]
-    [NeededPermission(Permission.TaskManagement)]
+    // [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> UpdateDescriptionAsync([FromBody] UpdateDescriptionCommand command,
         CancellationToken cancellationToken)
     {
@@ -91,7 +91,7 @@ public sealed class TasksController : BaseController
     }
     
     [HttpPut("comments")]
-    [NeededPermission(Permission.TaskManagement)]
+    // [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> WriteCommentAsync([FromBody] WriteCommentCommand command,
         CancellationToken cancellationToken)
     {
@@ -105,7 +105,7 @@ public sealed class TasksController : BaseController
     }
     
     [HttpPut("close")]
-    [NeededPermission(Permission.TaskManagement)]
+    // [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> CloseTaskAsync([FromBody] CloseTaskCommand command,
         CancellationToken cancellationToken)
     {
