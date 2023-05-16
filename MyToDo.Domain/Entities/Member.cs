@@ -9,13 +9,15 @@ public sealed class Member : AggregateRoot
         string lastName,
         string email,
         string hashedPassword,
+        bool isActive,
         Role role) : base(Guid.NewGuid())
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         HashedPassword = hashedPassword;
-
+        IsActive = isActive;
+        
         RoleId = role.Id;
     }
 
@@ -30,6 +32,8 @@ public sealed class Member : AggregateRoot
     public string Email { get; private set; }
 
     public string HashedPassword { get; private set; }
+    
+    public bool IsActive { get; private set; }
 
     public string FullName => $"{LastName} {FirstName}";
     
@@ -48,6 +52,7 @@ public sealed class Member : AggregateRoot
         string lastName,
         string email,
         string hashedPassword,
+        bool isActive,
         Role role)
     {
         return new Member(
@@ -55,6 +60,7 @@ public sealed class Member : AggregateRoot
             lastName,
             email,
             hashedPassword,
+            isActive,
             role);
     }
 }

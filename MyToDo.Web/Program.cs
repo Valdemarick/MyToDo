@@ -13,6 +13,8 @@ builder.Services.AddApplicationLayer()
     .AddPersistenceLayer(builder.Configuration)
     .AddInfrastructureLayer();
 
+builder.Services.AddScoped<GlobalExceptionHandlingMiddleware>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

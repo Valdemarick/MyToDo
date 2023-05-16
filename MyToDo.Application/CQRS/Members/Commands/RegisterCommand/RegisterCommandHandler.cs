@@ -48,6 +48,7 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand>
             request.LastName,
             request.Email,
             hashedPassword,
+            request.IsActive,
             role);
         if (createMemberResult.IsFailure)
         {

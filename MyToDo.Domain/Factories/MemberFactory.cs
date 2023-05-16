@@ -11,6 +11,7 @@ public static class MemberFactory
         string? lastName,
         string? email,
         string? hashedPassword,
+        bool isActive,
         Role? role)
     {
         if (firstName is null)
@@ -43,6 +44,7 @@ public static class MemberFactory
             lastName,
             email,
             hashedPassword,
+            isActive,
             role);
 
         return Result.Success(member);

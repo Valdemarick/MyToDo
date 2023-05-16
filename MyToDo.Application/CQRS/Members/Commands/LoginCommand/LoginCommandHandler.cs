@@ -31,6 +31,11 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
 
+        if (!member.IsActive)
+        {
+            return Result.Failure(DomainErrors.Member.InactiveUserCannotLogin);
+        }
+
         var isPasswordCorrect = _passwordHasher.Verify(member.HashedPassword, request.Password);
         if (!isPasswordCorrect)
         {

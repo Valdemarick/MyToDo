@@ -137,6 +137,10 @@ public static class DomainErrors
         public static readonly Error RoleIdValidationError = new(
             "Member. RoleId validation error",
             "RoleId validation error");
+
+        public static readonly Error InactiveUserCannotLogin = new(
+            "Member. Inactive user cannot login",
+            "Inactive user cannot login");
     }
     
     public static class Comment

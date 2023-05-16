@@ -25,6 +25,8 @@ internal sealed class MemberConfiguration : IEntityTypeConfiguration<Member>
 
         builder.Property(m => m.RegisteredOn).IsRequired();
 
+        builder.Property(m => m.IsActive).IsRequired().HasDefaultValue(true);
+
         builder.HasMany<TaskExecutor>()
             .WithOne()
             .HasForeignKey(te => te.MemberId);

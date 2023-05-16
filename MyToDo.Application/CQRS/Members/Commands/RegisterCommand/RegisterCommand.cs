@@ -7,5 +7,6 @@ public sealed record RegisterCommand(
     string LastName,
     string Email,
     string Password,
-    Guid RoleId) : ICommand;
+    Guid RoleId,
+    bool IsActive = true) : ICommand;
     
