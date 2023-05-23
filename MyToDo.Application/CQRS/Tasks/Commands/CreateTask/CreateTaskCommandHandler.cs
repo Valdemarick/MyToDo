@@ -26,7 +26,7 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
 
     public async Task<Result> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
-        var creator = await _memberRepository.GetByIdAsync(request.CreatorId, cancellationToken);
+        var creator = await _memberRepository.GetByIdWithoutTrackingAsync(request.CreatorId, cancellationToken);
         if (creator is null)
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);
@@ -41,7 +41,7 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
         TaskExecutor? taskExecutor = null;
         if (request.ExecutorId.HasValue)
         {
-            var executor = await _memberRepository.GetByIdAsync(request.ExecutorId.Value, cancellationToken);
+            var executor = await _memberRepository.GetByIdWithoutTrackingAsync(request.ExecutorId.Value, cancellationToken);
             if (executor is null)
             {
                 return Result.Failure(DomainErrors.Member.MemberNotFound);

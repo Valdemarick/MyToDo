@@ -19,11 +19,11 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Member?> GetByIdAsync(Guid memberId, CancellationToken cancellationToken = default)
+    public async Task<Member?> GetByIdWithoutTrackingAsync(Guid memberId, CancellationToken cancellationToken = default)
     {
         return await SpecificationEvaluator.GetQuery(
                 DbContext.Set<Member>(),
-                new MemberByIdSpecification(memberId))
+                new MemberByIdWithoutTrackingSpecification(memberId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -32,6 +32,14 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
         return await SpecificationEvaluator.GetQuery(
                 DbContext.Set<Member>(),
                 new MemberByEmailSpecification(email))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<Member?> GetByIdWithTrackingAsync(Guid memberId, CancellationToken cancellationToken = default)
+    {
+        return await SpecificationEvaluator.GetQuery(
+                DbContext.Set<Member>(),
+                new MemberByIdWithTrackingSpecification(memberId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 }

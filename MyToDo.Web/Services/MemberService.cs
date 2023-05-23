@@ -1,4 +1,5 @@
 ﻿using MyToDo.Application.Common.Dtos.Members;
+using MyToDo.Application.CQRS.Members.Commands.UpdateMemberActivityCommand;
 using MyToDo.Web.Services.Abstractions;
 
 namespace MyToDo.Web.Services;
@@ -22,5 +23,13 @@ internal sealed class MemberService : IMemberService
         var members = await _client.GetFromJsonAsync<List<MemberDto>>(_baseUrl, cancellationToken);
 
         return members ?? new List<MemberDto>();
+    }
+
+    public async Task UpdateActivityAsync(Guid memberId, bool isActive,
+        CancellationToken cancellationToken = default)
+    {
+        var dto = new UpdateMemberActivityDto(memberId, isActive);
+
+        await _client.PutAsJsonAsync($"{_baseUrl}/activity", dto, cancellationToken);
     }
 }

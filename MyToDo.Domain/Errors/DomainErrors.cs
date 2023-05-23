@@ -141,6 +141,14 @@ public static class DomainErrors
         public static readonly Error InactiveUserCannotLogin = new(
             "Member. Inactive user cannot login",
             "Inactive user cannot login");
+
+        public static readonly Error IdValidationError = new(
+            "Member. Id validation error",
+            "Id is invalid");
+
+        public static readonly Error MemberAlreadyHasTheSameActivity = new(
+            "Member. Member already has the same activity",
+            "Attempt to update activity with the same value");
     }
     
     public static class Comment

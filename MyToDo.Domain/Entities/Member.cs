@@ -1,4 +1,6 @@
-﻿using MyToDo.Domain.Primitives;
+﻿using MyToDo.Domain.Errors;
+using MyToDo.Domain.Primitives;
+using MyToDo.Domain.Shared;
 
 namespace MyToDo.Domain.Entities;
 
@@ -45,6 +47,18 @@ public sealed class Member : AggregateRoot
     public void SetRegisteredOn(DateTimeOffset dateTimeOffset)
     {
         RegisteredOn = dateTimeOffset;
+    }
+
+    public Result UpdateActivity(bool isActive)
+    {
+        if (IsActive == isActive)
+        {
+            return Result.Failure(DomainErrors.Member.MemberAlreadyHasTheSameActivity);
+        }
+
+        IsActive = isActive;
+
+        return Result.Success();
     }
 
     internal static Member Create(

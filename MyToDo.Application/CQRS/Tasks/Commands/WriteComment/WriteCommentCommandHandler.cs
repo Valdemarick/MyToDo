@@ -31,7 +31,7 @@ internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentC
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        var member = await _memberRepository.GetByIdAsync(request.MemberId, cancellationToken);
+        var member = await _memberRepository.GetByIdWithoutTrackingAsync(request.MemberId, cancellationToken);
         if (member is null)
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);
