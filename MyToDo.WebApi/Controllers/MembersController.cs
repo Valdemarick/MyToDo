@@ -5,6 +5,7 @@ using MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 using MyToDo.Application.CQRS.Members.Commands.RegisterCommand;
 using MyToDo.Application.CQRS.Members.Commands.UpdateMemberActivityCommand;
 using MyToDo.Application.CQRS.Members.Queries.GetAllMembersQuery;
+using MyToDo.Application.CQRS.Members.Queries.GetMemberPageQuery;
 using MyToDo.Domain.Enums;
 using MyToDo.Infrastructure.Security;
 
@@ -25,6 +26,21 @@ public sealed class MembersController : BaseController
             return BadRequest(result.Error);
         }
         
+        return Ok(result.Value);
+    }
+
+    [HttpGet("page")]
+    public async Task<IActionResult> GetPageAsync([FromQuery] MemberPageRequestDto dto,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetMemberPageQuery(dto);
+
+        var result = await Mediator.Send(query, cancellationToken);
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
         return Ok(result.Value);
     }
 

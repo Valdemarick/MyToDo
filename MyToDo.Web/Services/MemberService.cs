@@ -18,11 +18,14 @@ internal sealed class MemberService : IMemberService
         _client = _httpClientFactory.CreateClient("MyToDoServerClient");
     }
     
-    public async Task<List<MemberDto>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<MemberPagedListDto> GetPageAsync(MemberPageRequestDto dto, CancellationToken cancellationToken = default)
     {
-        var members = await _client.GetFromJsonAsync<List<MemberDto>>(_baseUrl, cancellationToken);
+        var query = await GetQueryFromDto(dto);
+        var url = $"{_baseUrl}/page?{query}";
+        
+        var members = await _client.GetFromJsonAsync<MemberPagedListDto>(url, cancellationToken);
 
-        return members ?? new List<MemberDto>();
+        return members;
     }
 
     public async Task UpdateActivityAsync(Guid memberId, bool isActive,
@@ -31,5 +34,20 @@ internal sealed class MemberService : IMemberService
         var dto = new UpdateMemberActivityDto(memberId, isActive);
 
         await _client.PutAsJsonAsync($"{_baseUrl}/activity", dto, cancellationToken);
+    }
+
+    private async Task<string> GetQueryFromDto(MemberPageRequestDto dto)
+    {
+        var queryParameters = new Dictionary<string, string>();
+
+        foreach (var property in dto.GetType().GetProperties())
+        {
+            if (property.GetValue(dto) is not null)
+            {
+                queryParameters.Add(property.Name, property.GetValue(dto).ToString());
+            }
+        }
+
+        return await new FormUrlEncodedContent(queryParameters).ReadAsStringAsync();
     }
 }

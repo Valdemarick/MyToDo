@@ -1,6 +1,6 @@
 ﻿@page "/members"
-@using MyToDo.Application.Common.Dtos.Members
 @using MyToDo.Web.Services.Abstractions
+@using MyToDo.Web.Shared.Pagination
 @inject IMemberService MemberService
 @inject NavigationManager NavigationManager
 
@@ -10,7 +10,6 @@
     .e-spinner-pane .e-spinner-inner .e-spin-bootstrap4 {
         stroke: navy;
     }
-    
 </style>
 
 <button class="btn btn-primary" @onclick="RedirectToCreateMemberForm">
@@ -19,45 +18,32 @@
 
 <table class="table">
     <thead>
-        <tr>
-            <th>Имя</th>
-            <th>Почта</th>
-            <th>Активность</th>
-            <th>Действия</th>
-        </tr>
+    <tr>
+        <th>Имя</th>
+        <th>Почта</th>
+        <th>Активность</th>
+        <th>Действия</th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var member in _members)
-        {
-            <tr>
-                <td>@member.FullName</td>
-                <td>@member.Email</td>
-                <td><input type="checkbox" value="@member.IsActive" checked="@(member.IsActive)"
-                           @onclick="async () => await OnActivityUpdate(member.Id, !member.IsActive)"/></td>
-                <td>
-                    <button class="btn btn-primary" @onclick="RedirectToCreateMemberForm">
-                        <i class="bi bi-pencil-square"></i> Обновить
-                    </button>
-                </td>
-            </tr>
-        }
+    @foreach (var member in _members)
+    {
+        <tr>
+            <td>@member.FullName</td>
+            <td>@member.Email</td>
+            <td><input type="checkbox" value="@member.IsActive" checked="@(member.IsActive)"
+                       @onclick="async () => await OnActActivityUpdateAsync(member.Id, !member.IsActive)"/></td>
+            <td>
+                <button class="btn btn-primary" @onclick="RedirectToCreateMemberForm">
+                    <i class="bi bi-pencil-square"></i> Обновить
+                </button>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
-
-@code {
-    private List<MemberDto> _members = new List<MemberDto>();
-
-    protected override async Task OnInitializedAsync()
-    {
-        _members = await MemberService.GetAllAsync(new CancellationToken());
-    }
-
-    private void RedirectToCreateMemberForm() => NavigationManager.NavigateTo("/members");
-
-    private void RedirectToUpdateMemberForm() => NavigationManager.NavigateTo("/members");
-
-    private async Task OnActivityUpdate(Guid memberId, bool isActive)
-    {
-        await MemberService.UpdateActivityAsync(memberId, isActive);
-    }
-}
+<div class="row">
+    <div class="col">
+        <Pagination PageView="_pageView" Spread="3" SelectedPage="SelectPageAsync" />
+    </div>
+</div>
