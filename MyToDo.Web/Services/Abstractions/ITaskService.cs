@@ -4,5 +4,5 @@ namespace MyToDo.Web.Services.Abstractions;
 
 internal interface ITaskService
 {
-    Task<List<PagedTaskDto>> GetAllTasksAsync(CancellationToken cancellationToken = default);
+    Task<TaskPagedListDto> GetPageAsync(TaskPageRequestDto dto, CancellationToken cancellationToken = default);
 }

@@ -11,15 +11,15 @@ public abstract class BasePagedListDto<TDto>
             PageSize = pageSize,
             CurrentPage = pageIndex,
             TotalCount = totalCount,
-            TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+            TotalPages = (int)Math.Ceiling((double)totalCount /pageSize)
         };
     }
 
-    protected BasePagedListDto()
+    public BasePagedListDto()
     {
     }
 
     public List<TDto> Items { get; set; }
 
-    public PageViewDto PageView { get; set; }
+    public PageViewDto PageView { get; set; }   
 }

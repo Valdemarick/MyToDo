@@ -4,32 +4,30 @@ using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
-namespace MyToDo.Application.CQRS.Tasks.Commands.UpdateDescription;
+namespace MyToDo.Application.CQRS.Tasks.Commands.ReopenTaskCommand;
 
-internal sealed class UpdateDescriptionCommandHandler : ICommandHandler<UpdateDescriptionCommand>
+internal sealed class ReopenTaskCommandHandler : ICommandHandler<ReopenTaskCommand>
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateDescriptionCommandHandler(
-        ITaskRepository taskRepository,
-        IUnitOfWork unitOfWork)
+    public ReopenTaskCommandHandler(ITaskRepository taskRepository, IUnitOfWork unitOfWork)
     {
         _taskRepository = taskRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(UpdateDescriptionCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ReopenTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = await _taskRepository.GetByIdAsync(request.TaskId, cancellationToken, isTracking: true);
+        var task = await _taskRepository.GetByIdAsync(request.Id, cancellationToken);
         if (task is null)
         {
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        task.UpdateDescription(request.Description);
+        task.Reopen();
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-
+        
         return Result.Success();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Abstractions.Repositories;
+using MyToDo.Domain.ValueObjects.PagedLists;
+using MyToDo.Domain.ValueObjects.Requests;
 using MyToDo.Persistence.Specifications.TaskSpecifications;
 using Task = MyToDo.Domain.Entities.Task;
 
@@ -30,11 +31,23 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<List<Task>> GetPageAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    public async Task<TaskPagedList> GetPageAsync(TaskPageRequest request, CancellationToken cancellationToken = default)
     {
-        return await ApplySpecification(new TaskPageSpecification())
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
+        IQueryable<Task> query = DbSet;
+
+        if (!string.IsNullOrWhiteSpace(request.SearchString))
+        {
+            query = query.Where(m => m.Title.ToLower().StartsWith(request.SearchString.ToLower()));
+        }
+
+        var totalCount = DbSet.Count();
+
+        var tags = await query
+            .Skip(((request.PageIndex - 1) * request.PageSize))
+            .Take(request.PageSize)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
+
+        return new TaskPagedList(tags, totalCount);
     }
 }

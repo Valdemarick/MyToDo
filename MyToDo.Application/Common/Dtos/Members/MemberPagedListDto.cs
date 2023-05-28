@@ -8,7 +8,7 @@ public class MemberPagedListDto : BasePagedListDto<MemberDto>
         : base(items, totalCount, pageIndex, pageSize)
     {
     }
-
+    
     public MemberPagedListDto()
     {
     }

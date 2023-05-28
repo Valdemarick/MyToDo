@@ -6,9 +6,9 @@ using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
-namespace MyToDo.Application.CQRS.Tasks.Queries.GetTaskById;
+namespace MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 
-internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, TaskDto>
+internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, TaskShortInfoDto>
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, 
         _mapper = mapper;
     }
 
-    public async Task<Result<TaskDto>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TaskShortInfoDto>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
     {
         var task = await _taskRepository.GetByIdAsync(request.Id, cancellationToken);
         if (task is null)
@@ -27,7 +27,7 @@ internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, 
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        var taskDto = _mapper.Map<TaskDto>(task);
+        var taskDto = _mapper.Map<TaskShortInfoDto>(task);
 
         return Result.Success(taskDto);
     }

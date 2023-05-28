@@ -1,4 +1,5 @@
 ﻿using MyToDo.Application.Common.Dtos.Tasks;
+using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
 
 namespace MyToDo.Web.Services;
@@ -6,7 +7,6 @@ namespace MyToDo.Web.Services;
 internal sealed class TaskService : ITaskService
 {
     private readonly IHttpClientFactory _httpClientFactory;
-
     private readonly HttpClient _client;
 
     private const string _baseUrl = "tasks";
@@ -18,10 +18,13 @@ internal sealed class TaskService : ITaskService
         _client = _httpClientFactory.CreateClient("MyToDoServerClient");
     }
 
-    public async Task<List<PagedTaskDto>> GetAllTasksAsync(CancellationToken cancellationToken = default)
+    public async Task<TaskPagedListDto> GetPageAsync(TaskPageRequestDto dto, CancellationToken cancellationToken = default)
     {
-        var getTasksResult = await _client.GetFromJsonAsync<List<PagedTaskDto>>($"{_baseUrl}/page",cancellationToken);
+        var queryParameters = dto.GetQueryFromRequestDto();
+        var url = $"{_baseUrl}/page?{queryParameters}";
         
-        return getTasksResult ?? new List<PagedTaskDto>();
+        var getTasksResult = await _client.GetFromJsonAsync<TaskPagedListDto>(url, cancellationToken);
+
+        return getTasksResult;
     }
 }

@@ -1,6 +1,6 @@
 ﻿@page "/tags"
-@using MyToDo.Application.Common.Dtos.Tags
 @using MyToDo.Web.Services.Abstractions
+@using MyToDo.Web.Shared.Pagination
 @inject ITagService TagService
 
 <h3>Теги</h3>
@@ -33,17 +33,8 @@
         }
     </tbody>
 </table>
-
-@code {
-    private List<TagDto> _tags = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        _tags = await TagService.GetAllTagsAsync();
-    }
-
-    private async Task DeleteTag(Guid id)
-    {
-        await TagService.DeleteAsync(id);
-    }
-}
+<div class="row">
+    <div class="col">
+        <Pagination PageView="_pageView" Spread="3" SelectedPage="SelectPageAsync" />
+    </div>
+</div>

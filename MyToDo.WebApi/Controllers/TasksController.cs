@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MyToDo.Application.Common.Dtos.Tasks;
 using MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CloseTaskCommand;
-using MyToDo.Application.CQRS.Tasks.Commands.CreateTask;
-using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescription;
-using MyToDo.Application.CQRS.Tasks.Commands.WriteComment;
-using MyToDo.Application.CQRS.Tasks.Queries.GetTaskById;
-using MyToDo.Application.CQRS.Tasks.Queries.GetTaskPage;
-using MyToDo.Domain.Enums;
-using MyToDo.Infrastructure.Security;
+using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
+using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescriptionCommand;
+using MyToDo.Application.CQRS.Tasks.Commands.WriteCommentCommand;
+using MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
+using MyToDo.Application.CQRS.Tasks.Queries.GetTaskPageQuery;
+using MyToDo.Domain.Errors;
 
 namespace MyToDo.WebApi.Controllers;
 
@@ -20,9 +20,11 @@ public sealed class TasksController : BaseController
     
     [HttpGet("page")]
     // [NeededPermission(Permission.TaskRead)]
-    public async Task<IActionResult> GetPageAsync([FromQuery] GetTaskPageQuery query,
+    public async Task<IActionResult> GetPageAsync([FromQuery] TaskPageRequestDto dto,
         CancellationToken cancellationToken)
     {
+        var query = new GetTaskPageQuery(dto);
+        
         var result = await Mediator.Send(query, cancellationToken);
         if (result.IsFailure)
         {
@@ -37,6 +39,11 @@ public sealed class TasksController : BaseController
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
+        if (id == default)
+        {
+            return BadRequest(DomainErrors.Task.IdValidationError);
+        }
+        
         var result = await Mediator.Send(new GetTaskByIdQuery(id),
             cancellationToken);
         if (result.IsFailure)

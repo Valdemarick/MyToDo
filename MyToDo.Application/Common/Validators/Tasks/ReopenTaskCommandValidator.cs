@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MyToDo.Application.CQRS.Tasks.Commands.ReopenTask;
+using MyToDo.Application.CQRS.Tasks.Commands.ReopenTaskCommand;
 using MyToDo.Domain.Errors;
 
 namespace MyToDo.Application.Common.Validators.Tasks;

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescription;
+using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescriptionCommand;
 using MyToDo.Domain.Errors;
 
 namespace MyToDo.Application.Common.Validators.Tasks;

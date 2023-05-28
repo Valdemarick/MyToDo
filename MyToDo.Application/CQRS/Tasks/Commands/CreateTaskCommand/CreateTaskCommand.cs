@@ -1,7 +1,7 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Enums;
 
-namespace MyToDo.Application.CQRS.Tasks.Commands.CreateTask;
+namespace MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
 
 public sealed record CreateTaskCommand(
     string Title,

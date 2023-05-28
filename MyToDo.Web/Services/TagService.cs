@@ -1,4 +1,6 @@
-﻿using MyToDo.Application.Common.Dtos.Tags;
+﻿using MyToDo.Application.Common.Dtos.Members;
+using MyToDo.Application.Common.Dtos.Tags;
+using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
 
 namespace MyToDo.Web.Services;
@@ -15,6 +17,16 @@ internal sealed class TagService : ITagService
         _httpClientFactory = httpClientFactory;
 
         _client = _httpClientFactory.CreateClient("MyToDoServerClient");
+    }
+    
+    public async Task<TagPagedListDto> GetPageAsync(TagPageRequestDto dto, CancellationToken cancellationToken = default)
+    {
+        var queryParameters = await dto.GetQueryFromRequestDto();
+        var url = $"{_baseUrl}/page?{queryParameters}";
+        
+        var tags = await _client.GetFromJsonAsync<TagPagedListDto>(url, cancellationToken);
+
+        return tags;
     }
     
     public async Task<List<TagDto>> GetAllTagsAsync(CancellationToken cancellationToken = default)

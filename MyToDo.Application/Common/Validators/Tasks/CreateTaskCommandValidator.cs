@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MyToDo.Application.CQRS.Tasks.Commands.CreateTask;
+using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
 using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 

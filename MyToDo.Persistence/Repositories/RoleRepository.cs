@@ -13,7 +13,7 @@ internal sealed class RoleRepository : BaseRepository<Role>, IRoleRepository
 
     public async Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await DbContext.Set<Role>()
+        return await DbSet
             .AsNoTracking()
             .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
     }

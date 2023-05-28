@@ -5,7 +5,7 @@ using MyToDo.Domain.Errors;
 using MyToDo.Domain.Factories;
 using MyToDo.Domain.Shared;
 
-namespace MyToDo.Application.CQRS.Tasks.Commands.WriteComment;
+namespace MyToDo.Application.CQRS.Tasks.Commands.WriteCommentCommand;
 
 internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentCommand>
 {

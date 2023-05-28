@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Primitives;
 using MyToDo.Persistence.Specifications;
@@ -10,9 +11,13 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
 {
     protected readonly ApplicationDbContext DbContext;
 
+    protected readonly DbSet<TEntity> DbSet;
+
     protected BaseRepository(ApplicationDbContext dbContext)
     {
         DbContext = dbContext;
+
+        DbSet = DbContext.Set<TEntity>();
     }
 
     public void Add(TEntity entity)

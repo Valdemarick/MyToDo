@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MyToDo.Application.CQRS.Tasks.Commands.WriteComment;
+using MyToDo.Application.CQRS.Tasks.Commands.WriteCommentCommand;
 using MyToDo.Domain.Errors;
 
 namespace MyToDo.Application.Common.Validators.Tasks;

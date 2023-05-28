@@ -16,14 +16,14 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
 
     public async Task<List<Member>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await DbContext.Set<Member>()
+        return await DbSet
             .ToListAsync(cancellationToken);
     }
 
     public async Task<Member?> GetByIdWithoutTrackingAsync(Guid memberId, CancellationToken cancellationToken = default)
     {
         return await SpecificationEvaluator.GetQuery(
-                DbContext.Set<Member>(),
+                DbSet,
                 new MemberByIdWithoutTrackingSpecification(memberId))
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -31,7 +31,7 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
     public async Task<Member?> GetByEmail(string email, CancellationToken cancellationToken = default)
     {
         return await SpecificationEvaluator.GetQuery(
-                DbContext.Set<Member>(),
+                DbSet,
                 new MemberByEmailSpecification(email))
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -39,14 +39,14 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
     public async Task<Member?> GetByIdWithTrackingAsync(Guid memberId, CancellationToken cancellationToken = default)
     {
         return await SpecificationEvaluator.GetQuery(
-                DbContext.Set<Member>(),
+                DbSet,
                 new MemberByIdWithTrackingSpecification(memberId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<MemberPagedList> GetMemberPageAsync(MemberPageRequest request, CancellationToken cancellationToken = default)
     {
-        IQueryable<Member> query = DbContext.Members;
+        IQueryable<Member> query = DbSet;
 
         if (!string.IsNullOrWhiteSpace(request.SearchString))
         {
@@ -54,7 +54,7 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
                                      m.LastName.ToLower().StartsWith(request.SearchString.ToLower()));
         }
 
-        var totalCount = DbContext.Members.Count();
+        var totalCount = DbSet.Count();
 
         var members = await query
             .Skip(((request.PageIndex - 1) * request.PageSize))
@@ -62,10 +62,6 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        return new MemberPagedList
-        {
-            Items = members,
-            TotalCount = totalCount
-        };
+        return new MemberPagedList(members, totalCount);
     }
 }

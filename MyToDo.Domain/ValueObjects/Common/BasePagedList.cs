@@ -4,7 +4,13 @@ namespace MyToDo.Domain.ValueObjects.Common;
 
 public abstract class BasePagedList<TEntity> where TEntity : AggregateRoot
 {
-    public required List<TEntity> Items { get; set; }
+    protected BasePagedList(List<TEntity> items, int totalCount)
+    {
+        Items = items;
+        TotalCount = totalCount;
+    }
+    
+    public List<TEntity> Items { get; set; }
 
-    public required int TotalCount { get; set; }
+    public int TotalCount { get; set; }
 }

@@ -1,11 +1,11 @@
 ﻿@page "/tasks"
-@using MyToDo.Application.Common.Dtos.Tasks
 @using MyToDo.Web.Services.Abstractions
+@using MyToDo.Web.Shared.Pagination
 @inject ITaskService TaskService
 
 <h3>Задачи</h3>
 
-<button class="btn btn-primary" @onclick="RedirectToCreateTaskPage">
+<button class="btn btn-primary">
     <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
 </button>
 
@@ -13,8 +13,8 @@
     <thead>
         <tr>
             <th>Название</th>
-            <th>Исполнитель</th>
             <th>Создатель</th>
+            <th>Дата создания</th>
             <th>Срок исполнения</th>
         </tr>
     </thead>
@@ -23,24 +23,15 @@
         {
             <tr>
                 <td>@task.Title</td>
-                <td>@(task.ExecutorName ?? "Неизвестный")</td>
                 <td>@task.CreatorName</td>
+                <td>@task.CreatedOn</td>
                 <td>@task.Deadline></td>
             </tr>
         }
     </tbody>
 </table>
-
-@code {
-    private List<PagedTaskDto> _tasks = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        _tasks = await TaskService.GetAllTasksAsync();
-    }
-
-    private void RedirectToCreateTaskPage()
-    {
-        
-    }
-}
+<div class="row">
+    <div class="col">
+        <Pagination PageView="_pageView" Spread="3" SelectedPage="SelectPageAsync" />
+    </div>
+</div>

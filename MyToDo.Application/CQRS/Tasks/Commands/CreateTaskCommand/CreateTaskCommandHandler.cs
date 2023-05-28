@@ -6,7 +6,7 @@ using MyToDo.Domain.Errors;
 using MyToDo.Domain.Factories;
 using MyToDo.Domain.Shared;
 
-namespace MyToDo.Application.CQRS.Tasks.Commands.CreateTask;
+namespace MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
 
 internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskCommand>
 {
