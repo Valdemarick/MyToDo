@@ -26,12 +26,8 @@ public sealed class TasksController : BaseController
         var query = new GetTaskPageQuery(dto);
         
         var result = await Mediator.Send(query, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        
+        return HandleResult(result);
     }
     
     [HttpGet("{id:guid}")]
@@ -46,12 +42,8 @@ public sealed class TasksController : BaseController
         
         var result = await Mediator.Send(new GetTaskByIdQuery(id),
             cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        
+        return HandleResult(result);
     }
 
     [HttpPost]
@@ -60,12 +52,8 @@ public sealed class TasksController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
 
     [HttpPut("assignToMember")]
@@ -75,12 +63,8 @@ public sealed class TasksController : BaseController
     {
         var result = await Mediator.Send(command,
             cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
 
     [HttpPut("updateDescription")]
@@ -89,12 +73,8 @@ public sealed class TasksController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
     
     [HttpPut("comments")]
@@ -103,12 +83,8 @@ public sealed class TasksController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
     
     [HttpPut("close")]
@@ -117,11 +93,7 @@ public sealed class TasksController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
 }

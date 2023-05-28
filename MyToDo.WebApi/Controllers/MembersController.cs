@@ -21,12 +21,8 @@ public sealed class MembersController : BaseController
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetAllMembersQuery(), cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-        
-        return Ok(result.Value);
+
+        return HandleResult(result);
     }
 
     [HttpGet("page")]
@@ -36,12 +32,8 @@ public sealed class MembersController : BaseController
         var query = new GetMemberPageQuery(dto);
 
         var result = await Mediator.Send(query, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        
+        return HandleResult(result);
     }
 
     [HttpPost("login")]
@@ -49,12 +41,8 @@ public sealed class MembersController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        
+        return HandleResult(result);
     }
 
     [HttpPost("registration")]
@@ -63,12 +51,8 @@ public sealed class MembersController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
 
     [HttpPut("activity")]
@@ -78,11 +62,7 @@ public sealed class MembersController : BaseController
         var command = new UpdateMemberActivityCommand(dto.MemberId, dto.IsActive);
 
         var result = await Mediator.Send(command, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
 }

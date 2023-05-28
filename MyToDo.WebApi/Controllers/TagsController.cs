@@ -24,12 +24,8 @@ public sealed class TagsController : BaseController
         var query = new GetAllTagsQuery();
 
         var result = await Mediator.Send(query, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        
+        return HandleResult(result);
     }
 
     [HttpGet("page")]
@@ -39,12 +35,8 @@ public sealed class TagsController : BaseController
         var query = new GetTagPageQuery(dto);
 
         var result = await Mediator.Send(query, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        
+        return HandleResult(result);
     }
 
     [HttpPost]
@@ -53,12 +45,8 @@ public sealed class TagsController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
 
-        return Ok();
+        return HandleResult(result);
     }
 
     [HttpPut]
@@ -67,12 +55,8 @@ public sealed class TagsController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
 
     [HttpDelete("{id:guid}")]
@@ -81,11 +65,7 @@ public sealed class TagsController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new DeleteTagCommand(id), cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        
+        return HandleResult(result);
     }
 }
