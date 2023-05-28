@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionsItems", "Solutions
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyToDo.Tests", "MyToDo.Tests\MyToDo.Tests.csproj", "{87D9FA14-9F7F-4EB4-B76E-A6DC77AF9B73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,5 +49,9 @@ Global
 		{5E00181E-7688-402B-AB4F-8D82DD93FB82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E00181E-7688-402B-AB4F-8D82DD93FB82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E00181E-7688-402B-AB4F-8D82DD93FB82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87D9FA14-9F7F-4EB4-B76E-A6DC77AF9B73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87D9FA14-9F7F-4EB4-B76E-A6DC77AF9B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87D9FA14-9F7F-4EB4-B76E-A6DC77AF9B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87D9FA14-9F7F-4EB4-B76E-A6DC77AF9B73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
