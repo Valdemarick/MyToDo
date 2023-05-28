@@ -1,4 +1,4 @@
-﻿namespace MyToDo.Application.Common.Dtos.Common;
+﻿namespace MyToDo.HttpContracts.Common;
 
 public sealed class PageViewDto
 {

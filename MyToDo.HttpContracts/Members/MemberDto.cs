@@ -1,4 +1,4 @@
-﻿namespace MyToDo.Application.Common.Dtos.Members;
+﻿namespace MyToDo.HttpContracts.Members;
 
 public sealed class MemberDto
 {

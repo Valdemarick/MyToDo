@@ -1,4 +1,4 @@
-﻿using MyToDo.Application.Common.Dtos.Common;
+﻿using MyToDo.HttpContracts.Common;
 
 namespace MyToDo.Web.Extensions;
 

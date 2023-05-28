@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyToDo.Application.Common.Dtos.Members;
 using MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 using MyToDo.Application.CQRS.Members.Commands.RegisterCommand;
 using MyToDo.Application.CQRS.Members.Commands.UpdateMemberActivityCommand;
 using MyToDo.Application.CQRS.Members.Queries.GetAllMembersQuery;
 using MyToDo.Application.CQRS.Members.Queries.GetMemberPageQuery;
 using MyToDo.Domain.Enums;
+using MyToDo.HttpContracts.Members;
 using MyToDo.Infrastructure.Security;
 
 namespace MyToDo.WebApi.Controllers;
@@ -29,7 +29,7 @@ public sealed class MembersController : BaseController
     public async Task<IActionResult> GetPageAsync([FromQuery] MemberPageRequestDto dto,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetMemberPageQuery(dto);
+        var query = new GetMemberPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize);
 
         var result = await Mediator.Send(query, cancellationToken);
         

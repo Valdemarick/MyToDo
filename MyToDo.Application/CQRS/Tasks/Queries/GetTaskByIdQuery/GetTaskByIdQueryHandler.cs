@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MyToDo.Application.Abstractions.Messaging;
-using MyToDo.Application.Common.Dtos.Tasks;
-using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
+using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 

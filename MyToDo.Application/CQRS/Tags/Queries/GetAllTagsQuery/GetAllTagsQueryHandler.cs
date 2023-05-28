@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using MyToDo.Application.Abstractions.Messaging;
-using MyToDo.Application.Common.Dtos.Tags;
-using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Abstractions.Repositories;
-using MyToDo.Domain.Entities;
 using MyToDo.Domain.Shared;
+using MyToDo.HttpContracts.Tags;
 
 namespace MyToDo.Application.CQRS.Tags.Queries.GetAllTagsQuery;
 

@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyToDo.Application.Common.Dtos.Tasks;
 using MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CloseTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
@@ -9,6 +8,7 @@ using MyToDo.Application.CQRS.Tasks.Commands.WriteCommentCommand;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskPageQuery;
 using MyToDo.Domain.Errors;
+using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.WebApi.Controllers;
 
@@ -23,7 +23,7 @@ public sealed class TasksController : BaseController
     public async Task<IActionResult> GetPageAsync([FromQuery] TaskPageRequestDto dto,
         CancellationToken cancellationToken)
     {
-        var query = new GetTaskPageQuery(dto);
+        var query = new GetTaskPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize);
         
         var result = await Mediator.Send(query, cancellationToken);
         

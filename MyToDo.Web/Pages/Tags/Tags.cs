@@ -1,5 +1,5 @@
-﻿using MyToDo.Application.Common.Dtos.Common;
-using MyToDo.Application.Common.Dtos.Tags;
+﻿using MyToDo.HttpContracts.Common;
+using MyToDo.HttpContracts.Tags;
 
 namespace MyToDo.Web.Pages.Tags;
 

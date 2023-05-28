@@ -1,6 +1,6 @@
-﻿using MyToDo.Application.Common.Dtos.Common;
+﻿using MyToDo.HttpContracts.Common;
 
-namespace MyToDo.Application.Common.Dtos.Members;
+namespace MyToDo.HttpContracts.Members;
 
 public class MemberPagedListDto : BasePagedListDto<MemberDto>
 {

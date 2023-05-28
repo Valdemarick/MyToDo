@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using MyToDo.Application.Common.Dtos.Members;
 using MyToDo.Domain.Errors;
+using MyToDo.HttpContracts.Members;
 
 namespace MyToDo.Application.Common.Validators.Members;
 

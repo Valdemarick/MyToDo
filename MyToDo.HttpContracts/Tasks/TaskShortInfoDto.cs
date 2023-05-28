@@ -1,4 +1,4 @@
-﻿namespace MyToDo.Application.Common.Dtos.Tasks;
+﻿namespace MyToDo.HttpContracts.Tasks;
 
 public sealed record TaskShortInfoDto(
     Guid Id,

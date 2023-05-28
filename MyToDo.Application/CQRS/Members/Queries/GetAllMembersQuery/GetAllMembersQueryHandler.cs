@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MyToDo.Application.Abstractions.Messaging;
-using MyToDo.Application.Common.Dtos.Members;
 using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Shared;
+using MyToDo.HttpContracts.Members;
 
 namespace MyToDo.Application.CQRS.Members.Queries.GetAllMembersQuery;
 
@@ -21,8 +21,8 @@ internal sealed class GetAllMembersQueryHandler : IQueryHandler<GetAllMembersQue
     {
         var members = await _memberRepository.GetAllAsync(cancellationToken);
 
-        var dtos = _mapper.Map<List<MemberDto>>(members);
+        var listOfDto = _mapper.Map<List<MemberDto>>(members);
 
-        return Result.Success(dtos);
+        return Result.Success(listOfDto);
     }
 }

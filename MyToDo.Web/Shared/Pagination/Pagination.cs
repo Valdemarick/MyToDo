@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MyToDo.Application.Common.Dtos.Common;
+using MyToDo.HttpContracts.Common;
 
 namespace MyToDo.Web.Shared.Pagination;
 

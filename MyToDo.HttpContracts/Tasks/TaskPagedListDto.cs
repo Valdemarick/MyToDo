@@ -1,6 +1,6 @@
-﻿using MyToDo.Application.Common.Dtos.Common;
+﻿using MyToDo.HttpContracts.Common;
 
-namespace MyToDo.Application.Common.Dtos.Tasks;
+namespace MyToDo.HttpContracts.Tasks;
 
 public sealed class TaskPagedListDto : BasePagedListDto<TaskShortInfoDto>
 {

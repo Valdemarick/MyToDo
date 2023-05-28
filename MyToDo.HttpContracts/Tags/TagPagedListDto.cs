@@ -1,6 +1,6 @@
-﻿using MyToDo.Application.Common.Dtos.Common;
+﻿using MyToDo.HttpContracts.Common;
 
-namespace MyToDo.Application.Common.Dtos.Tags;
+namespace MyToDo.HttpContracts.Tags;
 
 public sealed class TagPagedListDto : BasePagedListDto<TagDto>
 {

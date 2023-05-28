@@ -1,4 +1,4 @@
-﻿using MyToDo.Application.Common.Dtos.Tags;
+﻿using MyToDo.HttpContracts.Tags;
 
 namespace MyToDo.Web.Services.Abstractions;
 

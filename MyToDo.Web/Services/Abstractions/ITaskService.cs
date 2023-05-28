@@ -1,4 +1,4 @@
-﻿using MyToDo.Application.Common.Dtos.Tasks;
+﻿using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.Web.Services.Abstractions;
 

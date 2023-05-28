@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyToDo.Application.Common.Dtos.Tags;
 using MyToDo.Application.CQRS.Tags.Commands.CreateTagCommand;
 using MyToDo.Application.CQRS.Tags.Commands.DeleteTagCommand;
 using MyToDo.Application.CQRS.Tags.Commands.UpdateTagCommand;
 using MyToDo.Application.CQRS.Tags.Queries.GetAllTagsQuery;
 using MyToDo.Application.CQRS.Tags.Queries.GetTagPageQuery;
 using MyToDo.Domain.Enums;
+using MyToDo.HttpContracts.Tags;
 using MyToDo.Infrastructure.Security;
 
 namespace MyToDo.WebApi.Controllers;
@@ -32,7 +32,7 @@ public sealed class TagsController : BaseController
     public async Task<IActionResult> GetPageAsync([FromQuery] TagPageRequestDto dto,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetTagPageQuery(dto);
+        var query = new GetTagPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize);
 
         var result = await Mediator.Send(query, cancellationToken);
         

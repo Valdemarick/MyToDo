@@ -2,9 +2,16 @@
 
 public abstract class BasePageRequest
 {
-    public string? SearchString { get; init; }
+    protected BasePageRequest(string? searchString, int pageIndex, int pageSize)
+    {
+        SearchString = searchString;
+        PageIndex = pageIndex;
+        PageSize = pageSize;
+    }
+    
+    public string? SearchString { get; private set; }
 
-    public required int PageIndex { get; init; }
+    public int PageIndex { get; private set; }
 
-    public required int PageSize { get; init; }
+    public int PageSize { get; private set; }
 }

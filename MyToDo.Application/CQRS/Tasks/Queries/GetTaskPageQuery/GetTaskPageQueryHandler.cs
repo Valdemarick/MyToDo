@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MyToDo.Application.Abstractions.Messaging;
-using MyToDo.Application.Common.Dtos.Tasks;
 using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Shared;
 using MyToDo.Domain.ValueObjects.Requests;
+using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.Application.CQRS.Tasks.Queries.GetTaskPageQuery;
 
@@ -20,14 +20,14 @@ internal sealed class GetTaskPageQueryHandler : IQueryHandler<GetTaskPageQuery, 
 
     public async Task<Result<TaskPagedListDto>> Handle(GetTaskPageQuery query, CancellationToken cancellationToken)
     {
-        var request = _mapper.Map<TaskPageRequest>(query.Parameters);
+        var request = new TaskPageRequest(query.SearchString, query.PageIndex, query.PageSize);
         
         var taskPagedList = await _taskRepository.GetPageAsync(request, cancellationToken);
 
         var tasksDto = _mapper.Map<List<TaskShortInfoDto>>(taskPagedList.Items);
 
         var taskPagedListDto = new TaskPagedListDto(tasksDto, taskPagedList.TotalCount,
-            query.Parameters.PageIndex, query.Parameters.PageSize);
+            query.PageIndex, query.PageSize);
 
         return Result.Success(taskPagedListDto);
     }

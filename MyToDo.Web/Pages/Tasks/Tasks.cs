@@ -1,5 +1,5 @@
-﻿using MyToDo.Application.Common.Dtos.Common;
-using MyToDo.Application.Common.Dtos.Tasks;
+﻿using MyToDo.HttpContracts.Common;
+using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.Web.Pages.Tasks;
 

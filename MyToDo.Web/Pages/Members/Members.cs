@@ -1,5 +1,5 @@
-﻿using MyToDo.Application.Common.Dtos.Common;
-using MyToDo.Application.Common.Dtos.Members;
+﻿using MyToDo.HttpContracts.Common;
+using MyToDo.HttpContracts.Members;
 
 namespace MyToDo.Web.Pages.Members;
 

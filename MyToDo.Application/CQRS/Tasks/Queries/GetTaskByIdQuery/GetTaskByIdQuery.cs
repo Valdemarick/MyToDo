@@ -1,5 +1,5 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
-using MyToDo.Application.Common.Dtos.Tasks;
+using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 

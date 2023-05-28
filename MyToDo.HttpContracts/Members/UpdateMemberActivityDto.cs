@@ -1,3 +1,3 @@
-﻿namespace MyToDo.Application.Common.Dtos.Members;
+﻿namespace MyToDo.HttpContracts.Members;
 
 public sealed record UpdateMemberActivityDto(Guid MemberId, bool IsActive);
