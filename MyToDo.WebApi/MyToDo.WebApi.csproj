@@ -20,6 +20,7 @@
       <ProjectReference Include="..\MyToDo.Domain\MyToDo.Domain.csproj" />
       <ProjectReference Include="..\MyToDo.Infrastructure\MyToDo.Infrastructure.csproj" />
       <ProjectReference Include="..\MyToDo.Persistence\MyToDo.Persistence.csproj" />
+      <ProjectReference Include="..\MyToDo.Shared\MyToDo.Shared.csproj" />
     </ItemGroup>
 
 </Project>

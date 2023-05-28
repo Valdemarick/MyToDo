@@ -1,7 +1,4 @@
-using MyToDo.Application;
-using MyToDo.Infrastructure;
-using MyToDo.Persistence;
-using MyToDo.Web.Middlewares;
+using MyToDo.Shared.Extensions;
 using MyToDo.Web.Options;
 using MyToDo.Web.Services;
 using MyToDo.Web.Services.Abstractions;
@@ -12,11 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddApplicationLayer()
-    .AddPersistenceLayer(builder.Configuration)
-    .AddInfrastructureLayer();
-
-builder.Services.AddScoped<GlobalExceptionHandlingMiddleware>();
+builder.Services.AddGlobalExceptionHandling();
 
 builder.Services.AddScoped<ITaskService, TaskService>()
     .AddScoped<IMemberService, MemberService>()
@@ -37,7 +30,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseGlobalExceptionHandlingMiddleware();
 
 app.UseHttpsRedirection();
 

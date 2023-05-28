@@ -7,9 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MyToDo.Application\MyToDo.Application.csproj" />
-      <ProjectReference Include="..\MyToDo.Infrastructure\MyToDo.Infrastructure.csproj" />
-      <ProjectReference Include="..\MyToDo.Persistence\MyToDo.Persistence.csproj" />
+      <ProjectReference Include="..\MyToDo.HttpContracts\MyToDo.HttpContracts.csproj" />
+      <ProjectReference Include="..\MyToDo.Shared\MyToDo.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

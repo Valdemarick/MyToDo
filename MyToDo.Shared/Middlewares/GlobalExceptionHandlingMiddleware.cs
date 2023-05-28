@@ -1,8 +1,9 @@
 ﻿using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MyToDo.Web.Middlewares;
+namespace MyToDo.Shared.Middlewares;
 
 public class GlobalExceptionHandlingMiddleware : IMiddleware
 {
