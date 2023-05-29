@@ -24,9 +24,5 @@
             <_Parameter1>MyToDo.Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Common\Dtos\" />
-    </ItemGroup>
 
 </Project>

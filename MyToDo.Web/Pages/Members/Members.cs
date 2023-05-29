@@ -7,6 +7,8 @@ public sealed partial class Members
 {
     private List<MemberDto> _members = new List<MemberDto>();
     private PageViewDto _pageView = new PageViewDto();
+
+    private bool _isOrderByNameAsc = true;
     
     private readonly MemberPageRequestDto _parameters = new MemberPageRequestDto
     {
@@ -41,5 +43,18 @@ public sealed partial class Members
         var memberPage = await MemberService.GetPageAsync(_parameters);
         _members = memberPage.Items;
         _pageView = memberPage.PageView;
-    } 
+    }
+
+    private void SortByName()
+    {
+        IOrderedEnumerable<MemberDto> _sortedMembers;
+
+        _sortedMembers = _isOrderByNameAsc 
+            ? _members.OrderBy(m => m.FullName) 
+            : _members.OrderByDescending(m => m.FullName);
+
+        _isOrderByNameAsc = !_isOrderByNameAsc;
+        
+        _members = _sortedMembers.ToList();
+    }
 }
