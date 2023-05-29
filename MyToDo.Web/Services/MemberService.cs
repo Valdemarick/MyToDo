@@ -1,4 +1,5 @@
-﻿using MyToDo.HttpContracts.Members;
+﻿using MyToDo.Domain.Shared;
+using MyToDo.HttpContracts.Members;
 using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
 
@@ -31,5 +32,10 @@ internal sealed class MemberService : IMemberService
         var dto = new UpdateMemberActivityDto(memberId, isActive);
 
         await _client.PutAsJsonAsync($"{BaseUrl}/activity", dto, cancellationToken);
+    }
+
+    public Task<Result> CreateAsync(RegisterMemberDto dto, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }

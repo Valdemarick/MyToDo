@@ -9,7 +9,9 @@ public sealed partial class Members
     private PageViewDto _pageView = new PageViewDto();
 
     private bool _isOrderByNameAsc = true;
-    
+
+    private bool _isShowRegisterForm = false;
+
     private readonly MemberPageRequestDto _parameters = new MemberPageRequestDto
     {
         PageIndex = 1,
@@ -57,4 +59,8 @@ public sealed partial class Members
         
         _members = _sortedMembers.ToList();
     }
+
+    private void ShowRegisterForm() => _isShowRegisterForm = true;
+
+    private void CloseRegisterForm() => _isShowRegisterForm = false;
 }

@@ -1,12 +1,13 @@
 ﻿@page "/members"
 @using MyToDo.Web.Services.Abstractions
 @using MyToDo.Web.Shared.Pagination
+@using MyToDo.Web.Components.RegisterMember
 @inject IMemberService MemberService
 @inject NavigationManager NavigationManager
 
 <h3>Пользователи</h3>
 
-<button class="btn btn-primary" @onclick="RedirectToCreateMemberForm">
+<button class="btn btn-primary" @onclick="@ShowRegisterForm">
     <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
 </button>
 
@@ -41,3 +42,8 @@
         <Pagination PageView="_pageView" Spread="3" SelectedPage="SelectPageAsync" />
     </div>
 </div>
+
+@if (_isShowRegisterForm)
+{
+    <RegisterMember OnClose="@CloseRegisterForm"></RegisterMember>
+}
