@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 using MyToDo.Application.CQRS.Members.Commands.RegisterCommand;
 using MyToDo.Application.CQRS.Members.Commands.UpdateMemberActivityCommand;
+using MyToDo.Application.CQRS.Members.Commands.UpdateMemberCommand;
 using MyToDo.Application.CQRS.Members.Queries.GetAllMembersQuery;
 using MyToDo.Application.CQRS.Members.Queries.GetByIdQuery;
 using MyToDo.Application.CQRS.Members.Queries.GetMemberPageQuery;
@@ -15,8 +17,11 @@ namespace MyToDo.WebApi.Controllers;
 
 public sealed class MembersController : BaseController
 {
-    public MembersController(IMediator mediator) : base(mediator)
+    private readonly IMapper _mapper;
+    
+    public MembersController(IMediator mediator, IMapper mapper) : base(mediator)
     {
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -72,6 +77,17 @@ public sealed class MembersController : BaseController
         
         var result = await Mediator.Send(command, cancellationToken);
         
+        return HandleResult(result);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateMemberDto dto,
+        CancellationToken cancellationToken)
+    {
+        var command = _mapper.Map<UpdateMemberCommand>(dto);
+
+        var result = await Mediator.Send(command, cancellationToken);
+
         return HandleResult(result);
     }
 

@@ -10,5 +10,7 @@ public sealed class UpdateMemberDto
 
     public string Email { get; set; } = null!;
 
+    public Guid RoleId { get; set; }
+
     public bool IsActive { get; set; }
 }

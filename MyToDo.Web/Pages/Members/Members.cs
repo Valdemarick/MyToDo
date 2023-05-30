@@ -93,8 +93,10 @@ public sealed partial class Members : BaseComponent
         _isShowUpdateForm = true;
     }
 
-    private void CloseUpdateForm()
+    private async Task CloseUpdateForm()
     {
+        await GetMemberPageAsync();
+        
         _updatedMember = null!;
         _isShowUpdateForm = false;
     }

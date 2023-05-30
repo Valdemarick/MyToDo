@@ -11,4 +11,6 @@ public sealed class MemberDto
     public string Email { get; set; }
 
     public bool IsActive { get; set; }
+    
+    public Guid RoleId { get; set; }
 }
