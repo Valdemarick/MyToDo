@@ -11,6 +11,13 @@ internal sealed class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
     }
 
+    public async Task<List<Role>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await DbSet
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await DbSet

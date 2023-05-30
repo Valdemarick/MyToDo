@@ -13,24 +13,14 @@ public abstract class BaseController : ControllerBase
     protected BaseController(IMediator mediator) => Mediator = mediator;
 
     [NonAction]
-    public IActionResult HandleResult(Result result)
+    protected IActionResult HandleResult(Result result)
     {
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result);
+        return result.IsSuccess ? Ok() : BadRequest(result.Error) ;
     }
     
     [NonAction]
-    public IActionResult HandleResult<TValue>(Result<TValue> result)
+    protected IActionResult HandleResult<TValue>(Result<TValue> result)
     {
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
     }
 }

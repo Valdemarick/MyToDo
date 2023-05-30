@@ -213,4 +213,8 @@ public static class DomainErrors
             "Role. Role not found",
             "Role not found");
     }
+
+    public static readonly Error FailedToDeserializeObject = new(
+        "Deserialization error",
+        "Failed to deserialize object");
 }

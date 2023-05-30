@@ -4,8 +4,10 @@ using MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 using MyToDo.Application.CQRS.Members.Commands.RegisterCommand;
 using MyToDo.Application.CQRS.Members.Commands.UpdateMemberActivityCommand;
 using MyToDo.Application.CQRS.Members.Queries.GetAllMembersQuery;
+using MyToDo.Application.CQRS.Members.Queries.GetByIdQuery;
 using MyToDo.Application.CQRS.Members.Queries.GetMemberPageQuery;
 using MyToDo.Domain.Enums;
+using MyToDo.Domain.Errors;
 using MyToDo.HttpContracts.Members;
 using MyToDo.Infrastructure.Security;
 
@@ -30,9 +32,25 @@ public sealed class MembersController : BaseController
         CancellationToken cancellationToken = default)
     {
         var query = new GetMemberPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize);
-
+        
         var result = await Mediator.Send(query, cancellationToken);
         
+        return HandleResult(result);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        if (id == default)
+        {
+            return BadRequest(Domain.Errors.DomainErrors.Member.IdValidationError);
+        }
+
+        var query = new GetMemberByIdQuery(id);
+
+        var result = await Mediator.Send(query, cancellationToken);
+
         return HandleResult(result);
     }
 
@@ -47,9 +65,11 @@ public sealed class MembersController : BaseController
 
     [HttpPost("registration")]
     // [NeededPermission(Permission.UserManagement)]
-    public async Task<IActionResult> RegisterAsync([FromBody] RegisterCommand command,
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterMemberDto dto,
         CancellationToken cancellationToken)
     {
+        var command = new RegisterCommand(dto.FirstName, dto.LastName, dto.Email, dto.Password, dto.RoleId, dto.IsActive);
+        
         var result = await Mediator.Send(command, cancellationToken);
         
         return HandleResult(result);

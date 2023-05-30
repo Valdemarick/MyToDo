@@ -1,9 +1,10 @@
 ﻿using MyToDo.HttpContracts.Common;
 using MyToDo.HttpContracts.Members;
+using MyToDo.Web.Components;
 
 namespace MyToDo.Web.Pages.Members;
 
-public sealed partial class Members
+public sealed partial class Members : BaseComponent
 {
     private List<MemberDto> _members = new List<MemberDto>();
     private PageViewDto _pageView = new PageViewDto();
@@ -12,26 +13,38 @@ public sealed partial class Members
 
     private bool _isShowRegisterForm = false;
 
+    private bool _isShowUpdateForm = false;
+
     private readonly MemberPageRequestDto _parameters = new MemberPageRequestDto
     {
         PageIndex = 1,
         PageSize = 10
     };
 
+    private MemberDto _updatedMember;
+
     protected override async Task OnInitializedAsync()
     {
-        var memberPage = await MemberService.GetPageAsync(_parameters);
-        _members = memberPage.Items;
-        _pageView = memberPage.PageView;
+        var getMemberPageResult = await MemberService.GetPageAsync(_parameters);
+        if (getMemberPageResult.IsFailure)
+        {
+            ShowErrorDialog(getMemberPageResult.Error);
+            return;
+        }
+        
+        _members = getMemberPageResult.Value.Items;
+        _pageView = getMemberPageResult.Value.PageView;
     }
-
-    private void RedirectToCreateMemberForm() => NavigationManager.NavigateTo("/members");
-
-    private void RedirectToUpdateMemberForm() => NavigationManager.NavigateTo("/members");
 
     private async Task OnActActivityUpdateAsync(Guid memberId, bool isActive)
     {
-        await MemberService.UpdateActivityAsync(memberId, isActive);
+        var updateActivityResult = await MemberService.UpdateActivityAsync(memberId, isActive);
+        if (updateActivityResult.IsFailure)
+        {
+            ShowErrorDialog(updateActivityResult.Error);
+        }
+
+        await GetMemberPageAsync();
     }
     
     private async Task SelectPageAsync(int page)
@@ -39,12 +52,18 @@ public sealed partial class Members
         _parameters.PageIndex = page;
         await GetMemberPageAsync();
     }
-    
+
     private async Task GetMemberPageAsync()
     {
-        var memberPage = await MemberService.GetPageAsync(_parameters);
-        _members = memberPage.Items;
-        _pageView = memberPage.PageView;
+        var getMemberPageResult = await MemberService.GetPageAsync(_parameters);
+        if (getMemberPageResult.IsFailure)
+        {
+            ShowErrorDialog(getMemberPageResult.Error);
+            return;
+        }
+        
+        _members = getMemberPageResult.Value.Items;
+        _pageView = getMemberPageResult.Value.PageView;
     }
 
     private void SortByName()
@@ -52,8 +71,8 @@ public sealed partial class Members
         IOrderedEnumerable<MemberDto> _sortedMembers;
 
         _sortedMembers = _isOrderByNameAsc 
-            ? _members.OrderBy(m => m.FullName) 
-            : _members.OrderByDescending(m => m.FullName);
+            ? _members.OrderBy(m => m.LastName) 
+            : _members.OrderByDescending(m => m.LastName);
 
         _isOrderByNameAsc = !_isOrderByNameAsc;
         
@@ -62,5 +81,21 @@ public sealed partial class Members
 
     private void ShowRegisterForm() => _isShowRegisterForm = true;
 
-    private void CloseRegisterForm() => _isShowRegisterForm = false;
+    private async Task CloseRegisterForm()
+    {
+       await GetMemberPageAsync();
+        _isShowRegisterForm = false;
+    }
+
+    private void ShowUpdateForm(MemberDto memberDto)
+    {
+        _updatedMember = memberDto;
+        _isShowUpdateForm = true;
+    }
+
+    private void CloseUpdateForm()
+    {
+        _updatedMember = null!;
+        _isShowUpdateForm = false;
+    }
 }

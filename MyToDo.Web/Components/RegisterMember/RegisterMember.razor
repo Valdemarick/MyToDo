@@ -1,23 +1,38 @@
 ﻿@using MyToDo.Web.Services.Abstractions
 @inject IMemberService MemberService
+@inject IRoleService RoleService
+@inherits BaseComponent
 
-<ModalDialog Title="Регистрация нового пользователя" Text="Test" OnSubmit="@RegisterAsync" OnClose="@OnClose">
+<ModalDialog Title="Регистрация нового пользователя" Text="Test" OnSubmit="@RegisterAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
     <EditForm Model="@_registerMemberDto" OnValidSubmit="@RegisterAsync">
-        <FluentValidationValidator></FluentValidationValidator>
         <div class="mb-3">
             <label for="firstNameInput" class="form-label">Имя</label>
             <input type="text" class="form-control" id="firstNameInput" @bind="_registerMemberDto.FirstName">
-            <ValidationMessage For="() => _registerMemberDto.FirstName"></ValidationMessage>
         </div>
         <div class="mb-3">
             <label for="lastNameInput" class="form-label">Фамилия</label>
             <input type="text" class="form-control" id="lastNameInput" @bind="_registerMemberDto.LastName">
-            <ValidationMessage For="() => _registerMemberDto.LastName"></ValidationMessage>
         </div>
         <div class="mb-3">
             <label for="emailInput" class="form-label">Почта</label>
             <input type="email" class="form-control" id="emailInput" @bind="_registerMemberDto.Email">
-            <ValidationMessage For="() => _registerMemberDto.Email"></ValidationMessage>
+        </div>
+        <div class="mb-3">
+            <label for="passwordInput" class="form-label">Пароль</label>
+            <input type="password" class="form-control" id="passwordInput" @bind="_registerMemberDto.Password">
+        </div>
+        <div class="mb-3">
+            <label for="roleInput" class="form-label">Роль</label>
+            <select class="form-select" name="roleInput" id="roleInput" @bind="_registerMemberDto.RoleId">
+                @foreach (var role in _roles)
+                {
+                    <option value="@role.Id">@role.Name</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="isActiveInput" class="form-label">Активность</label>
+            <input type="checkbox" class="form-check" id="isActiveInput" @bind="_registerMemberDto.IsActive">
         </div>
     </EditForm>
 </ModalDialog>

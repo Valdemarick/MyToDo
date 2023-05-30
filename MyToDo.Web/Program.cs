@@ -13,7 +13,8 @@ builder.Services.AddGlobalExceptionHandling();
 
 builder.Services.AddScoped<ITaskService, TaskService>()
     .AddScoped<IMemberService, MemberService>()
-    .AddScoped<ITagService, TagService>();
+    .AddScoped<ITagService, TagService>()
+    .AddScoped<IRoleService, RoleService>();
 
 builder.Services.Configure<MyToDoServerOptions>(options =>
     builder.Configuration.GetSection("MyToDoServerClient").Bind(options));

@@ -5,9 +5,13 @@ namespace MyToDo.Web.Services.Abstractions;
 
 internal interface IMemberService
 {
-    Task<MemberPagedListDto> GetPageAsync(MemberPageRequestDto dto, CancellationToken cancellationToken = default);
+    Task<Result<MemberDto>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    
+    Task<Result<MemberPagedListDto>> GetPageAsync(MemberPageRequestDto dto, CancellationToken cancellationToken = default);
 
-    Task UpdateActivityAsync(Guid memberId, bool isActive, CancellationToken cancellationToken = default);
+    Task<Result> UpdateActivityAsync(Guid memberId, bool isActive, CancellationToken cancellationToken = default);
 
-    Task<Result> CreateAsync(RegisterMemberDto dto, CancellationToken cancellationToken = default);
+    Task<Result> RegisterAsync(RegisterMemberDto dto, CancellationToken cancellationToken = default);
+
+    Task<Result> UpdateAsync(UpdateMemberDto dto, CancellationToken cancellationToken = default);
 }

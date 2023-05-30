@@ -2,8 +2,11 @@
 @using MyToDo.Web.Services.Abstractions
 @using MyToDo.Web.Shared.Pagination
 @using MyToDo.Web.Components.RegisterMember
+@using MyToDo.Web.Components
+@using MyToDo.Web.Components.UpdateMember
 @inject IMemberService MemberService
 @inject NavigationManager NavigationManager
+@inherits BaseComponent
 
 <h3>Пользователи</h3>
 
@@ -24,12 +27,12 @@
     @foreach (var member in _members)
     {
         <tr>
-            <td>@member.FullName</td>
+            <td>@member.FirstName @member.LastName</td>
             <td>@member.Email</td>
             <td><input type="checkbox" value="@member.IsActive" checked="@(member.IsActive)"
                        @onclick="async () => await OnActActivityUpdateAsync(member.Id, !member.IsActive)"/></td>
             <td>
-                <button class="btn btn-primary" @onclick="RedirectToCreateMemberForm">
+                <button class="btn btn-primary" @onclick="() => ShowUpdateForm(member)">
                     <i class="bi bi-pencil-square"></i> Обновить
                 </button>
             </td>
@@ -46,4 +49,14 @@
 @if (_isShowRegisterForm)
 {
     <RegisterMember OnClose="@CloseRegisterForm"></RegisterMember>
+}
+
+@if (_isShowUpdateForm)
+{
+    <UpdateMember OnClose="@CloseUpdateForm" Member="_updatedMember"></UpdateMember>
+}
+
+@if (IsShowErrorDialog)
+{
+    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
 }
