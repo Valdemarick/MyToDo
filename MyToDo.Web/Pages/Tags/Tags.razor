@@ -1,11 +1,14 @@
 ﻿@page "/tags"
 @using MyToDo.Web.Services.Abstractions
 @using MyToDo.Web.Shared.Pagination
+@using MyToDo.Web.Components.CreateTag
+@using MyToDo.Web.Components.UpdateTag
+@using MyToDo.Web.Components
 @inject ITagService TagService
 
 <h3>Теги</h3>
 
-<button class="btn btn-primary">
+<button class="btn btn-primary" @onclick="@ShowCreateDialog">
     <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
 </button>
 
@@ -22,10 +25,10 @@
             <tr>
                 <td>@tag.Name</td>
                 <td>
-                    <button class="btn btn-primary">
+                    <button class="btn btn-warning" @onclick="@(() => ShowUpdateDialog(tag))">
                         <i class="bi bi-pencil-square"></i>Обновить
                     </button>
-                    <button class="btn btn-primary" @onclick="() => DeleteTag(tag.Id)">
+                    <button class="btn btn-danger" @onclick="@(() => ShowDeleteDialog(tag.Id))">
                         <i class="bi bi-trash3-fill"></i>Удалить
                     </button>
                 </td>
@@ -38,3 +41,19 @@
         <Pagination PageView="_pageView" Spread="3" SelectedPage="SelectPageAsync" />
     </div>
 </div>
+
+@if (_isShowCreateDialog)
+{
+    <CreateTag OnClose="@CloseCreateDialog"></CreateTag>
+}
+
+@if (_isShowUpdateDialog)
+{
+    <UpdateTag OnClose="@CloseUpdateDialog" Tag="_tagToUpdate"></UpdateTag>   
+}
+
+@if (_isShowDeleteDialog)
+{
+    <ModalDialog Title="Удаление тега" Text="Вы действительно хотите удалить этот тег?" OnClose="@CloseDeleteDialog"
+                 OnSubmit="@DeleteTag" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+}

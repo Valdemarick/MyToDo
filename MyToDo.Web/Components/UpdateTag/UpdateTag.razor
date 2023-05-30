@@ -1,0 +1,11 @@
+﻿@using MyToDo.Web.Services.Abstractions
+@inject ITagService TagService
+
+<ModalDialog Title="Обновление тега" Text="Test" OnSubmit="@UpdateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
+    <EditForm Model="@_updateTagDto" OnValidSubmit="@UpdateAsync">
+        <div class="mb-3">
+            <label for="nameInput" class="form-label">Название</label>
+            <input type="text" class="form-control" id="nameInput" @bind="_updateTagDto.Name">
+        </div>
+    </EditForm>
+</ModalDialog>

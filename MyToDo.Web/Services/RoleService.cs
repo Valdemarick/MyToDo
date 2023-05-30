@@ -5,16 +5,16 @@ using MyToDo.Web.Services.Abstractions;
 
 namespace MyToDo.Web.Services;
 
-internal sealed class RoleService : IRoleService
+internal sealed class RoleService : BaseService, IRoleService
 {
     private readonly HttpClient _httpClient;
-
-    private const string BaseUrl = "roles";
 
     public RoleService(IHttpClientFactory httpClientFactory)
     {
         _httpClient = httpClientFactory.CreateClient("MyToDoServerClient");
     }
+
+    protected override string BaseUrl => "roles";
 
     public async Task<Result<List<RoleDto>>> GetAllAsync(CancellationToken cancellationToken = default)
     {

@@ -4,20 +4,19 @@ using MyToDo.Domain.Shared;
 using MyToDo.HttpContracts.Members;
 using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
-using Newtonsoft.Json;
 
 namespace MyToDo.Web.Services;
 
-internal sealed class MemberService : IMemberService
+internal sealed class MemberService : BaseService, IMemberService
 {
     private readonly HttpClient _client;
     
-    private const string BaseUrl = "members";
-
     public MemberService(IHttpClientFactory httpClientFactory)
     {
         _client = httpClientFactory.CreateClient("MyToDoServerClient");
     }
+
+    protected override string BaseUrl => "members";
 
     public async Task<Result<MemberDto>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
@@ -63,7 +62,7 @@ internal sealed class MemberService : IMemberService
 
         var dto = new UpdateMemberActivityDto(memberId, isActive);
 
-        var httpRequest = CreateHttpRequestMessage(dto, url, HttpMethod.Put);
+        var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, url, dto);
 
         using var response = await _client.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)
@@ -78,7 +77,7 @@ internal sealed class MemberService : IMemberService
     {
         var url = $"{BaseUrl}/registration";
         
-        var httpRequest = CreateHttpRequestMessage(dto, url, HttpMethod.Post);
+        var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, url, dto);
 
         using var response = await _client.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)
@@ -91,7 +90,7 @@ internal sealed class MemberService : IMemberService
 
     public async Task<Result> UpdateAsync(UpdateMemberDto dto, CancellationToken cancellationToken = default)
     {
-        var httpRequest = CreateHttpRequestMessage(dto, BaseUrl, HttpMethod.Put);
+        var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
 
         using var response = await _client.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)
@@ -100,22 +99,5 @@ internal sealed class MemberService : IMemberService
         }
 
         return await HandleError(response, cancellationToken);
-    }
-
-    private static HttpRequestMessage CreateHttpRequestMessage(object body, string url, HttpMethod httpMethod)
-    {
-        var httpRequest = new HttpRequestMessage(httpMethod, url);
-
-        var json = JsonConvert.SerializeObject(body);
-        httpRequest.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        return httpRequest;
-    }
-
-    private static async Task<Result> HandleError(HttpResponseMessage response, CancellationToken cancellationToken = default)
-    {
-        var error = await response.Content.ReadFromJsonAsync<Error>(cancellationToken: cancellationToken);
-
-        return Result.Failure(error ?? DomainErrors.FailedToDeserializeObject);
     }
 }

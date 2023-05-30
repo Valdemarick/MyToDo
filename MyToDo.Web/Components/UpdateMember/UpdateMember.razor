@@ -3,7 +3,7 @@
 @inject IRoleService RoleService
 @inherits BaseComponent
 
-<ModalDialog Title="Регистрация нового пользователя" Text="Test" OnSubmit="@UpdateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
+<ModalDialog Title="Обновление пользователя" Text="Test" OnSubmit="@UpdateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
     <EditForm Model="@_updateMemberDto" OnValidSubmit="@UpdateAsync">
         <div class="mb-3">
             <label for="firstNameInput" class="form-label">Имя</label>
