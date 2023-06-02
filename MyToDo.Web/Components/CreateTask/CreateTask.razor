@@ -1,0 +1,58 @@
+﻿@using MyToDo.Web.Services.Abstractions
+@inject IMemberService MemberService
+@inject ITaskService TaskService
+
+<ModalDialog Title="Создание новой задачи" Text="Test" OnSubmit="@CreateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
+    <EditForm Model="@_createTaskDto" OnValidSubmit="@CreateAsync">
+        <div class="mb-3">
+            <label for="nameInput" class="form-label">Заголовок</label>
+            <input type="text" class="form-control" id="nameInput" @bind="_createTaskDto.Title">
+        </div>
+        <div class="mb-3">
+            <label for="descriptionInput" class="form-label">Описание</label>
+            <textarea class="form-control" id="descriptionInput" @bind="_createTaskDto.Description"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="creatorInput" class="form-label">Создатель</label>
+            <select class="form-select" name="creatorInput" id="creatorInput" @bind="_createTaskDto.CreatorId">
+                <option value="">Пожалуйста, выберите создателя</option>
+                @foreach (var member in _members)
+                {
+                    <option value="@member.Id">@member.LastName @member.FirstName</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="executorInput" class="form-label">Исполнитель</label>
+            <select class="form-select" name="executorInput" id="executorInput" @bind="_createTaskDto.ExecutorId">
+                <option value="">Это поле может остаться пустым</option>
+                @foreach (var member in _members)
+                {
+                    <option value="@member.Id">@member.LastName @member.FirstName</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="taskTypeInput" class="form-label">Тип задачи</label>
+            <select class="form-select" name="taskTypeInput" id="taskTypeInput" @bind="_createTaskDto.TaskType">
+                @foreach (var taskType in _taskTypes)
+                {
+                    <option value="@taskType">@GetTaskTypeNameInRussian(@taskType)</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="priorityInput" class="form-label">Приоритет</label>
+            <select class="form-select" name="priorityInput" id="priorityInput" @bind="_createTaskDto.Priority">
+                @foreach (var priority in _priorities)
+                {
+                    <option value="@priority">@GetPriorityNameInRussian(priority)</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="deadLineInput" class="form-label">Срок</label>
+            <input type="datetime-local" class="form-control" id="deadLineInput" @bind="_createTaskDto.Deadline">
+        </div>
+    </EditForm>
+</ModalDialog>

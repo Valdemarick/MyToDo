@@ -22,6 +22,28 @@ internal abstract class BaseService
         return httpRequest;
     }
 
+    protected static async Task<Result<T>> HandleResponse<T>(HttpResponseMessage response, CancellationToken cancellationToken = default)
+    {
+        if (!response.IsSuccessStatusCode)
+        {
+            return await HandleError(response, cancellationToken);
+        }
+
+        return await response.Content.ReadFromJsonAsync(typeof(T), cancellationToken: cancellationToken) is T value 
+            ? Result.Success(value) 
+            : Result.Failure(DomainErrors.FailedToDeserializeObject);
+    }
+    
+    protected static async Task<Result> HandleResponse(HttpResponseMessage response, CancellationToken cancellationToken = default)
+    {
+        if (!response.IsSuccessStatusCode)
+        {
+            return await HandleError(response, cancellationToken);
+        }
+        
+        return Result.Success();
+    }
+
     protected static async Task<Result> HandleError(HttpResponseMessage response, CancellationToken cancellationToken = default)
     {
         var error = await response.Content.ReadFromJsonAsync<Error>(cancellationToken: cancellationToken);

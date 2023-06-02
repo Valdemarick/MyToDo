@@ -14,11 +14,13 @@ public partial class Tasks
         PageSize = 10
     };
 
+    private bool _isShowCreateForm = false;
+
     protected override async Task OnInitializedAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
-        _tasks = taskPagedList.Items;
-        _pageView = taskPagedList.PageView;
+        _tasks = taskPagedList.Value.Items;
+        _pageView = taskPagedList.Value.PageView;
     }
 
     private async Task SelectPageAsync(int page)
@@ -30,7 +32,11 @@ public partial class Tasks
     private async Task GetMemberPageAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
-        _tasks = taskPagedList.Items;
-        _pageView = taskPagedList.PageView;
-    } 
+        _tasks = taskPagedList.Value.Items;
+        _pageView = taskPagedList.Value.PageView;
+    }
+
+    private void ShowCreateForm() => _isShowCreateForm = true;
+
+    private void CloseCreateForm() => _isShowCreateForm = false;
 }

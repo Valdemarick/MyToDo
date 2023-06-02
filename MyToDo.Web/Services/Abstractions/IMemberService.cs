@@ -5,6 +5,8 @@ namespace MyToDo.Web.Services.Abstractions;
 
 internal interface IMemberService
 {
+    Task<Result<List<MemberDto>>> GetAllAsync(CancellationToken cancellationToken = default);
+    
     Task<Result<MemberDto>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     
     Task<Result<MemberPagedListDto>> GetPageAsync(MemberPageRequestDto dto, CancellationToken cancellationToken = default);

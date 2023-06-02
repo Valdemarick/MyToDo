@@ -1,11 +1,12 @@
 ﻿@page "/tasks"
 @using MyToDo.Web.Services.Abstractions
 @using MyToDo.Web.Shared.Pagination
+@using MyToDo.Web.Components.CreateTask
 @inject ITaskService TaskService
 
 <h3>Задачи</h3>
 
-<button class="btn btn-primary">
+<button class="btn btn-primary" @onclick="@ShowCreateForm">
     <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
 </button>
 
@@ -35,3 +36,8 @@
         <Pagination PageView="_pageView" Spread="3" SelectedPage="SelectPageAsync" />
     </div>
 </div>
+
+@if (_isShowCreateForm)
+{
+    <CreateTask OnClose="CloseCreateForm"></CreateTask>
+}

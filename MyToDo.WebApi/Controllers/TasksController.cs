@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CloseTaskCommand;
@@ -14,8 +15,11 @@ namespace MyToDo.WebApi.Controllers;
 
 public sealed class TasksController : BaseController
 {
-    public TasksController(IMediator mediator) : base(mediator)
+    private readonly IMapper _mapper;
+    
+    public TasksController(IMediator mediator, IMapper mapper) : base(mediator)
     {
+        _mapper = mapper;
     }
     
     [HttpGet("page")]
@@ -48,9 +52,11 @@ public sealed class TasksController : BaseController
 
     [HttpPost]
     // [NeededPermission(Permission.TaskManagement)]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateTaskCommand command,
+    public async Task<IActionResult> CreateAsync([FromBody] CreateTaskDto dto,
         CancellationToken cancellationToken)
     {
+        var command = _mapper.Map<CreateTaskCommand>(dto);
+        
         var result = await Mediator.Send(command, cancellationToken);
         
         return HandleResult(result);

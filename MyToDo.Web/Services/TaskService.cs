@@ -1,27 +1,39 @@
-﻿using MyToDo.HttpContracts.Tasks;
+﻿using MyToDo.Domain.Shared;
+using MyToDo.HttpContracts.Tasks;
 using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
 
 namespace MyToDo.Web.Services;
 
-internal sealed class TaskService : ITaskService
+internal sealed class TaskService : BaseService, ITaskService
 {
-    private readonly HttpClient _client;
-
-    private const string BaseUrl = "tasks";
+    private readonly HttpClient _httpClient;
 
     public TaskService(IHttpClientFactory httpClientFactory)
     {
-        _client = httpClientFactory.CreateClient("MyToDoServerClient");
+        _httpClient = httpClientFactory.CreateClient("MyToDoServerClient");
     }
 
-    public async Task<TaskPagedListDto> GetPageAsync(TaskPageRequestDto dto, CancellationToken cancellationToken = default)
+    protected override string BaseUrl => "tasks";
+
+    public async Task<Result<TaskPagedListDto>> GetPageAsync(TaskPageRequestDto dto, CancellationToken cancellationToken = default)
     {
         var queryParameters = dto.GetQueryFromRequestDto();
         var url = $"{BaseUrl}/page?{queryParameters}";
-        
-        var getTasksResult = await _client.GetFromJsonAsync<TaskPagedListDto>(url, cancellationToken);
 
-        return getTasksResult;
+        var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);
+
+        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<TaskPagedListDto>(response, cancellationToken);
+    }
+
+    public async Task<Result> CreateAsync(CreateTaskDto dto, CancellationToken cancellationToken = default)
+    {
+        var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, BaseUrl, dto);
+
+        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
     }
 }

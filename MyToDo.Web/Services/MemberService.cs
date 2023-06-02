@@ -9,14 +9,23 @@ namespace MyToDo.Web.Services;
 
 internal sealed class MemberService : BaseService, IMemberService
 {
-    private readonly HttpClient _client;
+    private readonly HttpClient _httpClient;
     
     public MemberService(IHttpClientFactory httpClientFactory)
     {
-        _client = httpClientFactory.CreateClient("MyToDoServerClient");
+        _httpClient = httpClientFactory.CreateClient("MyToDoServerClient");
     }
 
     protected override string BaseUrl => "members";
+
+    public async Task<Result<List<MemberDto>>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, BaseUrl);
+
+        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<List<MemberDto>>(response, cancellationToken);
+    }
 
     public async Task<Result<MemberDto>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
@@ -24,17 +33,9 @@ internal sealed class MemberService : BaseService, IMemberService
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            var error = await response.Content.ReadFromJsonAsync<Error>(cancellationToken: cancellationToken);
+        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
 
-            return Result.Failure(error ?? DomainErrors.FailedToDeserializeObject);
-        }
-
-        var memberDto = await response.Content.ReadFromJsonAsync<MemberDto>(cancellationToken: cancellationToken);
-        
-        return memberDto is not null ? Result.Success(memberDto) : Result.Failure(DomainErrors.FailedToDeserializeObject);
+        return await HandleResponse<MemberDto>(response, cancellationToken);
     }
 
     public async Task<Result<MemberPagedListDto>> GetPageAsync(MemberPageRequestDto dto, CancellationToken cancellationToken = default)
@@ -44,15 +45,9 @@ internal sealed class MemberService : BaseService, IMemberService
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            return await HandleError(response, cancellationToken);
-        }
+        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
 
-        var members = await response.Content.ReadFromJsonAsync<MemberPagedListDto>(cancellationToken: cancellationToken);
-        
-        return members is null ? Result.Failure(DomainErrors.FailedToDeserializeObject) : Result.Success(members);
+        return await HandleResponse<MemberPagedListDto>(response, cancellationToken);
     }
 
     public async Task<Result> UpdateActivityAsync(Guid memberId, bool isActive,
@@ -64,13 +59,9 @@ internal sealed class MemberService : BaseService, IMemberService
 
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, url, dto);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
-        if (response.IsSuccessStatusCode)
-        {
-            return Result.Success();
-        }
+        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
 
-        return await HandleError(response, cancellationToken);
+        return await HandleResponse(response, cancellationToken);
     }
 
     public async Task<Result> RegisterAsync(RegisterMemberDto dto, CancellationToken cancellationToken = default)
@@ -79,25 +70,17 @@ internal sealed class MemberService : BaseService, IMemberService
         
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, url, dto);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
-        if (response.IsSuccessStatusCode)
-        {
-            return Result.Success();
-        }
+        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
 
-        return await HandleError(response, cancellationToken);
+        return await HandleResponse(response, cancellationToken);
     }
 
     public async Task<Result> UpdateAsync(UpdateMemberDto dto, CancellationToken cancellationToken = default)
     {
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
-        if (response.IsSuccessStatusCode)
-        {
-            return Result.Success();
-        }
+        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
 
-        return await HandleError(response, cancellationToken);
+        return await HandleResponse(response, cancellationToken);
     }
 }

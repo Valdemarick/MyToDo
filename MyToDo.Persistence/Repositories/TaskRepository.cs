@@ -45,6 +45,7 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
         var tags = await query
             .Skip(((request.PageIndex - 1) * request.PageSize))
             .Take(request.PageSize)
+            .Include(x => x.Creator)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
