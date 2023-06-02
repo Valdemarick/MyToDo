@@ -40,7 +40,7 @@ internal sealed class MemberService : BaseService, IMemberService
 
     public async Task<Result<MemberPagedListDto>> GetPageAsync(MemberPageRequestDto dto, CancellationToken cancellationToken = default)
     {
-        var queryParameters = await dto.GetQueryFromRequestDto();
+        var queryParameters = await dto.GetQueryFromRequestDtoAsync();
         var url = $"{BaseUrl}/page?{queryParameters}";
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);

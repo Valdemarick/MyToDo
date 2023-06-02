@@ -26,10 +26,10 @@ public partial class Tasks
     private async Task SelectPageAsync(int page)
     {
         _parameters.PageIndex = page;
-        await GetMemberPageAsync();
+        await GetTaskPageAsync();
     }
     
-    private async Task GetMemberPageAsync()
+    private async Task GetTaskPageAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
         _tasks = taskPagedList.Value.Items;

@@ -25,8 +25,8 @@
             <tr>
                 <td>@task.Title</td>
                 <td>@task.CreatorName</td>
-                <td>@task.CreatedOn</td>
-                <td>@task.Deadline></td>
+                <td>@($"{task.CreatedOn:dd.MM.yyyy HH:mm:ss z}")</td>
+                <td>@($"{task.Deadline:dd.MM.yyyy HH:mm:ss z}")</td>
             </tr>
         }
     </tbody>

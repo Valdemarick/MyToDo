@@ -18,7 +18,7 @@ internal sealed class TaskService : BaseService, ITaskService
 
     public async Task<Result<TaskPagedListDto>> GetPageAsync(TaskPageRequestDto dto, CancellationToken cancellationToken = default)
     {
-        var queryParameters = dto.GetQueryFromRequestDto();
+        var queryParameters = await dto.GetQueryFromRequestDtoAsync();
         var url = $"{BaseUrl}/page?{queryParameters}";
 
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);

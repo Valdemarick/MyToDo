@@ -19,7 +19,7 @@ internal sealed class TagService : BaseService, ITagService
     
     public async Task<Result<TagPagedListDto>> GetPageAsync(TagPageRequestDto dto, CancellationToken cancellationToken = default)
     {
-        var queryParameters = await dto.GetQueryFromRequestDto();
+        var queryParameters = await dto.GetQueryFromRequestDtoAsync();
         var url = $"{BaseUrl}/page?{queryParameters}";
 
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);
