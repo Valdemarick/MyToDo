@@ -1,12 +1,13 @@
-﻿using MyToDo.Domain.Entities;
+﻿using MyToDo.Domain.Abstractions.Factories;
+using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
 namespace MyToDo.Domain.Factories;
 
-public static class CommentFactory
+public class CommentFactory : ICommentFactory
 {
-    public static Result<Comment> Create(string? text, Guid taskId, Guid writerId)
+    public Result<Comment> Create(string? text, Guid taskId, Guid writerId)
     {
         if (text is null)
         {
@@ -23,8 +24,7 @@ public static class CommentFactory
             return Result.Failure(DomainErrors.Comment.WriterIdValidationError);
         }
 
-        var comment = Comment.Create(
-            text,
+        var comment = new Comment(text,
             taskId,
             writerId);
 

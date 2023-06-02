@@ -1,12 +1,13 @@
-﻿using MyToDo.Domain.Entities;
+﻿using MyToDo.Domain.Abstractions.Factories;
+using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
 namespace MyToDo.Domain.Factories;
 
-public static class TaskExecutorFactory
+public class TaskExecutorFactory : ITaskExecutorFactory
 {
-    public static Result<TaskExecutor> Create(string? fullName, Guid memberId)
+    public Result<TaskExecutor> Create(string? fullName, Guid memberId)
     {
         if (fullName is null)
         {
@@ -18,7 +19,7 @@ public static class TaskExecutorFactory
             return Result.Failure(DomainErrors.TaskExecutor.MemberIdValidationError);
         }
 
-        var taskExecutor = TaskExecutor.Create(fullName!, memberId);
+        var taskExecutor = new TaskExecutor(fullName, memberId);
         
         return Result.Success(taskExecutor);
     }

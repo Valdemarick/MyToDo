@@ -1,12 +1,13 @@
-﻿using MyToDo.Domain.Entities;
+﻿using MyToDo.Domain.Abstractions.Factories;
+using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
 namespace MyToDo.Domain.Factories;
 
-public static class MemberFactory
+public class MemberFactory : IMemberFactory
 {
-    public static Result<Member> Create(
+    public Result<Member> Create(
         string? firstName,
         string? lastName,
         string? email,
@@ -39,7 +40,7 @@ public static class MemberFactory
             return Result.Failure(DomainErrors.Member.RoleValidationError);
         }
 
-        var member = Member.Create(
+        var member = new Member(
             firstName,
             lastName,
             email,

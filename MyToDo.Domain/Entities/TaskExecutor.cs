@@ -4,7 +4,7 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class TaskExecutor : BaseEntity
 {
-    private TaskExecutor(
+    internal TaskExecutor(
         string fullName,
         Guid memberId) : base(Guid.NewGuid())
     {
@@ -12,14 +12,13 @@ public sealed class TaskExecutor : BaseEntity
         MemberId = memberId;
     }
 
+    private TaskExecutor()
+    {
+    }
+
     public Task Task { get; private set; }
 
     public Guid MemberId { get; private set; }
     
     public string FullName { get; private set; }
-
-    internal static TaskExecutor Create(string fullName, Guid memberId)
-    {
-        return new TaskExecutor(fullName, memberId);
-    }
 }

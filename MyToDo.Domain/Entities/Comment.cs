@@ -4,7 +4,7 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class Comment : BaseEntity
 {
-    private Comment(string text,
+    internal Comment(string text,
         Guid taskId,
         Guid writerId)
         : base(Guid.NewGuid())
@@ -42,15 +42,5 @@ public sealed class Comment : BaseEntity
     public void SetLastUpdatedOn(DateTimeOffset dateTimeOffset)
     {
         LastUpdatedOn = dateTimeOffset;
-    }
-    
-    internal static Comment Create(string text, Guid taskId, Guid writerId)
-    {
-        var comment = new Comment(
-            text,
-            taskId,
-            writerId);
-
-        return comment;
     }
 }

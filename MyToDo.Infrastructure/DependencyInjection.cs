@@ -14,9 +14,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services)
     {
         services.AddTransient<IPasswordHasher, PasswordHasher>()
-            .AddTransient<IDateTimeService, DateTimeService>()
-            .AddTransient<IJwtProvider, JwtProvider>()
-            .AddTransient<IPermissionService, PermissionService>()
+            .AddSingleton<IDateTimeService, DateTimeService>()
+            .AddScoped<IJwtProvider, JwtProvider>()
+            .AddScoped<IPermissionService, PermissionService>()
             .AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>()
             .AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
 

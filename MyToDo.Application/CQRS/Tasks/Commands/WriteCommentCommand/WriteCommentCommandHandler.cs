@@ -1,5 +1,6 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Factories;
 using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Factories;
@@ -12,15 +13,18 @@ internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentC
     private readonly ITaskRepository _taskRepository;
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICommentFactory _commentFactory;
 
     public WriteCommentCommandHandler(
         ITaskRepository taskRepository,
         IMemberRepository memberRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ICommentFactory commentFactory)
     {
         _taskRepository = taskRepository;
         _memberRepository = memberRepository;
         _unitOfWork = unitOfWork;
+        _commentFactory = commentFactory;
     }
 
     public async Task<Result> Handle(WriteCommentCommand request, CancellationToken cancellationToken)
@@ -37,7 +41,7 @@ internal sealed class WriteCommentCommandHandler : ICommandHandler<WriteCommentC
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
 
-        var createCommentResult = CommentFactory.Create(
+        var createCommentResult = _commentFactory.Create(
             request.Text,
             request.TaskId,
             request.MemberId);

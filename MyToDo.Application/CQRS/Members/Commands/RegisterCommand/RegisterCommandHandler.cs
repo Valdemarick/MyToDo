@@ -1,6 +1,7 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Application.Abstractions.Security;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Factories;
 using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Factories;
@@ -14,17 +15,20 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand>
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRoleRepository _roleRepository;
+    private readonly IMemberFactory _memberFactory;
 
     public RegisterCommandHandler(
         IMemberRepository memberRepository, 
         IPasswordHasher passwordHasher, 
         IUnitOfWork unitOfWork, 
-        IRoleRepository roleRepository)
+        IRoleRepository roleRepository,
+        IMemberFactory memberFactory)
     {
         _memberRepository = memberRepository;
         _passwordHasher = passwordHasher;
         _unitOfWork = unitOfWork;
         _roleRepository = roleRepository;
+        _memberFactory = memberFactory;
     }
 
     public async Task<Result> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -43,7 +47,7 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand>
         
         var hashedPassword = _passwordHasher.Hash(request.Password);
 
-        var createMemberResult = MemberFactory.Create(
+        var createMemberResult = _memberFactory.Create(
             request.FirstName,
             request.LastName,
             request.Email,

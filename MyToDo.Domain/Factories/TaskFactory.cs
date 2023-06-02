@@ -1,14 +1,16 @@
-﻿using MyToDo.Domain.Entities;
+﻿using MyToDo.Domain.Abstractions.Factories;
+using MyToDo.Domain.Entities;
 using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 using Task = MyToDo.Domain.Entities.Task;
+using TaskStatus = MyToDo.Domain.Enums.TaskStatus;
 
 namespace MyToDo.Domain.Factories;
 
-public static class TaskFactory
+public class TaskFactory : ITaskFactory
 {
-    public static Result<Task> Create(
+    public Result<Task> Create(
         string? title,
         string? description,
         Priority priority,
@@ -17,16 +19,6 @@ public static class TaskFactory
         TaskCreator creator,
         TaskExecutor? executor)
     {
-        if (priority is Priority.Unknown)
-        {
-            return Result.Failure(DomainErrors.Task.TaskPriorityValidationError);
-        }
-
-        if (taskType is TaskType.Unknown)
-        {
-            return Result.Failure(DomainErrors.Task.TaskStatusValidationError);
-        }
-
         if (title is null)
         {
             return Result.Failure(DomainErrors.Task.TitleValidationError);
@@ -47,9 +39,10 @@ public static class TaskFactory
             return Result.Failure(DomainErrors.Task.DeadlineValidationError);
         }
 
-        var task = Task.Create(
+        var task = new Task(
             title,
             description,
+            TaskStatus.Open,
             priority,
             taskType,
             deadline,

@@ -17,11 +17,11 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("Database"));
         });
 
-        services.AddTransient<ITaskRepository, TaskRepository>()
-            .AddTransient<IMemberRepository, MemberRepository>()
-            .AddTransient<IUnitOfWork, UnitOfWork>()
-            .AddTransient<ITagRepository, TagRepository>()
-            .AddTransient<IRoleRepository, RoleRepository>();
+        services.AddScoped<ITaskRepository, TaskRepository>()
+            .AddScoped<IMemberRepository, MemberRepository>()
+            .AddScoped<IUnitOfWork, UnitOfWork>()
+            .AddScoped<ITagRepository, TagRepository>()
+            .AddScoped<IRoleRepository, RoleRepository>();
 
         return services;
     }

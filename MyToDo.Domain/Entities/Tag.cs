@@ -6,14 +6,14 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class Tag : AggregateRoot
 {
-    private Tag(string name) : base(Guid.NewGuid())
+    internal Tag(string name) : base(Guid.NewGuid())
     {
         Name = name;
 
         Tasks = new List<Task>();
     }
 
-    protected Tag()
+    private Tag()
     {
         Tasks = new List<Task>();
     }
@@ -34,11 +34,6 @@ public sealed class Tag : AggregateRoot
     public void SetLastUpdatedOn(DateTimeOffset dateTimeOffset)
     {
         LastUpdatedOn = dateTimeOffset;
-    }
-
-    public static Tag Create(string name)
-    {
-        return new Tag(name);
     }
 
     public Result UpdateName(string? name)

@@ -1,5 +1,6 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
+using MyToDo.Domain.Abstractions.Factories;
 using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Entities;
 using MyToDo.Domain.Errors;
@@ -13,15 +14,24 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
     private readonly ITaskRepository _taskRepository;
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ITaskCreatorFactory _taskCreatorFactory;
+    private readonly ITaskExecutorFactory _taskExecutorFactory;
+    private readonly ITaskFactory _taskFactory;
 
     public CreateTaskCommandHandler(
         ITaskRepository taskRepository, 
         IMemberRepository memberRepository, 
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ITaskCreatorFactory taskCreatorFactory,
+        ITaskExecutorFactory taskExecutorFactory,
+        ITaskFactory taskFactory)
     {
         _taskRepository = taskRepository;
         _memberRepository = memberRepository;
         _unitOfWork = unitOfWork;
+        _taskCreatorFactory = taskCreatorFactory;
+        _taskExecutorFactory = taskExecutorFactory;
+        _taskFactory = taskFactory;
     }
 
     public async Task<Result> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
@@ -32,7 +42,7 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
 
-        var createTaskCreator = TaskCreatorFactory.Create(creator.FullName, creator.Id);
+        var createTaskCreator = _taskCreatorFactory.Create(creator.FullName, creator.Id);
         if (createTaskCreator.IsFailure)
         {
             return Result.Failure(createTaskCreator.Error);
@@ -47,7 +57,7 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
                 return Result.Failure(DomainErrors.Member.MemberNotFound);
             }
 
-            var createTaskExecutor = TaskExecutorFactory.Create(executor.FullName, executor.Id);
+            var createTaskExecutor = _taskExecutorFactory.Create(executor.FullName, executor.Id);
             if (createTaskCreator.IsFailure)
             {
                 return Result.Failure(createTaskExecutor.Error);
@@ -56,7 +66,7 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
             taskExecutor = createTaskExecutor.Value;
         }
 
-        var createTaskResult = Domain.Factories.TaskFactory.Create(
+        var createTaskResult = _taskFactory.Create(
             request.Title,
             request.Description,
             request.Priority,

@@ -15,7 +15,7 @@ public sealed class Task : AggregateRoot
     private readonly List<Comment> _comments = new();
     private readonly List<Tag> _tags = new();
 
-    private Task(
+    internal Task(
         string title,
         string description,
         TaskStatus status,
@@ -182,25 +182,5 @@ public sealed class Task : AggregateRoot
         _tags.Remove(tag);
 
         return Result.Success();
-    }
-    
-    internal static Task Create(
-        string title,
-        string description,
-        Priority priority,
-        TaskType taskType,
-        DateTime deadline,
-        TaskCreator creator,
-        TaskExecutor? executor)
-    {
-        return new Task(
-            title,
-            description,
-            TaskStatus.Open,
-            priority,
-            taskType,
-            deadline,
-            creator,
-            executor);
     }
 }

@@ -6,7 +6,7 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class Member : AggregateRoot
 {
-    private Member(
+    internal Member(
         string firstName,
         string lastName,
         string email,
@@ -59,22 +59,5 @@ public sealed class Member : AggregateRoot
         IsActive = isActive;
 
         return Result.Success();
-    }
-
-    internal static Member Create(
-        string firstName,
-        string lastName,
-        string email,
-        string hashedPassword,
-        bool isActive,
-        Role role)
-    {
-        return new Member(
-            firstName,
-            lastName,
-            email,
-            hashedPassword,
-            isActive,
-            role);
     }
 }
