@@ -16,6 +16,9 @@ public static class DependencyInjection
         {
             options.UseNpgsql(configuration.GetConnectionString("Database"));
         });
+        
+        // without this line, the app returns different datetime from the value stored in the database
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         services.AddScoped<ITaskRepository, TaskRepository>()
             .AddScoped<IMemberRepository, MemberRepository>()
