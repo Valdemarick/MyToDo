@@ -40,9 +40,5 @@ internal sealed class TaskConfiguration : IEntityTypeConfiguration<Task>
 
         builder.HasMany(t => t.Tags)
             .WithMany(t => t.Tasks);
-
-        builder.HasMany(t => t.Comments)
-            .WithOne(c => c.Task)
-            .HasForeignKey(c => c.TaskId);
     }
 }

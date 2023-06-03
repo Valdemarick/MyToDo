@@ -21,7 +21,7 @@ internal sealed class AddTagToTaskCommandHandler : ICommandHandler<AddTagToTaskC
 
     public async Task<Result> Handle(AddTagToTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = await _taskRepository.GetWithCommentsAsync(request.TaskId, cancellationToken);
+        var task = await _taskRepository.GetByIdAsync(request.TaskId, cancellationToken);
         if (task is null)
         {
             return Result.Failure(DomainErrors.Task.TaskNotFound);

@@ -21,7 +21,7 @@ internal sealed class RemoveTagFromTaskCommandHandler : ICommandHandler<RemoveTa
 
     public async Task<Result> Handle(RemoveTagFromTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = await _taskRepository.GetWithCommentsAsync(request.TaskId, cancellationToken);
+        var task = await _taskRepository.GetByIdAsync(request.TaskId, cancellationToken, isTracking: true);
         if (task is null)
         {
             return Result.Failure(DomainErrors.Task.TaskNotFound);

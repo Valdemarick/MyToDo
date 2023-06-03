@@ -19,12 +19,6 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Task?> GetWithCommentsAsync(Guid taskId, CancellationToken cancellationToken = default)
-    {
-        return await ApplySpecification(new TaskByIdWithCommentsBaseSpecification(taskId))
-            .FirstOrDefaultAsync(cancellationToken);
-    }
-
     public async Task<Task?> GetWithTagsAsync(Guid taskId, bool isTracking = false, CancellationToken cancellationToken = default)
     {
         return await ApplySpecification(new TaskWithTagsSpecification(taskId, isTracking))

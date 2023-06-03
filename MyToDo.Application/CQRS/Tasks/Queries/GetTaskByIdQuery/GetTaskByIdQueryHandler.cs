@@ -7,7 +7,7 @@ using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 
-internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, TaskShortInfoDto>
+internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, TaskFullInfoDto>
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, 
         _mapper = mapper;
     }
 
-    public async Task<Result<TaskShortInfoDto>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TaskFullInfoDto>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
     {
         var task = await _taskRepository.GetByIdAsync(request.Id, cancellationToken);
         if (task is null)
@@ -26,7 +26,7 @@ internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, 
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        var taskDto = _mapper.Map<TaskShortInfoDto>(task);
+        var taskDto = _mapper.Map<TaskFullInfoDto>(task);
 
         return Result.Success(taskDto);
     }

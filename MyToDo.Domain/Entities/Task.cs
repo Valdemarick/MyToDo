@@ -12,7 +12,6 @@ namespace MyToDo.Domain.Entities;
 /// </summary>
 public sealed class Task : AggregateRoot
 {
-    private readonly List<Comment> _comments = new();
     private readonly List<Tag> _tags = new();
 
     internal Task(
@@ -62,8 +61,7 @@ public sealed class Task : AggregateRoot
     
     public TaskCreator Creator { get; private set; }
     public Guid CreatorId { get; private set; }
-
-    public IEnumerable<Comment> Comments => _comments;
+    
     public IEnumerable<Tag> Tags => _tags;
 
     public Result Complete()
@@ -111,23 +109,6 @@ public sealed class Task : AggregateRoot
     public void Assign(TaskExecutor executor)
     {
         Executor = executor;
-    }
-
-    public void AddComment(Comment comment)
-    {
-        _comments.Add(comment);
-    }
-
-    public Result RemoveComment(Comment comment)
-    {
-        if (_comments.All(c => c.Id != comment.Id))
-        {
-            return Result.Failure(DomainErrors.Task.TaskDoesNotHaveThisComment);
-        }
-
-        _comments.Remove(comment);
-
-        return Result.Success();
     }
 
     public void UpdateDescription(string newDescription)

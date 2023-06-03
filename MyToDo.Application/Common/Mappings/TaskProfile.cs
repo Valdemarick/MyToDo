@@ -19,5 +19,11 @@ internal sealed class TaskProfile : Profile
             .ForCtorParam(nameof(CreateTaskCommand.Deadline), 
                 opt => opt
                     .MapFrom(src => src.Deadline.ToUniversalTime()));
+
+        CreateMap<Task, TaskFullInfoDto>()
+            .ForMember(dest => dest.CreatorFullName, opt =>
+                opt.MapFrom(src => src.Creator.FullName))
+            .ForMember(dest => dest.ExecutorFullName, opt =>
+                opt.MapFrom(src => src.Executor != null ? src.Executor.FullName : "Не назначено"));
     }    
 }

@@ -35,7 +35,6 @@ public sealed class ApplicationDbContext : DbContext
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         SetTaskDateTimeOffset();
-        SetCommentDateTimeOffset();
         SetMemberDateTimeOffset();
         SetTagCommentDateTimeOffset();
 
@@ -61,24 +60,6 @@ public sealed class ApplicationDbContext : DbContext
             if (entity.Status is TaskStatus.Completed)
             {
                 entity.SetCompletedOn(_dateTimeService.UtcNow);
-            }
-        }
-    }
-
-    private void SetCommentDateTimeOffset()
-    {
-        foreach (var entry in ChangeTracker.Entries<Comment>())
-        {
-            var entity = entry.Entity;
-
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    entity.SetCreatedOn(_dateTimeService.UtcNow);
-                    break;
-                case EntityState.Modified:
-                    entity.SetLastUpdatedOn(_dateTimeService.UtcNow);
-                    break;
             }
         }
     }

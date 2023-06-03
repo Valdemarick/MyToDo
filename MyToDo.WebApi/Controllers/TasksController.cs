@@ -5,7 +5,6 @@ using MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CloseTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescriptionCommand;
-using MyToDo.Application.CQRS.Tasks.Commands.WriteCommentCommand;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskPageQuery;
 using MyToDo.Domain.Errors;
@@ -79,16 +78,6 @@ public sealed class TasksController : BaseController
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command);
-        
-        return HandleResult(result);
-    }
-    
-    [HttpPut("comments")]
-    // [NeededPermission(Permission.TaskManagement)]
-    public async Task<IActionResult> WriteCommentAsync([FromBody] WriteCommentCommand command,
-        CancellationToken cancellationToken)
-    {
-        var result = await Mediator.Send(command, cancellationToken);
         
         return HandleResult(result);
     }
