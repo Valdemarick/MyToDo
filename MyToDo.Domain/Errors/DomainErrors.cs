@@ -150,22 +150,7 @@ public static class DomainErrors
             "Member. Member already has the same activity",
             "Attempt to update activity with the same value");
     }
-    
-    public static class Comment
-    {
-        public static readonly Error TextValidationError = new(
-            "Comment. TextValidationError",
-            "Text is invalid");
 
-        public static readonly Error TaskIdValidationError = new(
-            "Comment. TaskIdValidationError",
-            "TaskId is invalid");
-
-        public static readonly Error WriterIdValidationError = new(
-            "Comment. WriterIdValidationError",
-            "WriterIdValidationError is invalid");
-    }
-    
     public static class Tag
     {
         public static readonly Error TagNameValidationError = new(
@@ -184,29 +169,7 @@ public static class DomainErrors
             "Tag. Id validation error",
             "Id validation error");
     }
-    
-    public static class TaskCreator
-    {
-        public static readonly Error MemberIdValidationError = new(
-            "TaskCreator. MemberIdValidationError",
-            "MemberId is invalid");
 
-        public static readonly Error FullNameValidationError = new(
-            "TaskCreator. FullNameValidationError",
-            "FullName is invalid");
-    }
-    
-    public static class TaskExecutor
-    {
-        public static readonly Error MemberIdValidationError = new(
-            "TaskExecutor. MemberIdValidationError",
-            "MemberId is invalid");
-        
-        public static readonly Error FullNameValidationError = new(
-            "TaskExecutor. FullNameValidationError",
-            "FullName is invalid");
-    }
-    
     public static class Role
     {
         public static readonly Error RoleNotFound = new(
