@@ -15,10 +15,9 @@
         <div class="mb-3">
             <label for="executorInput" class="form-label">Исполнитель</label>
             <select class="form-select" name="executorInput" id="executorInput" @bind="_updateTaskDto.ExecutorId">
-                <option value="">Это поле может остаться пустым</option>
                 @foreach (var member in _members)
                 {
-                    @if ($"{member.FirstName} {member.LastName}" == Task.ExecutorFullName)
+                    @if (member.Id == _updateTaskDto.ExecutorId)
                     {
                         <option value="@member.Id" selected="selected">@member.LastName @member.FirstName</option>
                     }

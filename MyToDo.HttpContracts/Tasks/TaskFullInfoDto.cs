@@ -24,6 +24,10 @@ public sealed class TaskFullInfoDto
     
     public DateTime? CompletedOn { get; set; }
 
+    public Guid CreatorId { get; set; }
+
+    public Guid? ExecutorId { get; set; }
+    
     public string CreatorFullName { get; set; } = null!;
 
     public string? ExecutorFullName { get; set; }

@@ -36,6 +36,7 @@ public partial class UpdateTask
         _updateTaskDto.TaskType = Task.TaskType;
         _updateTaskDto.Deadline = Task.Deadline;
         _updateTaskDto.Priority = Task.Priority;
+        _updateTaskDto.ExecutorId = Task.ExecutorId;
 
         return System.Threading.Tasks.Task.CompletedTask;
     }
