@@ -2,6 +2,8 @@
 @using MyToDo.Web.Services.Abstractions
 @using MyToDo.Web.Shared.Pagination
 @using MyToDo.Web.Components.CreateTask
+@using MyToDo.Web.Components.TaskFullInfo
+@using MyToDo.Web.Components.Tasks.UpdateTask
 @inject ITaskService TaskService
 
 <h3>Задачи</h3>
@@ -17,16 +19,20 @@
             <th>Создатель</th>
             <th>Дата создания</th>
             <th>Срок исполнения</th>
+            <th>Действия</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var task in _tasks)
         {
             <tr>
-                <td>@task.Title</td>
+                <td @onclick="@(() => ShowFullInfoDialog(task.Id))">@task.Title</td>
                 <td>@task.CreatorName</td>
                 <td>@($"{task.CreatedOn:dd.MM.yyyy HH:mm:ss z}")</td>
                 <td>@($"{task.Deadline:dd.MM.yyyy HH:mm:ss z}")</td>
+                <td><button class="btn btn-warning" @onclick="@(() => ShowUpdateDialog(task.Id))">
+                                            <i class="bi bi-pencil-square"></i>Обновить
+                                        </button></td>
             </tr>
         }
     </tbody>
@@ -40,4 +46,14 @@
 @if (_isShowCreateForm)
 {
     <CreateTask OnClose="CloseCreateForm"></CreateTask>
+}
+
+@if (_isShowFullInfoDialog)
+{
+    <TaskFullInfo Task="_taskFullInfoDto" OnClose="CloseFullInfoDialog"></TaskFullInfo>
+}
+
+@if (_isShowUpdateDialog)
+{
+    <UpdateTask OnClose="CloseUpdateDialog" Task="_taskToUpdate"></UpdateTask>
 }

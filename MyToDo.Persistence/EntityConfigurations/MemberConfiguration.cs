@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyToDo.Domain.Entities;
+using MyToDo.Domain.ValueObjects;
 using MyToDo.Persistence.Constants;
 
 namespace MyToDo.Persistence.EntityConfigurations;
@@ -26,17 +27,17 @@ internal sealed class MemberConfiguration : IEntityTypeConfiguration<Member>
         builder.Property(m => m.RegisteredOn).IsRequired();
 
         builder.Property(m => m.IsActive).IsRequired().HasDefaultValue(true);
-
-        builder.HasMany<TaskExecutor>()
-            .WithOne()
-            .HasForeignKey(te => te.MemberId);
-
-        builder.HasMany<TaskCreator>()
-            .WithOne()
-            .HasForeignKey(tc => tc.MemberId);
-
+        
         builder.HasOne<Role>(m => m.Role)
             .WithMany(r => r.Members)
             .HasForeignKey(m => m.RoleId);
+
+        builder.HasMany(m => m.CreatedTasks)
+            .WithOne(t => t.Creator)
+            .HasForeignKey(t => t.CreatorId);
+        
+        builder.HasMany(m => m.AssignedTasks)
+            .WithOne(t => t.Executor)
+            .HasForeignKey(t => t.ExecutorId);
     }
 }

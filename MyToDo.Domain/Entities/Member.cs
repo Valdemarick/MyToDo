@@ -1,6 +1,7 @@
 ﻿using MyToDo.Domain.Errors;
 using MyToDo.Domain.Primitives;
 using MyToDo.Domain.Shared;
+using MyToDo.Domain.ValueObjects;
 
 namespace MyToDo.Domain.Entities;
 
@@ -43,6 +44,10 @@ public sealed class Member : AggregateRoot
     
     public Guid RoleId { get; private set; }
     public Role Role { get; private set; }
+    
+    public IEnumerable<Task> CreatedTasks { get; set; }
+    
+    public IEnumerable<Task> AssignedTasks { get; set; }
 
     public void SetRegisteredOn(DateTimeOffset dateTimeOffset)
     {

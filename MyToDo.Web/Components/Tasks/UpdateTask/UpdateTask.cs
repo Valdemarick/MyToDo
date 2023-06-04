@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MyToDo.Domain.Shared;
 using MyToDo.HttpContracts.Enums;
 using MyToDo.HttpContracts.Members;
 using MyToDo.HttpContracts.Tasks;
 
-namespace MyToDo.Web.Components.CreateTask;
+namespace MyToDo.Web.Components.Tasks.UpdateTask;
 
-public partial class CreateTask
+public partial class UpdateTask
 {
-    [Parameter] 
+    [Parameter]
     public EventCallback<bool> OnClose { get; set; }
     
-    private CreateTaskDto _createTaskDto = new();
+    [Parameter]
+    public TaskFullInfoDto Task { get; set; }
 
+    private UpdateTaskDto _updateTaskDto = new();
+    
     private List<MemberDto> _members = new();
 
     private List<TaskTypeDto> _taskTypes = new();
@@ -26,13 +28,29 @@ public partial class CreateTask
         _priorities.AddRange(Enum.GetValues<PriorityDto>());
     }
 
-    private async Task CreateAsync()
-    { 
-        await TaskService.CreateAsync(_createTaskDto);
+    protected override Task OnParametersSetAsync()
+    {
+        _updateTaskDto.Id = Task.Id;
+        _updateTaskDto.Title = Task.Title;
+        _updateTaskDto.Description = Task.Description;
+        _updateTaskDto.TaskType = Task.TaskType;
+        _updateTaskDto.Deadline = Task.Deadline;
+        _updateTaskDto.Priority = Task.Priority;
+
+        return System.Threading.Tasks.Task.CompletedTask;
+    }
+
+    private async Task UpdateAsync()
+    {
+        var updateResult = await TaskService.UpdateAsync(_updateTaskDto);
+        if (updateResult.IsFailure)
+        {
+            return;    
+        }
 
         await OnClose.InvokeAsync();
     }
-
+    
     private string GetTaskTypeNameInRussian(TaskTypeDto taskType) => taskType switch
     {
         TaskTypeDto.Bug => "Баг",

@@ -13,18 +13,15 @@ internal sealed class AssignTaskCommandHandler : ICommandHandler<AssignTaskComma
     private readonly ITaskRepository _taskRepository;
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ITaskExecutorFactory _taskExecutorFactory;
 
     public AssignTaskCommandHandler(
         ITaskRepository taskRepository, 
         IMemberRepository memberRepository,
-        IUnitOfWork unitOfWork,
-        ITaskExecutorFactory taskExecutorFactory)
+        IUnitOfWork unitOfWork)
     {
         _taskRepository = taskRepository;
         _memberRepository = memberRepository;
         _unitOfWork = unitOfWork;
-        _taskExecutorFactory = taskExecutorFactory;
     }
 
     public async Task<Result> Handle(AssignTaskCommand request, CancellationToken cancellationToken)
@@ -35,19 +32,13 @@ internal sealed class AssignTaskCommandHandler : ICommandHandler<AssignTaskComma
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        var member = await _memberRepository.GetByIdWithoutTrackingAsync(request.MemberId, cancellationToken);
-        if (member is null)
+        var executor = await _memberRepository.GetByIdWithoutTrackingAsync(request.MemberId, cancellationToken);
+        if (executor is null)
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
 
-        var createTaskExecutorResult = _taskExecutorFactory.Create(member.FullName, request.MemberId);
-        if (createTaskExecutorResult.IsFailure)
-        {
-            return Result.Failure(createTaskExecutorResult.Error);
-        }
-        
-        task.Assign(createTaskExecutorResult.Value);
+        task.Assign(executor);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

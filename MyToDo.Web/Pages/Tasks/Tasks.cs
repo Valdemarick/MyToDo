@@ -7,6 +7,10 @@ public partial class Tasks
 {
     private List<TaskShortInfoDto> _tasks = new();
     private PageViewDto _pageView = new PageViewDto();
+
+    private TaskFullInfoDto _taskFullInfoDto;
+
+    private TaskFullInfoDto _taskToUpdate;
     
     private readonly TaskPageRequestDto _parameters = new TaskPageRequestDto
     {
@@ -14,7 +18,9 @@ public partial class Tasks
         PageSize = 10
     };
 
-    private bool _isShowCreateForm = false;
+    private bool _isShowCreateForm;
+    private bool _isShowFullInfoDialog;
+    private bool _isShowUpdateDialog;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,4 +45,35 @@ public partial class Tasks
     private void ShowCreateForm() => _isShowCreateForm = true;
 
     private void CloseCreateForm() => _isShowCreateForm = false;
+
+    private async Task ShowFullInfoDialog(Guid id)
+    {
+        var getTaskFullInfoResult = await TaskService.GetByIdAsync(id);
+
+        _taskFullInfoDto = getTaskFullInfoResult.Value;
+
+        _isShowFullInfoDialog = true;
+    }
+
+    private void CloseFullInfoDialog()
+    {
+        _taskFullInfoDto = null!;
+        _isShowFullInfoDialog = false;
+    }
+
+    private async Task ShowUpdateDialog(Guid taskId)
+    {
+        var getTaskResult = await TaskService.GetByIdAsync(taskId);
+
+        _taskToUpdate = getTaskResult.Value;
+
+        _isShowUpdateDialog = true;
+    }
+
+    private void CloseUpdateDialog()
+    {
+        _taskToUpdate = null!;
+
+        _isShowUpdateDialog = false;
+    }
 }

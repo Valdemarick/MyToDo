@@ -1,8 +1,8 @@
-﻿using MyToDo.Domain.Abstractions;
-using MyToDo.Domain.Enums;
+﻿using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Primitives;
 using MyToDo.Domain.Shared;
+using MyToDo.Domain.ValueObjects;
 using TaskStatus = MyToDo.Domain.Enums.TaskStatus;
 
 namespace MyToDo.Domain.Entities;
@@ -21,8 +21,8 @@ public sealed class Task : AggregateRoot
         Priority priority,
         TaskType taskType,
         DateTime deadLine,
-        TaskCreator creator,
-        TaskExecutor? executor) : base(Guid.NewGuid())
+        Member creator,
+        Member? executor) : base(Guid.NewGuid())
     {
         Title = title;
         Description = description;
@@ -30,8 +30,12 @@ public sealed class Task : AggregateRoot
         Priority = priority;
         TaskType = taskType;
         DeadLine = deadLine;
-        Creator = creator;
-        Executor = executor;
+        CreatorId = creator.Id;
+
+        if (executor is not null)
+        {
+            ExecutorId = executor.Id;
+        }
     }
 
     private Task()
@@ -56,12 +60,12 @@ public sealed class Task : AggregateRoot
     
     public DateTime? CompletedOn { get; private set; }
 
-    public TaskExecutor? Executor { get; private set; }
-    public Guid? ExecutorId { get; private set; }
-    
-    public TaskCreator Creator { get; private set; }
+    public Member Creator { get; private set; }
     public Guid CreatorId { get; private set; }
-    
+
+    public Member? Executor { get; private set; }
+    public Guid? ExecutorId { get; private set; }
+
     public IEnumerable<Tag> Tags => _tags;
 
     public Result Complete()
@@ -93,6 +97,21 @@ public sealed class Task : AggregateRoot
         return Result.Success();
     }
 
+    public void Update(string title,
+        string description,
+        Member? executor,
+        TaskType taskType,
+        Priority priority,
+        DateTime deadline)
+    {
+        Title = title;
+        Description = description;
+        Executor = executor;
+        TaskType = taskType;
+        Priority = priority;
+        DeadLine = deadline;
+    }
+
     public Result Reopen()
     {
         if (Status is TaskStatus.Open or TaskStatus.InProgress)
@@ -106,7 +125,7 @@ public sealed class Task : AggregateRoot
         return Result.Success();
     }
 
-    public void Assign(TaskExecutor executor)
+    public void Assign(Member executor)
     {
         Executor = executor;
     }

@@ -16,8 +16,8 @@ public class TaskFactory : ITaskFactory
         Priority priority,
         TaskType taskType,
         DateTime deadline,
-        TaskCreator creator,
-        TaskExecutor? executor)
+        Member creator,
+        Member? executor)
     {
         if (title is null)
         {
@@ -27,11 +27,6 @@ public class TaskFactory : ITaskFactory
         if (description is null)
         {
             return Result.Failure(DomainErrors.Task.DescriptionValidationError);
-        }
-
-        if (creator is null)
-        {
-            return Result.Failure(DomainErrors.Task.TaskCreatorValidationError);
         }
 
         if (deadline == default)

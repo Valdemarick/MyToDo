@@ -1,6 +1,4 @@
-﻿using System.Text;
-using MyToDo.Domain.Errors;
-using MyToDo.Domain.Shared;
+﻿using MyToDo.Domain.Shared;
 using MyToDo.HttpContracts.Members;
 using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
@@ -9,11 +7,8 @@ namespace MyToDo.Web.Services;
 
 internal sealed class MemberService : BaseService, IMemberService
 {
-    private readonly HttpClient _httpClient;
-    
-    public MemberService(IHttpClientFactory httpClientFactory)
+    public MemberService(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
     {
-        _httpClient = httpClientFactory.CreateClient("MyToDoServerClient");
     }
 
     protected override string BaseUrl => "members";
@@ -22,7 +17,7 @@ internal sealed class MemberService : BaseService, IMemberService
     {
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, BaseUrl);
 
-        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse<List<MemberDto>>(response, cancellationToken);
     }
@@ -33,7 +28,7 @@ internal sealed class MemberService : BaseService, IMemberService
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
 
-        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse<MemberDto>(response, cancellationToken);
     }
@@ -45,7 +40,7 @@ internal sealed class MemberService : BaseService, IMemberService
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
 
-        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse<MemberPagedListDto>(response, cancellationToken);
     }
@@ -59,7 +54,7 @@ internal sealed class MemberService : BaseService, IMemberService
 
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, url, dto);
 
-        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse(response, cancellationToken);
     }
@@ -70,7 +65,7 @@ internal sealed class MemberService : BaseService, IMemberService
         
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, url, dto);
 
-        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse(response, cancellationToken);
     }
@@ -79,7 +74,7 @@ internal sealed class MemberService : BaseService, IMemberService
     {
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
 
-        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse(response, cancellationToken);
     }

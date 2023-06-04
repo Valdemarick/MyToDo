@@ -7,11 +7,8 @@ namespace MyToDo.Web.Services;
 
 internal sealed class RoleService : BaseService, IRoleService
 {
-    private readonly HttpClient _httpClient;
-
-    public RoleService(IHttpClientFactory httpClientFactory)
+    public RoleService(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
     {
-        _httpClient = httpClientFactory.CreateClient("MyToDoServerClient");
     }
 
     protected override string BaseUrl => "roles";
@@ -20,7 +17,7 @@ internal sealed class RoleService : BaseService, IRoleService
     {
         var request = new HttpRequestMessage(HttpMethod.Get, BaseUrl);
 
-        using var response = await _httpClient.SendAsync(request, cancellationToken: cancellationToken);
+        using var response = await HttpClient.SendAsync(request, cancellationToken: cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadFromJsonAsync<Error>(cancellationToken: cancellationToken);

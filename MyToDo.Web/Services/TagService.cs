@@ -8,11 +8,8 @@ namespace MyToDo.Web.Services;
 
 internal sealed class TagService : BaseService, ITagService
 {
-    private readonly HttpClient _client;
-
-    public TagService(IHttpClientFactory httpClientFactory)
+    public TagService(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
     {
-        _client = httpClientFactory.CreateClient("MyToDoServerClient");
     }
 
     protected override string BaseUrl => "tags";
@@ -24,7 +21,7 @@ internal sealed class TagService : BaseService, ITagService
 
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             return await HandleError(response, cancellationToken);
@@ -39,7 +36,7 @@ internal sealed class TagService : BaseService, ITagService
     {
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, BaseUrl, dto);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)
         {
             return Result.Success();
@@ -52,7 +49,7 @@ internal sealed class TagService : BaseService, ITagService
     {
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)
         {
             return Result.Success();
@@ -67,7 +64,7 @@ internal sealed class TagService : BaseService, ITagService
 
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Delete, url);
 
-        using var response = await _client.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)
         {
             return Result.Success();

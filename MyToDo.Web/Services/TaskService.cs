@@ -7,11 +7,8 @@ namespace MyToDo.Web.Services;
 
 internal sealed class TaskService : BaseService, ITaskService
 {
-    private readonly HttpClient _httpClient;
-
-    public TaskService(IHttpClientFactory httpClientFactory)
+    public TaskService(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
     {
-        _httpClient = httpClientFactory.CreateClient("MyToDoServerClient");
     }
 
     protected override string BaseUrl => "tasks";
@@ -23,16 +20,36 @@ internal sealed class TaskService : BaseService, ITaskService
 
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);
 
-        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse<TaskPagedListDto>(response, cancellationToken);
+    }
+
+    public async Task<Result<TaskFullInfoDto>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{id}";
+
+        var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<TaskFullInfoDto>(response, cancellationToken);
     }
 
     public async Task<Result> CreateAsync(CreateTaskDto dto, CancellationToken cancellationToken = default)
     {
         var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, BaseUrl, dto);
 
-        using var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result> UpdateAsync(UpdateTaskDto dto, CancellationToken cancellationToken = default)
+    {
+        var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse(response, cancellationToken);
     }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
-using MyToDo.Domain.ValueObjects.Requests;
+using MyToDo.Application.CQRS.Tasks.Commands.UpdateTaskCommand;
 using MyToDo.HttpContracts.Tasks;
 using Task = MyToDo.Domain.Entities.Task;
 
@@ -25,5 +25,7 @@ internal sealed class TaskProfile : Profile
                 opt.MapFrom(src => src.Creator.FullName))
             .ForMember(dest => dest.ExecutorFullName, opt =>
                 opt.MapFrom(src => src.Executor != null ? src.Executor.FullName : "Не назначено"));
+
+        CreateMap<UpdateTaskDto, UpdateTaskCommand>();
     }    
 }

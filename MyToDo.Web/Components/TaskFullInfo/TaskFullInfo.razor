@@ -1,0 +1,66 @@
+﻿@using MyToDo.HttpContracts.Enums
+<ModalDialog Title="Полная информация о задаче" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
+    <form>
+        <div class="mb-3">
+            <label for="title" class="form-label fw-bold">Заголовок</label>
+            <p class="text-black" id="title">@Task.Title</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Описание</label>
+            <p class="text-black" id="description">@Task.Description</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Приоритет</label>
+            <p class="text-black" id="description">@GetPriorityNameInRussian(Task.Priority)</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Тип задачи</label>
+            <p class="text-black" id="description">@GetTaskTypeInRussian(Task.TaskType)</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Статус</label>
+            <p class="text-black" id="description">@GetTaskStatusInRussian(Task.Status)</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Создатель</label>
+            <p class="text-black" id="description">@Task.CreatorFullName</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Исполнитель</label>
+            <p class="text-black" id="description">@($"{Task.ExecutorFullName ?? "Без исполнителя"}")</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Дата создания</label>
+            <p class="text-black" id="description">@($"{Task.CreatedOn:dd.MM.yyyy HH:mm:ss z}")</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Срок исполнения</label>
+            <p class="text-black" id="description">@($"{Task.Deadline:dd.MM.yyyy HH:mm:ss z}")</p>
+        </div>
+        @if (Task.LastUpdatedOn.HasValue)
+        {
+            <div class="mb-3">
+                <label for="description" class="form-label fw-bold">Последнее изменение</label>
+                <p class="text-black" id="description">@($"{Task.LastUpdatedOn:dd.MM.yyyy HH:mm:ss z}")</p>
+            </div>
+        }
+        @if (Task.CompletedOn.HasValue)
+        {
+            <div class="mb-3">
+                <label for="description" class="form-label fw-bold">Закрыта</label>
+                <p class="text-black" id="description">@($"{Task.CompletedOn:dd.MM.yyyy HH:mm:ss z}")</p>
+            </div>
+        }
+        <div>
+            <button type="button" class="btn btn-primary" @onclick="@CloseTaskAsync">Закрыть</button>
+            @if (Task.Status == TaskStatusDto.Completed)
+            {
+                <button type="button" class="btn btn-primary m-1" @onclick="ReopenTaskAsync">Переоткрыть задачу</button>
+            }
+            @if (Task.Status == TaskStatusDto.Open)
+            {
+                <button type="button" class="btn btn-primary m-1" @onclick="StartWorkingOnTaskAsync">Начать работу</button>
+            }
+        </div>
+    </form>
+</ModalDialog>

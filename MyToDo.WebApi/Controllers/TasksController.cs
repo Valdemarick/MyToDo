@@ -5,6 +5,7 @@ using MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CloseTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescriptionCommand;
+using MyToDo.Application.CQRS.Tasks.Commands.UpdateTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskPageQuery;
 using MyToDo.Domain.Errors;
@@ -81,7 +82,18 @@ public sealed class TasksController : BaseController
         
         return HandleResult(result);
     }
-    
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateTaskDto dto,
+        CancellationToken cancellationToken = default)
+    {
+        var command = _mapper.Map<UpdateTaskCommand>(dto);
+
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return HandleResult(result);
+    }
+
     [HttpPut("close")]
     // [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> CloseTaskAsync([FromBody] CloseTaskCommand command,

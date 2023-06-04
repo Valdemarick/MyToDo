@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyToDo.Domain.Entities;
+using MyToDo.Domain.Errors;
+using MyToDo.Domain.ValueObjects;
 using MyToDo.Persistence.Constants;
 using Task = MyToDo.Domain.Entities.Task;
 
@@ -22,8 +24,6 @@ internal sealed class TaskConfiguration : IEntityTypeConfiguration<Task>
 
         builder.Property(t => t.Description).IsRequired();
 
-        builder.Property(t => t.CreatorId).IsRequired();
-
         builder.Property(t => t.Priority).IsRequired();
 
         builder.Property(t => t.Status).IsRequired();
@@ -32,11 +32,15 @@ internal sealed class TaskConfiguration : IEntityTypeConfiguration<Task>
 
         builder.Property(t => t.DeadLine).IsRequired();
 
-        builder.HasOne<TaskExecutor>(t => t.Executor)
-            .WithOne(m => m.Task);
+        builder.Property(t => t.CreatorId).IsRequired();
 
-        builder.HasOne<TaskCreator>(t => t.Creator)
-            .WithOne(m => m.Task);
+        builder.HasOne(t => t.Creator)
+            .WithMany(c => c.CreatedTasks)
+            .HasForeignKey(t => t.CreatorId);
+
+        builder.HasOne(t => t.Executor)
+            .WithMany(e => e.AssignedTasks)
+            .HasForeignKey(t => t.ExecutorId);
 
         builder.HasMany(t => t.Tags)
             .WithMany(t => t.Tasks);

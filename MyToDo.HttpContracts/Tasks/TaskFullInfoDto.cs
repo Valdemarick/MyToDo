@@ -18,7 +18,7 @@ public sealed class TaskFullInfoDto
     
     public DateTime CreatedOn { get; set; }
     
-    public DateTime DeadLine { get; set; }
+    public DateTime Deadline { get; set; }
     
     public DateTime? LastUpdatedOn { get; set; }
     

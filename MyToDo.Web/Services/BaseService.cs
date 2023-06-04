@@ -7,6 +7,13 @@ namespace MyToDo.Web.Services;
 
 internal abstract class BaseService
 {
+    protected HttpClient HttpClient;
+    
+    protected BaseService(IHttpClientFactory httpClientFactory)
+    {
+        HttpClient = httpClientFactory.CreateClient("MyToDoServerClient");
+    }
+    
     protected abstract string BaseUrl { get; }
     
     protected static HttpRequestMessage CreateHttpRequestMessage(HttpMethod httpMethod, string url, object? body = null!)
@@ -29,13 +36,9 @@ internal abstract class BaseService
             return await HandleError(response, cancellationToken);
         }
 
-        var value = await response.Content.ReadFromJsonAsync(typeof(T), cancellationToken: cancellationToken);
-
-        return value is T val ? Result.Success(val) : Result.Failure(DomainErrors.FailedToDeserializeObject);
-
-        // return await response.Content.ReadFromJsonAsync(typeof(T), cancellationToken: cancellationToken) is T value 
-        //     ? Result.Success(value) 
-        //     : Result.Failure(DomainErrors.FailedToDeserializeObject);
+        return await response.Content.ReadFromJsonAsync(typeof(T), cancellationToken: cancellationToken) is T value 
+            ? Result.Success(value) 
+            : Result.Failure(DomainErrors.FailedToDeserializeObject);
     }
     
     protected static async Task<Result> HandleResponse(HttpResponseMessage response, CancellationToken cancellationToken = default)
