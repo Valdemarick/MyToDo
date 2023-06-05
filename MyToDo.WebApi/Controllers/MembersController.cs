@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 using MyToDo.Application.CQRS.Members.Commands.RegisterCommand;
@@ -25,6 +26,7 @@ public sealed class MembersController : BaseController
     }
 
     [HttpGet]
+    [NeededPermission(Permission.UserRead)]
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetAllMembersQuery(), cancellationToken);
@@ -33,6 +35,7 @@ public sealed class MembersController : BaseController
     }
 
     [HttpGet("page")]
+    [NeededPermission(Permission.UserRead)]
     public async Task<IActionResult> GetPageAsync([FromQuery] MemberPageRequestDto dto,
         CancellationToken cancellationToken = default)
     {
@@ -44,6 +47,7 @@ public sealed class MembersController : BaseController
     }
 
     [HttpGet("{id:guid}")]
+    [NeededPermission(Permission.UserRead)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
@@ -60,16 +64,18 @@ public sealed class MembersController : BaseController
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginCommand command,
+    public async Task<IActionResult> LoginAsync([FromBody] LoginDto dto,
         CancellationToken cancellationToken)
     {
+        var command = new LoginCommand(dto.Email, dto.Password);
+        
         var result = await Mediator.Send(command, cancellationToken);
         
         return HandleResult(result);
     }
 
     [HttpPost("registration")]
-    // [NeededPermission(Permission.UserManagement)]
+    [NeededPermission(Permission.UserManagement)]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterMemberDto dto,
         CancellationToken cancellationToken)
     {
@@ -81,6 +87,7 @@ public sealed class MembersController : BaseController
     }
 
     [HttpPut]
+    [NeededPermission(Permission.UserManagement)]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateMemberDto dto,
         CancellationToken cancellationToken)
     {
@@ -92,6 +99,7 @@ public sealed class MembersController : BaseController
     }
 
     [HttpPut("activity")]
+    [NeededPermission(Permission.UserManagement)]
     public async Task<IActionResult> SetMemberActivityAsync([FromBody] UpdateMemberActivityDto dto,
         CancellationToken cancellationToken)
     {

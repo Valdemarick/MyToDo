@@ -8,8 +8,10 @@ using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescriptionCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.UpdateTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskPageQuery;
+using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 using MyToDo.HttpContracts.Tasks;
+using MyToDo.Infrastructure.Security;
 
 namespace MyToDo.WebApi.Controllers;
 
@@ -23,7 +25,7 @@ public sealed class TasksController : BaseController
     }
     
     [HttpGet("page")]
-    // [NeededPermission(Permission.TaskRead)]
+    [NeededPermission(Permission.TaskRead)]
     public async Task<IActionResult> GetPageAsync([FromQuery] TaskPageRequestDto dto,
         CancellationToken cancellationToken)
     {
@@ -35,7 +37,7 @@ public sealed class TasksController : BaseController
     }
     
     [HttpGet("{id:guid}")]
-    // [NeededPermission(Permission.TaskRead)]
+    [NeededPermission(Permission.TaskRead)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
@@ -51,7 +53,7 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPost]
-    // [NeededPermission(Permission.TaskManagement)]
+    [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateTaskDto dto,
         CancellationToken cancellationToken)
     {
@@ -63,7 +65,7 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPut("assignToMember")]
-    // [NeededPermission(Permission.TaskManagement)]
+    [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> AssignTaskAsync([FromBody] AssignTaskCommand command,
         CancellationToken cancellationToken)
     {
@@ -74,7 +76,7 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPut("updateDescription")]
-    // [NeededPermission(Permission.TaskManagement)]
+    [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> UpdateDescriptionAsync([FromBody] UpdateDescriptionCommand command,
         CancellationToken cancellationToken)
     {
@@ -84,6 +86,7 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPut]
+    [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateTaskDto dto,
         CancellationToken cancellationToken = default)
     {
@@ -95,7 +98,7 @@ public sealed class TasksController : BaseController
     }
 
     [HttpPut("close")]
-    // [NeededPermission(Permission.TaskManagement)]
+    [NeededPermission(Permission.TaskManagement)]
     public async Task<IActionResult> CloseTaskAsync([FromBody] CloseTaskCommand command,
         CancellationToken cancellationToken)
     {

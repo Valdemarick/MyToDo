@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyToDo.Application.CQRS.Roles.Queries.GetAllRolesQuery;
+using MyToDo.Domain.Enums;
+using MyToDo.Infrastructure.Security;
 
 namespace MyToDo.WebApi.Controllers;
 
@@ -11,6 +13,7 @@ public sealed class RolesController : BaseController
     }
 
     [HttpGet]
+    [NeededPermission(Permission.UserRead)]
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
         var query = new GetAllRolesQuery();

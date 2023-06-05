@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyToDo.Application.Abstractions.Security;
 using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Entities;
+using MyToDo.HttpContracts.Members;
 using MyToDo.Infrastructure.Constants;
 using MyToDo.Infrastructure.Services.Abstractions;
 
@@ -27,7 +28,7 @@ internal sealed class JwtProvider : IJwtProvider
         _permissionService = permissionService;
     }
 
-    public async Task<string> GenerateTokenAsync(Member member)
+    public async Task<MemberSessionDto> GenerateTokenAsync(Member member)
     {
         var claims = new List<Claim>()
         {
@@ -58,6 +59,12 @@ internal sealed class JwtProvider : IJwtProvider
         var tokenValue = new JwtSecurityTokenHandler()
             .WriteToken(token);
 
-        return tokenValue;
+        return new MemberSessionDto
+        {
+            FullName = member.FullName,
+            Token = tokenValue,
+            ExpiresIn = (int)TimeSpan.FromHours(_jwtOptions.ExpiresIn).TotalSeconds,
+            Role = member.Role.Name
+        };
     }
 }

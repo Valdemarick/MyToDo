@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Shared;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using MyToDo.Domain.Shared;
 using MyToDo.HttpContracts.Tasks;
 using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
@@ -7,7 +8,8 @@ namespace MyToDo.Web.Services;
 
 internal sealed class TaskService : BaseService, ITaskService
 {
-    public TaskService(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+    public TaskService(IHttpClientFactory httpClientFactory,
+        AuthenticationStateProvider authenticationStateProvider) : base(httpClientFactory, authenticationStateProvider)
     {
     }
 
@@ -18,7 +20,7 @@ internal sealed class TaskService : BaseService, ITaskService
         var queryParameters = await dto.GetQueryFromRequestDtoAsync();
         var url = $"{BaseUrl}/page?{queryParameters}";
 
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
@@ -29,7 +31,7 @@ internal sealed class TaskService : BaseService, ITaskService
     {
         var url = $"{BaseUrl}/{id}";
 
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
@@ -38,7 +40,7 @@ internal sealed class TaskService : BaseService, ITaskService
 
     public async Task<Result> CreateAsync(CreateTaskDto dto, CancellationToken cancellationToken = default)
     {
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, BaseUrl, dto);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Post, BaseUrl, dto);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
@@ -47,7 +49,7 @@ internal sealed class TaskService : BaseService, ITaskService
 
     public async Task<Result> UpdateAsync(UpdateTaskDto dto, CancellationToken cancellationToken = default)
     {
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 

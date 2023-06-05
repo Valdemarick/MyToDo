@@ -1,13 +1,13 @@
 ﻿using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Application.Abstractions.Security;
-using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Abstractions.Repositories;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
+using MyToDo.HttpContracts.Members;
 
 namespace MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 
-internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string>
+internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, MemberSessionDto>
 {
     private readonly IMemberRepository _memberRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -23,9 +23,9 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string
         _jwtProvider = jwtProvider;
     }
 
-    public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<MemberSessionDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var member = await _memberRepository.GetByEmail(request.Email, cancellationToken);
+        var member = await _memberRepository.GetByEmailWithRoleAsync(request.Email, cancellationToken);
         if (member is null)
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);
@@ -42,8 +42,8 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string
             return Result.Failure(DomainErrors.Member.PasswordIsWrong);
         }
 
-        var token = await _jwtProvider.GenerateTokenAsync(member);
+        var memberSessionDto = await _jwtProvider.GenerateTokenAsync(member);
 
-        return Result.Success(token);
+        return Result.Success(memberSessionDto);
     }
 }

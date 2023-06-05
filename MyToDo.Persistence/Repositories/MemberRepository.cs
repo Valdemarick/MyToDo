@@ -36,6 +36,15 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<Member?> GetByEmailWithRoleAsync(string email, CancellationToken cancellationToken = default)
+    {
+        return await DbSet
+            .Where(x => x.Email == email)
+            .Include(x => x.Role)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<Member?> GetByIdWithTrackingAsync(Guid memberId, CancellationToken cancellationToken = default)
     {
         return await SpecificationEvaluator.GetQuery(

@@ -31,6 +31,7 @@ public partial class Tags
     private async Task GetTagPageAsync()
     {
         var memberPage = await TagService.GetPageAsync(_parameters);
+        if (memberPage.IsFailure) return;
         _tags = memberPage.Value.Items;
         _pageView = memberPage.Value.PageView;
     }
@@ -51,6 +52,7 @@ public partial class Tags
     private async Task GetMemberPageAsync()
     {
         var memberPage = await TagService.GetPageAsync(_parameters);
+        if (memberPage.IsFailure) return;
         _tags = memberPage.Value.Items;
         _pageView = memberPage.Value.PageView;
     }

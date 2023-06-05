@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using MyToDo.Web.Authentication
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <PageTitle>My To-Do</PageTitle>
 
@@ -9,7 +12,14 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <AuthorizeView>
+                <Authorized>
+                    <a @onclick="@Logout" href="javascript:void(0)">Выход</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/login">Вход</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -17,3 +27,13 @@
         </article>
     </main>
 </div>
+
+@code
+{
+    private async Task Logout()
+    {
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        NavigationManager.NavigateTo("/", true);
+    }
+}

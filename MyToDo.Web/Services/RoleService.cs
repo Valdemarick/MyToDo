@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Errors;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 using MyToDo.HttpContracts.Roles;
 using MyToDo.Web.Services.Abstractions;
@@ -7,7 +8,8 @@ namespace MyToDo.Web.Services;
 
 internal sealed class RoleService : BaseService, IRoleService
 {
-    public RoleService(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+    public RoleService(IHttpClientFactory httpClientFactory,
+        AuthenticationStateProvider authenticationStateProvider) : base(httpClientFactory, authenticationStateProvider)
     {
     }
 

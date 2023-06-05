@@ -1,4 +1,6 @@
-﻿using MyToDo.Domain.Errors;
+﻿using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Components.Authorization;
+using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 using MyToDo.HttpContracts.Tags;
 using MyToDo.Web.Extensions;
@@ -8,7 +10,8 @@ namespace MyToDo.Web.Services;
 
 internal sealed class TagService : BaseService, ITagService
 {
-    public TagService(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+    public TagService(IHttpClientFactory httpClientFactory,
+        AuthenticationStateProvider authenticationStateProvider) : base(httpClientFactory, authenticationStateProvider)
     {
     }
 
@@ -19,22 +22,16 @@ internal sealed class TagService : BaseService, ITagService
         var queryParameters = await dto.GetQueryFromRequestDtoAsync();
         var url = $"{BaseUrl}/page?{queryParameters}";
 
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, url);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            return await HandleError(response, cancellationToken);
-        }
 
-        var tags = await response.Content.ReadFromJsonAsync<TagPagedListDto>(cancellationToken: cancellationToken);
-
-        return tags is not null ? Result.Success(tags) : Result.Failure(DomainErrors.FailedToDeserializeObject);
+        return await HandleResponse<TagPagedListDto>(response, cancellationToken);
     }
 
     public async Task<Result> CreateAsync(CreateTagDto dto, CancellationToken cancellationToken = default)
     {
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, BaseUrl, dto);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Post, BaseUrl, dto);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)
@@ -47,7 +44,7 @@ internal sealed class TagService : BaseService, ITagService
 
     public async Task<Result> UpdateAsync(UpdateTagDto dto, CancellationToken cancellationToken = default)
     {
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)
@@ -62,7 +59,7 @@ internal sealed class TagService : BaseService, ITagService
     {
         var url = $"{BaseUrl}/{id}";
 
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Delete, url);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Delete, url);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
         if (response.IsSuccessStatusCode)

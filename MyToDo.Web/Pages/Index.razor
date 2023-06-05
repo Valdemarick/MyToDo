@@ -2,7 +2,14 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<AuthorizeView>
+    <Authorized>
+        <h1>Привет, @context.User.Identity?.Name</h1>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Привет, незнакомец</h1>
+    </NotAuthorized>
+</AuthorizeView>
 
 Welcome to your new app.
 

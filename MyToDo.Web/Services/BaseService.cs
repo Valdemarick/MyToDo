@@ -1,22 +1,30 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Authorization;
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
+using MyToDo.Web.Authentication;
 using Newtonsoft.Json;
 
 namespace MyToDo.Web.Services;
 
 internal abstract class BaseService
 {
-    protected HttpClient HttpClient;
+    private readonly CustomAuthenticationStateProvider _authenticationStateProvider;
     
-    protected BaseService(IHttpClientFactory httpClientFactory)
+    protected readonly HttpClient HttpClient;
+    
+    protected BaseService(IHttpClientFactory httpClientFactory, AuthenticationStateProvider authenticationStateProvider)
     {
+        _authenticationStateProvider =
+            authenticationStateProvider as CustomAuthenticationStateProvider ?? throw new Exception();
         HttpClient = httpClientFactory.CreateClient("MyToDoServerClient");
     }
     
     protected abstract string BaseUrl { get; }
     
-    protected static HttpRequestMessage CreateHttpRequestMessage(HttpMethod httpMethod, string url, object? body = null!)
+    protected async Task<HttpRequestMessage> CreateHttpRequestMessage(HttpMethod httpMethod, string url, object? body = null!)
     {
         var httpRequest = new HttpRequestMessage(httpMethod, url);
 
@@ -25,6 +33,8 @@ internal abstract class BaseService
             var json = JsonConvert.SerializeObject(body);
             httpRequest.Content = new StringContent(json, Encoding.UTF8, "application/json");
         }
+
+        await AddAuthorizationHeader(httpRequest);
 
         return httpRequest;
     }
@@ -56,5 +66,12 @@ internal abstract class BaseService
         var error = await response.Content.ReadFromJsonAsync<Error>(cancellationToken: cancellationToken);
 
         return Result.Failure(error ?? DomainErrors.FailedToDeserializeObject);
+    }
+
+    private async Task AddAuthorizationHeader(HttpRequestMessage message)
+    {
+        var token = await _authenticationStateProvider.GetToken();
+
+        message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 }

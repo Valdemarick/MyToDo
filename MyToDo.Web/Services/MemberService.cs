@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Shared;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using MyToDo.Domain.Shared;
 using MyToDo.HttpContracts.Members;
 using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
@@ -7,7 +8,8 @@ namespace MyToDo.Web.Services;
 
 internal sealed class MemberService : BaseService, IMemberService
 {
-    public MemberService(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+    public MemberService(IHttpClientFactory httpClientFactory, 
+        AuthenticationStateProvider authenticationStateProvider) : base(httpClientFactory, authenticationStateProvider)
     {
     }
 
@@ -15,7 +17,7 @@ internal sealed class MemberService : BaseService, IMemberService
 
     public async Task<Result<List<MemberDto>>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Get, BaseUrl);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, BaseUrl);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
@@ -38,7 +40,7 @@ internal sealed class MemberService : BaseService, IMemberService
         var queryParameters = await dto.GetQueryFromRequestDtoAsync();
         var url = $"{BaseUrl}/page?{queryParameters}";
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
@@ -52,7 +54,7 @@ internal sealed class MemberService : BaseService, IMemberService
 
         var dto = new UpdateMemberActivityDto(memberId, isActive);
 
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, url, dto);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url, dto);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
@@ -63,7 +65,7 @@ internal sealed class MemberService : BaseService, IMemberService
     {
         var url = $"{BaseUrl}/registration";
         
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Post, url, dto);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Post, url, dto);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
@@ -72,10 +74,21 @@ internal sealed class MemberService : BaseService, IMemberService
 
     public async Task<Result> UpdateAsync(UpdateMemberDto dto, CancellationToken cancellationToken = default)
     {
-        var httpRequest = CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result<MemberSessionDto>> LoginAsync(LoginDto dto, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/login";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Post, url, dto);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<MemberSessionDto>(response, cancellationToken);
     }
 }

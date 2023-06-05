@@ -1,4 +1,7 @@
+using Blazored.SessionStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using MyToDo.Shared.Extensions;
+using MyToDo.Web.Authentication;
 using MyToDo.Web.Options;
 using MyToDo.Web.Services;
 using MyToDo.Web.Services.Abstractions;
@@ -15,6 +18,12 @@ builder.Services.AddScoped<ITaskService, TaskService>()
     .AddScoped<IMemberService, MemberService>()
     .AddScoped<ITagService, TagService>()
     .AddScoped<IRoleService, RoleService>();
+
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
+builder.Services.AddAuthenticationCore();
+
+builder.Services.AddBlazoredSessionStorage();
 
 builder.Services.Configure<MyToDoServerOptions>(options =>
     builder.Configuration.GetSection("MyToDoServerClient").Bind(options));
