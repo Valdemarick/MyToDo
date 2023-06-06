@@ -13,9 +13,9 @@ public static class DependencyInjection
             config.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly);
         });
 
-        services.AddValidatorsFromAssembly(
-            Assembly.GetExecutingAssembly(),
-            includeInternalTypes: true);
+        // services.AddValidatorsFromAssembly(
+        //     Assembly.GetExecutingAssembly(),
+        //     includeInternalTypes: true);
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

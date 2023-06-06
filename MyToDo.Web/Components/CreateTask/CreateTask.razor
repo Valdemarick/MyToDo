@@ -1,6 +1,7 @@
 ﻿@using MyToDo.Web.Services.Abstractions
 @inject IMemberService MemberService
 @inject ITaskService TaskService
+@inherits BaseComponent
 
 <ModalDialog Title="Создание новой задачи" Text="Test" OnSubmit="@CreateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
     <EditForm Model="@_createTaskDto" OnValidSubmit="@CreateAsync">
@@ -11,16 +12,6 @@
         <div class="mb-3">
             <label for="descriptionInput" class="form-label">Описание</label>
             <textarea class="form-control" id="descriptionInput" @bind="_createTaskDto.Description"></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="creatorInput" class="form-label">Создатель</label>
-            <select class="form-select" name="creatorInput" id="creatorInput" @bind="_createTaskDto.CreatorId">
-                <option value="">Пожалуйста, выберите создателя</option>
-                @foreach (var member in _members)
-                {
-                    <option value="@member.Id">@member.LastName @member.FirstName</option>
-                }
-            </select>
         </div>
         <div class="mb-3">
             <label for="executorInput" class="form-label">Исполнитель</label>
@@ -56,3 +47,8 @@
         </div>
     </EditForm>
 </ModalDialog>
+
+@if (IsShowErrorDialog)
+{
+    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+}

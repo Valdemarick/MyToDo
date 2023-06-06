@@ -1,6 +1,7 @@
 ﻿@using MyToDo.Web.Services.Abstractions
 @inject IMemberService MemberService
 @inject ITaskService TaskService
+@inherits BaseComponent
 
 <ModalDialog Title="Обновление задачи" Text="Test" OnSubmit="@UpdateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
     <EditForm Model="@_updateTaskDto" OnValidSubmit="@UpdateAsync">
@@ -59,3 +60,8 @@
         </div>
     </EditForm>
 </ModalDialog>
+
+@if (IsShowErrorDialog)
+{
+    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+}

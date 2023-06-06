@@ -45,4 +45,10 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
 
         return new TaskPagedList(tags, totalCount);
     }
+
+    public async Task<Task?> GetByTitleAsync(string title, CancellationToken cancellationToken = default)
+    {
+        return await DbSet
+            .FirstOrDefaultAsync(t => t.Title.ToLower() == title.ToLower(), cancellationToken);
+    }
 }

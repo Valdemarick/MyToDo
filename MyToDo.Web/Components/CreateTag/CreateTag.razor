@@ -1,5 +1,6 @@
 ﻿@using MyToDo.Web.Services.Abstractions
 @inject ITagService TagService
+@inherits BaseComponent
 
 <ModalDialog Title="Создание нового тега" Text="Test" OnSubmit="@CreateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
     <EditForm Model="@_createTagDto" OnValidSubmit="@CreateAsync">
@@ -9,3 +10,8 @@
         </div>
     </EditForm>
 </ModalDialog>
+
+@if (IsShowErrorDialog)
+{
+    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+}

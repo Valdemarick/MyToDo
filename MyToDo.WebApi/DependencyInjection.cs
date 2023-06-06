@@ -18,6 +18,8 @@ internal static class DependencyInjection
         
         services.AddAuthorization();
 
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        
         services.ConfigureSwagger();
 
         return services;

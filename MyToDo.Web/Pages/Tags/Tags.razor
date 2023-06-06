@@ -6,6 +6,7 @@
 @using MyToDo.Web.Components
 @inject ITagService TagService
 @* @attribute [Authorize] *@
+@inherits BaseComponent
 
 <h3>Теги</h3>
 
@@ -57,4 +58,9 @@
 {
     <ModalDialog Title="Удаление тега" Text="Вы действительно хотите удалить этот тег?" OnClose="@CloseDeleteDialog"
                  OnSubmit="@DeleteTag" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+}
+
+@if (IsShowErrorDialog)
+{
+    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
 }

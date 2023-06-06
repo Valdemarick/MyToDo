@@ -6,7 +6,6 @@ namespace MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
 public sealed record CreateTaskCommand(
     string Title,
     string Description,
-    Guid CreatorId,
     Guid? ExecutorId,
     TaskType TaskType,
     Priority Priority,

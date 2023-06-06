@@ -1,4 +1,7 @@
-﻿using MyToDo.Application.Abstractions.Messaging;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.JsonWebTokens;
+using MyToDo.Application.Abstractions.Messaging;
 using MyToDo.Domain.Abstractions;
 using MyToDo.Domain.Abstractions.Factories;
 using MyToDo.Domain.Abstractions.Repositories;
@@ -16,22 +19,38 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITaskFactory _taskFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public CreateTaskCommandHandler(
         ITaskRepository taskRepository, 
         IMemberRepository memberRepository, 
         IUnitOfWork unitOfWork,
-        ITaskFactory taskFactory)
+        ITaskFactory taskFactory, 
+        IHttpContextAccessor httpContextAccessor)
     {
         _taskRepository = taskRepository;
         _memberRepository = memberRepository;
         _unitOfWork = unitOfWork;
         _taskFactory = taskFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Result> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
-        var creator = await _memberRepository.GetByIdWithoutTrackingAsync(request.CreatorId, cancellationToken);
+        var taskWithTheSameTitle = await _taskRepository.GetByTitleAsync(request.Title, cancellationToken);
+        if (taskWithTheSameTitle is not null)
+        {
+            return Result.Failure(DomainErrors.Task.TitleIsAlreadyOccupied);
+        }
+
+        var creatorIdString =
+            _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(creatorIdString, out var creatorIdGuid))
+        {
+            return Result.Failure(DomainErrors.FailedToParseId);
+        }
+        
+        var creator = await _memberRepository.GetByIdWithoutTrackingAsync(creatorIdGuid, cancellationToken);
         if (creator is null)
         {
             return Result.Failure(DomainErrors.Member.MemberNotFound);

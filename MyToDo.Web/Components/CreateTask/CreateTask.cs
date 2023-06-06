@@ -28,7 +28,12 @@ public partial class CreateTask
 
     private async Task CreateAsync()
     { 
-        await TaskService.CreateAsync(_createTaskDto);
+        var result = await TaskService.CreateAsync(_createTaskDto);
+        if (result.IsFailure)
+        {
+            ShowErrorDialog(result.Error);
+            return;
+        }
 
         await OnClose.InvokeAsync();
     }

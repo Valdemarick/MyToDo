@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MyToDo.Domain.Shared;
 using MyToDo.HttpContracts.Tags;
 
 namespace MyToDo.Web.Components.UpdateTag;
@@ -21,7 +22,12 @@ public partial class UpdateTag
 
     private async Task UpdateAsync()
     {
-        await TagService.UpdateAsync(_updateTagDto);
+        var result = await TagService.UpdateAsync(_updateTagDto);
+        if (result.IsFailure)
+        {
+            ShowErrorDialog(result.Error);
+            return;
+        }
 
         await OnClose.InvokeAsync();
     }

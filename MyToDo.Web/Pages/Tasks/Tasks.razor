@@ -6,6 +6,7 @@
 @using MyToDo.Web.Components.Tasks.UpdateTask
 @inject ITaskService TaskService
 @* @attribute [Authorize] *@
+@inherits MyToDo.Web.Components.BaseComponent
 
 <h3>Задачи</h3>
 
@@ -57,4 +58,9 @@
 @if (_isShowUpdateDialog)
 {
     <UpdateTask OnClose="CloseUpdateDialog" Task="_taskToUpdate"></UpdateTask>
+}
+
+@if (IsShowErrorDialog)
+{
+    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
 }

@@ -17,10 +17,6 @@ internal sealed class CreateTaskCommandValidator : AbstractValidator<CreateTaskC
             .NotEmpty()
             .WithCustomError(DomainErrors.Task.DescriptionValidationError);
 
-        RuleFor(c => c.CreatorId)
-            .NotEmpty()
-            .WithCustomError(DomainErrors.Task.CreatorIdValidationError);
-
         RuleFor(c => c.Deadline)
             .NotEqual(default(DateTime))
             .WithCustomError(DomainErrors.Task.DeadlineValidationError);

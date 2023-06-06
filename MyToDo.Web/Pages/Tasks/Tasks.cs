@@ -25,6 +25,12 @@ public partial class Tasks
     protected override async Task OnInitializedAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
+        if (taskPagedList.IsFailure)
+        {
+            ShowErrorDialog(taskPagedList.Error);
+            return;
+        }
+        
         _tasks = taskPagedList.Value.Items;
         _pageView = taskPagedList.Value.PageView;
     }
@@ -38,6 +44,12 @@ public partial class Tasks
     private async Task GetTaskPageAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
+        if (taskPagedList.IsFailure)
+        {
+            ShowErrorDialog(taskPagedList.Error);
+            return;
+        }
+        
         _tasks = taskPagedList.Value.Items;
         _pageView = taskPagedList.Value.PageView;
     }

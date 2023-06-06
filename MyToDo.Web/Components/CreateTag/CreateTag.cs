@@ -12,8 +12,13 @@ public partial class CreateTag
 
     private async Task CreateAsync()
     {
-        await TagService.CreateAsync(_createTagDto);
-
+        var result = await TagService.CreateAsync(_createTagDto);
+        if (result.IsFailure)
+        {
+            ShowErrorDialog(result.Error);
+            return;
+        }
+        
         await OnClose.InvokeAsync();
     }
 }

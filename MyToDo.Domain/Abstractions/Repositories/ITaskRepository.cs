@@ -9,4 +9,5 @@ public interface ITaskRepository : IBaseRepository<Task>
     Task<Task?> GetByIdAsync(Guid taskId, CancellationToken cancellationToken = default, bool isTracking = false);
     Task<Task?> GetWithTagsAsync(Guid taskId, bool isTracking = false, CancellationToken cancellationToken = default);
     Task<TaskPagedList> GetPageAsync(TaskPageRequest request, CancellationToken cancellationToken = default);
+    Task<Task?> GetByTitleAsync(string title, CancellationToken cancellationToken = default);
 }

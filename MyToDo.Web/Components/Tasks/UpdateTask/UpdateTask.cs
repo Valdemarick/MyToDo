@@ -46,6 +46,7 @@ public partial class UpdateTask
         var updateResult = await TaskService.UpdateAsync(_updateTaskDto);
         if (updateResult.IsFailure)
         {
+            ShowErrorDialog(updateResult.Error);
             return;    
         }
 

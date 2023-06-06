@@ -29,7 +29,7 @@ public class TaskFactory : ITaskFactory
             return Result.Failure(DomainErrors.Task.DescriptionValidationError);
         }
 
-        if (deadline == default)
+        if (deadline < DateTime.Now)
         {
             return Result.Failure(DomainErrors.Task.DeadlineValidationError);
         }

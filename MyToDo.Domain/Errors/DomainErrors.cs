@@ -98,6 +98,10 @@ public static class DomainErrors
         public static readonly Error DeadlineValidationError = new(
             "Task. Deadline validation error",
             "Deadline validation error");
+
+        public static Error TitleIsAlreadyOccupied = new(
+            "Task. Title is already occupied",
+            "Title is already occupied");
     }
     
     public static class Member
@@ -180,4 +184,8 @@ public static class DomainErrors
     public static readonly Error FailedToDeserializeObject = new(
         "Deserialization error",
         "Failed to deserialize object");
+
+    public static readonly Error FailedToParseId = new(
+        "Parsing error",
+        "Failed to parse id");
 }
