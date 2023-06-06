@@ -1,4 +1,5 @@
-﻿using MyToDo.HttpContracts.Common;
+﻿using System.Runtime.CompilerServices;
+using MyToDo.HttpContracts.Common;
 using MyToDo.HttpContracts.Members;
 using MyToDo.Web.Components;
 
@@ -77,6 +78,11 @@ public sealed partial class Members : BaseComponent
         _isOrderByNameAsc = !_isOrderByNameAsc;
         
         _members = _sortedMembers.ToList();
+    }
+
+    private async Task SearchAsync()
+    {
+        await GetMemberPageAsync();
     }
 
     private void ShowRegisterForm() => _isShowRegisterForm = true;

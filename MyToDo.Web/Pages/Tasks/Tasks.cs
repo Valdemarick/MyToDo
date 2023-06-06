@@ -56,7 +56,12 @@ public partial class Tasks
 
     private void ShowCreateForm() => _isShowCreateForm = true;
 
-    private void CloseCreateForm() => _isShowCreateForm = false;
+    private async Task CloseCreateForm()
+    {
+        await GetTaskPageAsync();
+
+        _isShowCreateForm = false;
+    }
 
     private async Task ShowFullInfoDialog(Guid id)
     {
@@ -82,8 +87,10 @@ public partial class Tasks
         _isShowUpdateDialog = true;
     }
 
-    private void CloseUpdateDialog()
+    private async Task CloseUpdateDialog()
     {
+        await GetTaskPageAsync();
+
         _taskToUpdate = null!;
 
         _isShowUpdateDialog = false;

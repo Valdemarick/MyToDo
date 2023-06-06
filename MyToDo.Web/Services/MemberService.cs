@@ -28,7 +28,7 @@ internal sealed class MemberService : BaseService, IMemberService
     {
         var url = $"{BaseUrl}/{id}";
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
 
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
@@ -52,7 +52,11 @@ internal sealed class MemberService : BaseService, IMemberService
     {
         var url = $"{BaseUrl}/activity";
 
-        var dto = new UpdateMemberActivityDto(memberId, isActive);
+        var dto = new UpdateMemberActivityDto
+        {
+            MemberId = memberId,
+            IsActive = isActive
+        };
 
         var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url, dto);
 

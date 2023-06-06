@@ -5,13 +5,16 @@
 
 <ModalDialog Title="Обновление задачи" Text="Test" OnSubmit="@UpdateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
     <EditForm Model="@_updateTaskDto" OnValidSubmit="@UpdateAsync">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
         <div class="mb-3">
             <label for="nameInput" class="form-label">Заголовок</label>
             <input type="text" class="form-control" id="nameInput" @bind="_updateTaskDto.Title">
+            <ValidationMessage For="@(() => _updateTaskDto.Title)"></ValidationMessage>
         </div>
         <div class="mb-3">
             <label for="descriptionInput" class="form-label">Описание</label>
             <textarea class="form-control" id="descriptionInput" @bind="_updateTaskDto.Description"></textarea>
+            <ValidationMessage For="@(() => _updateTaskDto.Description)"></ValidationMessage>
         </div>
         <div class="mb-3">
             <label for="executorInput" class="form-label">Исполнитель</label>
@@ -39,6 +42,7 @@
                     <option value="@taskType">@GetTaskTypeNameInRussian(@taskType)</option>
                 }
             </select>
+            <ValidationMessage For="@(() => _updateTaskDto.TaskType)"></ValidationMessage>
         </div>
         <div class="mb-3">
             <label for="priorityInput" class="form-label">Приоритет</label>
@@ -49,14 +53,19 @@
                     {
                         <option value="@priority" selected="selected">@GetPriorityNameInRussian(priority)</option>
                     }
-                    
+
                     <option value="@priority">@GetPriorityNameInRussian(priority)</option>
                 }
             </select>
+            <ValidationMessage For="@(() => _updateTaskDto.Priority)"></ValidationMessage>
         </div>
         <div class="mb-3">
             <label for="deadLineInput" class="form-label">Срок</label>
             <input type="datetime-local" class="form-control" id="deadLineInput" @bind="_updateTaskDto.Deadline">
+            <ValidationMessage For="@(() => _updateTaskDto.Deadline)"></ValidationMessage>
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
         </div>
     </EditForm>
 </ModalDialog>

@@ -1,0 +1,16 @@
+﻿<ModalDialog Title="Удаление тега" Text="Вы действительно хотите удалить этот тег?" OnClose="@OnClose"
+             OnSubmit="@OnSubmit" DialogType="ModalDialog.ModalDialogType.Error">
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" @onclick="@(() => OnSubmit.InvokeAsync())">Подвердить</button>
+        <button type="button" class="btn btn-primary" @onclick="@(() => OnClose.InvokeAsync())">Отмена</button>
+    </div>
+</ModalDialog>
+             
+@code
+{
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+    
+    [Parameter]
+    public EventCallback<bool> OnSubmit { get; set; }
+}

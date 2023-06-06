@@ -29,12 +29,12 @@ internal sealed class UpdateTaskCommandHandler : ICommandHandler<UpdateTaskComma
     public async Task<Result> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
     {
         var taskWithTheSameTitle = await _taskRepository.GetByTitleAsync(request.Title, cancellationToken);
-        if (taskWithTheSameTitle is not null)
+        if (taskWithTheSameTitle is not null && taskWithTheSameTitle.Id != request.Id)
         {
             return Result.Failure(DomainErrors.Task.TitleIsAlreadyOccupied);
         }
         
-        var task = await _taskRepository.GetByIdAsync(request.Id, cancellationToken, true);
+        var task = await _taskRepository.GetByIdWithoutIncludesAsync(request.Id, cancellationToken, true);
         if (task is null)
         {
             return Result.Failure(DomainErrors.Task.TaskNotFound);

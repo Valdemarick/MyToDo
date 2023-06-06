@@ -1,3 +1,11 @@
-﻿namespace MyToDo.HttpContracts.Members;
+﻿using System.ComponentModel.DataAnnotations;
 
-public sealed record UpdateMemberActivityDto(Guid MemberId, bool IsActive);
+namespace MyToDo.HttpContracts.Members;
+
+public sealed record UpdateMemberActivityDto
+{
+    [Required(ErrorMessage = "Это поле обязательное")]
+    public Guid MemberId { get; set; }
+
+    public bool IsActive { get; set; }
+}

@@ -19,6 +19,19 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<Task?> GetByIdWithoutIncludesAsync(Guid taskId, CancellationToken cancellationToken = default, bool isTracking = false)
+    {
+        if (isTracking)
+        {
+            return await DbSet
+                .FirstOrDefaultAsync(t => t.Id == taskId, cancellationToken);
+        }
+        
+        return await DbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == taskId, cancellationToken);
+    }
+
     public async Task<Task?> GetWithTagsAsync(Guid taskId, bool isTracking = false, CancellationToken cancellationToken = default)
     {
         return await ApplySpecification(new TaskWithTagsSpecification(taskId, isTracking))
@@ -49,6 +62,7 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
     public async Task<Task?> GetByTitleAsync(string title, CancellationToken cancellationToken = default)
     {
         return await DbSet
+            .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Title.ToLower() == title.ToLower(), cancellationToken);
     }
 }

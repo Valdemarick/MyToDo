@@ -56,8 +56,7 @@
 
 @if (_isShowDeleteDialog)
 {
-    <ModalDialog Title="Удаление тега" Text="Вы действительно хотите удалить этот тег?" OnClose="@CloseDeleteDialog"
-                 OnSubmit="@DeleteTag" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+    <ConfirmModalDialog OnClose="@CloseDeleteDialog" OnSubmit="@DeleteTag"></ConfirmModalDialog>
 }
 
 @if (IsShowErrorDialog)

@@ -12,7 +12,8 @@ public partial class Login
         var loginResult = await MemberService.LoginAsync(_loginDto);
         if (loginResult.IsFailure)
         {
-            
+            ShowErrorDialog(loginResult.Error);
+            return;
         }
 
         var customAuthProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MyToDo.Domain.Errors;
 using MyToDo.Domain.Shared;
 
 namespace MyToDo.Web.Components;
@@ -19,5 +20,15 @@ public abstract class BaseComponent : ComponentBase
     {
         Error = null!;
         IsShowErrorDialog = false;
+    }
+
+    protected string GetErrorTextInRussian()
+    {
+        if (Error == DomainErrors.Member.MemberNotFound)
+        {
+            return "Такой пользователь не найден";
+        }
+
+        return "";
     }
 }
