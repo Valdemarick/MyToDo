@@ -1,4 +1,5 @@
 ﻿using MyToDo.HttpContracts.Common;
+using MyToDo.HttpContracts.Enums;
 using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.Web.Pages.Tasks;
@@ -21,7 +22,14 @@ public partial class Tasks
     private bool _isShowCreateForm;
     private bool _isShowFullInfoDialog;
     private bool _isShowUpdateDialog;
+    private bool _isShowTagEditDialog;
 
+    private Guid _taskIdToUpdateTags;
+
+    private readonly List<TaskTypeDto> _taskTypes = new();
+    private readonly List<TaskStatusDto> _taskStatuses = new();
+    private readonly List<PriorityDto> _priorities = new();
+    
     protected override async Task OnInitializedAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
@@ -33,6 +41,10 @@ public partial class Tasks
         
         _tasks = taskPagedList.Value.Items;
         _pageView = taskPagedList.Value.PageView;
+
+        _taskStatuses.AddRange(Enum.GetValues<TaskStatusDto>());
+        _taskTypes.AddRange(Enum.GetValues<TaskTypeDto>());
+        _priorities.AddRange(Enum.GetValues<PriorityDto>());
     }
 
     private async Task SelectPageAsync(int page)
@@ -95,4 +107,43 @@ public partial class Tasks
 
         _isShowUpdateDialog = false;
     }
+
+    private void ShowTagEditDialog(Guid taskId)
+    {
+        _taskIdToUpdateTags = taskId;
+        _isShowTagEditDialog = true;
+    }
+
+    private void CloseTagEditDialog()
+    {
+        _taskIdToUpdateTags = default;
+        _isShowTagEditDialog = false;
+    }
+    
+    private string GetTaskTypeNameInRussian(TaskTypeDto taskType) => taskType switch
+    {
+        TaskTypeDto.Bug => "Баг",
+        TaskTypeDto.Task => "Задача",
+        TaskTypeDto.Idea => "Идея",
+        TaskTypeDto.NotChosen => "Не выбрано",
+        _ => "Неизвестно"
+    };
+
+    private string GetPriorityNameInRussian(PriorityDto priority) => priority switch
+    {
+        PriorityDto.Low => "Низкий",
+        PriorityDto.Normal => "Средний",
+        PriorityDto.High => "Высокий",
+        PriorityDto.Critical => "Критический",
+        PriorityDto.NotChosen => "Не выбрано"
+    };
+
+    private string GetTaskStatusInRussian(TaskStatusDto status) => status switch
+    {
+        TaskStatusDto.Open => "Открыта",
+        TaskStatusDto.InProgress => "В работу",
+        TaskStatusDto.Completed => "Закрыта",
+        TaskStatusDto.NotChosen => "Не выбрано",
+        TaskStatusDto.Reopen => "Переоткрыта"
+    };
 }

@@ -30,15 +30,15 @@ public partial class Tags
 
     private async Task GetTagPageAsync()
     {
-        var memberPage = await TagService.GetPageAsync(_parameters);
-        if (memberPage.IsFailure)
+        var tagPage = await TagService.GetPageAsync(_parameters);
+        if (tagPage.IsFailure)
         {
-            ShowErrorDialog(memberPage.Error);
+            ShowErrorDialog(tagPage.Error);
             return;
         }
         
-        _tags = memberPage.Value.Items;
-        _pageView = memberPage.Value.PageView;
+        _tags = tagPage.Value.Items;
+        _pageView = tagPage.Value.PageView;
     }
 
     private async Task DeleteTag()
@@ -51,19 +51,7 @@ public partial class Tags
     private async Task SelectPageAsync(int page)
     {
         _parameters.PageIndex = page;
-        await GetMemberPageAsync();
-    }
-    
-    private async Task GetMemberPageAsync()
-    {
-        var memberPage = await TagService.GetPageAsync(_parameters);
-        if (memberPage.IsFailure)
-        {
-            ShowErrorDialog(memberPage.Error);
-            return;
-        }
-        _tags = memberPage.Value.Items;
-        _pageView = memberPage.Value.PageView;
+        await GetTagPageAsync();
     }
 
     private void ShowCreateDialog() => _isShowCreateDialog = true;

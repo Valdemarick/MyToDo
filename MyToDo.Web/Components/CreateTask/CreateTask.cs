@@ -43,6 +43,7 @@ public partial class CreateTask
         TaskTypeDto.Bug => "Баг",
         TaskTypeDto.Task => "Задача",
         TaskTypeDto.Idea => "Идея",
+        TaskTypeDto.NotChosen => "Не выбрано",
         _ => "Неизвестно"
     };
 
@@ -51,6 +52,7 @@ public partial class CreateTask
         PriorityDto.Low => "Низкий",
         PriorityDto.Normal => "Средний",
         PriorityDto.High => "Высокий",
-        PriorityDto.Critical => "Критический"
+        PriorityDto.Critical => "Критический",
+        PriorityDto.NotChosen => "Не выбрано",
     };
 }

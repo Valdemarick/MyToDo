@@ -6,9 +6,9 @@ namespace MyToDo.Web.Components;
 
 public abstract class BaseComponent : ComponentBase
 {
-    protected Error Error = null!;
+    protected static Error Error = null!;
 
-    protected bool IsShowErrorDialog;
+    protected static bool IsShowErrorDialog;
     
     protected void ShowErrorDialog(Error error)
     {

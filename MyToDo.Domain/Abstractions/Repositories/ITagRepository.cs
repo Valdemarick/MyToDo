@@ -10,4 +10,5 @@ public interface ITagRepository : IBaseRepository<Tag>
     Task<TagPagedList> GetPageAsync(TagPageRequest request, CancellationToken cancellationToken = default);
     Task<Tag?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
     Task<Tag?> GetByIdAsync(Guid id, bool isTracking = false, CancellationToken cancellationToken = default);
+    Task<List<Tag>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken);
 }

@@ -1,0 +1,12 @@
+﻿@inherits BaseComponent
+
+<ModalDialog Title="Ошибка" Text="@GetErrorTextInRussian()" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.Error">
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" @onclick="@(() => OnClose.InvokeAsync())">Закрыть</button>
+    </div>
+</ModalDialog>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+}

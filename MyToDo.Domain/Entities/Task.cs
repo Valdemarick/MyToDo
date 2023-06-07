@@ -183,4 +183,14 @@ public sealed class Task : AggregateRoot
 
         return Result.Success();
     }
+
+    public void UnlinkAllTags()
+    {
+        _tags.Clear();
+    }
+
+    public void LinkTags(IEnumerable<Tag> tags)
+    {
+        _tags.AddRange(tags);
+    }
 }

@@ -36,7 +36,7 @@ public sealed partial class Members : BaseComponent
         _members = getMemberPageResult.Value.Items;
         _pageView = getMemberPageResult.Value.PageView;
     }
-
+    
     private async Task OnActActivityUpdateAsync(Guid memberId, bool isActive)
     {
         var updateActivityResult = await MemberService.UpdateActivityAsync(memberId, isActive);

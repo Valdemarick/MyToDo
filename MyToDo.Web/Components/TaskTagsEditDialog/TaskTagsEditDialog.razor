@@ -1,0 +1,33 @@
+﻿@using MyToDo.Web.Services.Abstractions
+@inject ITaskService TaskService
+@inherits BaseComponent
+@inject ITagService TagService
+
+<ModalDialog Title="Привязка тегов к задаче" Text="Test" OnSubmit="@LinkAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
+    <EditForm Model="@_linkTagsToTaskDto" OnValidSubmit="@LinkAsync">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mb-3">
+            <label for="executorInput" class="form-label">Исполнитель</label>
+            <select class="form-select" name="executorInput" id="executorInput" multiple @bind="_linkTagsToTaskDto.TagIds">
+                <option value=""></option>
+                @foreach (var tag in _tags)
+                {
+                    if (_linkedTags.Any(x => x.Name == tag.Name))
+                    {
+                        <option value="@tag.Id" selected>@tag.Name</option>
+                    }
+                    
+                    <option value="@tag.Id">@tag.Name</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Привязать</button>
+        </div>
+    </EditForm>
+</ModalDialog>
+
+@if (IsShowErrorDialog)
+{
+    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+}

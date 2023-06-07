@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using MyToDo.Domain.Shared;
+using MyToDo.HttpContracts.Tags;
 using MyToDo.HttpContracts.Tasks;
 using MyToDo.Web.Extensions;
 using MyToDo.Web.Services.Abstractions;
@@ -54,5 +55,27 @@ internal sealed class TaskService : BaseService, ITaskService
         using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
 
         return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result> LinkTagsToTaskAsync(LinkTagsToTaskDto dto, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/linkTags";
+        
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url, dto);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result<List<TagDto>>> GetLinkedTagsAsync(Guid taskId, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{taskId}/tags";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<List<TagDto>>(response, cancellationToken);
     }
 }

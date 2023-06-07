@@ -11,17 +11,22 @@
 
 <h3>Пользователи</h3>
 
-<button class="btn btn-primary" @onclick="@ShowRegisterForm">
-    <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
-</button>
-
 <div class="container">
-    <form method="get"  class="d-flex text-center">
-        <div class="input-group w-25">
-            <input class="form-control" type="search" name="name" @bind="_parameters.SearchString"/>
-            <button type="submit" class="btn btn-primary" @onclick="@SearchAsync"><i class="bi bi-search"></i></button>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary" @onclick="@ShowRegisterForm">
+                <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
+            </button>
         </div>
-    </form>
+        <div class="col">
+            <form method="get" class="d-flex text-center">
+                <div class="input-group w-50">
+                    <input class="form-control" type="search" name="name" placeholder="Искать по полному имени" @bind="_parameters.SearchString"/>
+                    <button type="submit" class="btn btn-primary" @onclick="@GetMemberPageAsync"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <table class="table">
@@ -68,5 +73,7 @@
 
 @if (IsShowErrorDialog)
 {
-    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error">
+        <button type="button" class="btn btn-primary" @onclick="@CloseErrorDialog">Ok</button>
+    </ModalDialog>
 }

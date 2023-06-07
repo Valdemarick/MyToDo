@@ -58,6 +58,7 @@ public partial class UpdateTask
         TaskTypeDto.Bug => "Баг",
         TaskTypeDto.Task => "Задача",
         TaskTypeDto.Idea => "Идея",
+        TaskTypeDto.NotChosen => "Не выбрано",
         _ => "Неизвестно"
     };
 
@@ -66,6 +67,7 @@ public partial class UpdateTask
         PriorityDto.Low => "Низкий",
         PriorityDto.Normal => "Средний",
         PriorityDto.High => "Высокий",
-        PriorityDto.Critical => "Критический"
+        PriorityDto.Critical => "Критический",
+        PriorityDto.NotChosen => "Не выбрано"
     };
 }

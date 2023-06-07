@@ -16,7 +16,16 @@ internal sealed class TagService : BaseService, ITagService
     }
 
     protected override string BaseUrl => "tags";
-    
+
+    public async Task<Result<List<TagDto>>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, BaseUrl);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<List<TagDto>>(response, cancellationToken);
+    }
+
     public async Task<Result<TagPagedListDto>> GetPageAsync(TagPageRequestDto dto, CancellationToken cancellationToken = default)
     {
         var queryParameters = await dto.GetQueryFromRequestDtoAsync();

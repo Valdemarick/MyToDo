@@ -5,15 +5,54 @@
 @using MyToDo.Web.Components.TaskFullInfo
 @using MyToDo.Web.Components.Tasks.UpdateTask
 @using MyToDo.Web.Components
+@using MyToDo.Web.Components.TaskTagsEditDialog
 @inject ITaskService TaskService
 @* @attribute [Authorize] *@
 @inherits MyToDo.Web.Components.BaseComponent
 
 <h3>Задачи</h3>
 
-<button class="btn btn-primary" @onclick="@ShowCreateForm">
-    <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
-</button>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary" @onclick="@ShowCreateForm">
+                <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
+            </button>
+        </div>
+        <div class="col w-50">
+            <form method="get" class="d-flex text-center">
+                <div class="input-group">
+                    <input class="form-control" type="search" name="name" placeholder="Имя" @bind="_parameters.SearchString"/>
+                    <button type="submit" class="btn btn-primary" @onclick="@GetTaskPageAsync"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+        <div class="col w-25">
+            <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.TaskType">
+                @foreach (var taskType in _taskTypes)
+                {
+                    <option value="@taskType" @onclick="@GetTaskPageAsync">@GetTaskTypeNameInRussian(taskType)</option>
+                }
+            </select>
+        </div>
+        <div class="col w-25">
+            <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.TaskStatus">
+                @foreach (var taskStatus in _taskStatuses)
+                {
+                    <option value="@taskStatus" @onclick="@GetTaskPageAsync">@GetTaskStatusInRussian(taskStatus)</option>
+                }
+            </select>
+        </div>
+        <div class="col w-25">
+            <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.Priority">
+                @foreach (var priority in _priorities)
+                {
+                    <option value="@priority" @onclick="@GetTaskPageAsync">@GetPriorityNameInRussian(priority)</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
 
 <table class="table">
     <thead>
@@ -34,8 +73,12 @@
                 <td>@($"{task.CreatedOn:dd.MM.yyyy HH:mm:ss z}")</td>
                 <td>@($"{task.Deadline:dd.MM.yyyy HH:mm:ss z}")</td>
                 <td><button class="btn btn-warning" @onclick="@(() => ShowUpdateDialog(task.Id))">
-                                            <i class="bi bi-pencil-square"></i>Обновить
-                                        </button></td>
+                        <i class="bi bi-pencil-square"></i>Обновить
+                    </button>
+                    <button class="btn btn-warning" @onclick="@(() => ShowTagEditDialog(task.Id))">
+                        <i class="bi bi-pencil-square"></i>Теги
+                    </button>
+                </td>
             </tr>
         }
     </tbody>
@@ -64,4 +107,9 @@
 @if (IsShowErrorDialog)
 {
     <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+}
+
+@if (_isShowTagEditDialog)
+{
+    <TaskTagsEditDialog OnClose="CloseTagEditDialog" TaskId="_taskIdToUpdateTags"></TaskTagsEditDialog>
 }

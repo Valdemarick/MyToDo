@@ -72,6 +72,6 @@ internal abstract class BaseService
     {
         var token = await _authenticationStateProvider.GetToken();
 
-        message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);   
     }
 }

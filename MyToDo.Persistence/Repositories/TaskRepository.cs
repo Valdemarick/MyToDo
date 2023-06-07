@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyToDo.Domain.Abstractions.Repositories;
+using MyToDo.Domain.Enums;
 using MyToDo.Domain.ValueObjects.PagedLists;
 using MyToDo.Domain.ValueObjects.Requests;
 using MyToDo.Persistence.Specifications.TaskSpecifications;
 using Task = MyToDo.Domain.Entities.Task;
+using TaskStatus = MyToDo.Domain.Enums.TaskStatus;
 
 namespace MyToDo.Persistence.Repositories;
 
@@ -45,6 +47,21 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
         if (!string.IsNullOrWhiteSpace(request.SearchString))
         {
             query = query.Where(m => m.Title.ToLower().StartsWith(request.SearchString.ToLower()));
+        }
+
+        if (request.TaskStatus != TaskStatus.NotChosen)
+        {
+            query = query.Where(t => t.Status == request.TaskStatus);
+        }
+
+        if (request.Priority != Priority.NotChosen)
+        {
+            query = query.Where(t => t.Priority == request.Priority);
+        }
+
+        if (request.TaskType != TaskType.NotChosen)
+        {
+            query = query.Where(t => t.TaskType == request.TaskType);
         }
 
         var totalCount = DbSet.Count();

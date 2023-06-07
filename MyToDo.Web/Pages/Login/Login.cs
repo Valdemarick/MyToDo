@@ -5,12 +5,12 @@ namespace MyToDo.Web.Pages.Login;
 
 public partial class Login
 {
-    private LoginDto _loginDto = new();
-    
-    public async Task LoginAsync()
+    private readonly LoginDto _loginDto = new();
+
+    private async Task LoginAsync()
     {
         var loginResult = await MemberService.LoginAsync(_loginDto);
-        if (loginResult.IsFailure)
+                if (loginResult.IsFailure)
         {
             ShowErrorDialog(loginResult.Error);
             return;

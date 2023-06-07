@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CloseTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
+using MyToDo.Application.CQRS.Tasks.Commands.LinkTagsToTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescriptionCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.UpdateTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskPageQuery;
+using MyToDo.Application.CQRS.Tasks.Queries.GetTaskTagsQuery;
 using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 using MyToDo.HttpContracts.Tasks;
@@ -29,7 +31,8 @@ public sealed class TasksController : BaseController
     public async Task<IActionResult> GetPageAsync([FromQuery] TaskPageRequestDto dto,
         CancellationToken cancellationToken)
     {
-        var query = new GetTaskPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize);
+        var query = new GetTaskPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize,
+            dto.TaskStatus, dto.TaskType, dto.Priority);
         
         var result = await Mediator.Send(query, cancellationToken);
         
@@ -49,6 +52,22 @@ public sealed class TasksController : BaseController
         var result = await Mediator.Send(new GetTaskByIdQuery(id),
             cancellationToken);
         
+        return HandleResult(result);
+    }
+
+    [HttpGet("{taskId:guid}/tags")]
+    public async Task<IActionResult> GetTaskTagsAsync([FromRoute] Guid taskId,
+        CancellationToken cancellationToken = default)
+    {
+        if (taskId == default)
+        {
+            return BadRequest(DomainErrors.Task.IdValidationError);
+        }
+
+        var query = new GetTaskTagsQuery(taskId);
+
+        var result = await Mediator.Send(query, cancellationToken);
+
         return HandleResult(result);
     }
 
@@ -104,6 +123,18 @@ public sealed class TasksController : BaseController
     {
         var result = await Mediator.Send(command, cancellationToken);
         
+        return HandleResult(result);
+    }
+
+    [HttpPut("linkTags")]
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> LinkTagsToTaskAsync([FromBody] LinkTagsToTaskDto dto,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new LinkTagsToTaskCommand(dto.TaskId, dto.TagIds);
+
+        var result = await Mediator.Send(command, cancellationToken);
+
         return HandleResult(result);
     }
 }

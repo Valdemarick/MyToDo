@@ -50,4 +50,11 @@ internal sealed class TagRepository : BaseRepository<Tag>, ITagRepository
         return await DbSet
             .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
+
+    public async Task<List<Tag>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        return await DbSet
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+    }
 }
