@@ -78,4 +78,15 @@ internal sealed class TaskService : BaseService, ITaskService
 
         return await HandleResponse<List<TagDto>>(response, cancellationToken);
     }
+
+    public async Task<Result> CompleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{id}/close";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
 }

@@ -4,6 +4,7 @@
 @using MyToDo.Web.Components.RegisterMember
 @using MyToDo.Web.Components
 @using MyToDo.Web.Components.UpdateMember
+@using MyToDo.Web.Components.MemberStatistics
 @inject IMemberService MemberService
 @inject NavigationManager NavigationManager
 @inherits BaseComponent
@@ -47,8 +48,11 @@
             <td><input type="checkbox" value="@member.IsActive" checked="@(member.IsActive)"
                        @onclick="async () => await OnActActivityUpdateAsync(member.Id, !member.IsActive)"/></td>
             <td>
-                <button class="btn btn-primary" @onclick="() => ShowUpdateForm(member)">
+                <button class="btn btn-warning" @onclick="() => ShowUpdateForm(member)">
                     <i class="bi bi-pencil-square"></i> Обновить
+                </button>
+                <button class="btn btn-primary" @onclick="@(() => ShowStatisticsForm(member.Id))">
+                    <i class="bi bi-info-square"></i> Статистика
                 </button>
             </td>
         </tr>
@@ -73,7 +77,10 @@
 
 @if (IsShowErrorDialog)
 {
-    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error">
-        <button type="button" class="btn btn-primary" @onclick="@CloseErrorDialog">Ok</button>
-    </ModalDialog>
+    <ErrorDialog OnClose="@CloseErrorDialog"></ErrorDialog>
+}
+
+@if (_isShowStatisticsForm)
+{
+    <MemberStatisticsFormDialog OnClose="@CloseStatisticsForm" MemberId="@_memberIdStatistics"></MemberStatisticsFormDialog>
 }

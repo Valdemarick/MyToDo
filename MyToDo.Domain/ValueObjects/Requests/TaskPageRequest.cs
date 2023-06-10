@@ -12,12 +12,14 @@ public sealed class TaskPageRequest : BasePageRequest
         int pageSize,
         TaskStatus taskStatus,
         TaskType taskType,
-        Priority priority) 
+        Priority priority,
+        Guid? executorId = null) 
         : base(searchString, pageIndex, pageSize)
     {
         TaskStatus = taskStatus;
         TaskType = taskType;
         Priority = priority;
+        ExecutorId = executorId;
     }
 
     public TaskStatus TaskStatus { get; set; }
@@ -25,4 +27,6 @@ public sealed class TaskPageRequest : BasePageRequest
     public Priority Priority { get; set; }
 
     public TaskType TaskType { get; set; }
+
+    public Guid? ExecutorId { get; set; }
 }

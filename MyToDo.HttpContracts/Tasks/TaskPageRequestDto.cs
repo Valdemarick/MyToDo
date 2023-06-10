@@ -10,4 +10,6 @@ public sealed class TaskPageRequestDto : BasePageRequestDto
     public TaskStatusDto TaskStatus { get; set; } = TaskStatusDto.NotChosen;
 
     public PriorityDto Priority { get; set; } = PriorityDto.NotChosen;
+    
+    public bool IsShowOnlyMyTask { get; set; }
 }

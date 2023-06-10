@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using MyToDo.Domain.ValueObjects.PagedLists;
 using MyToDo.HttpContracts.Common;
 using MyToDo.HttpContracts.Members;
 using MyToDo.Web.Components;
@@ -16,6 +17,8 @@ public sealed partial class Members : BaseComponent
 
     private bool _isShowUpdateForm = false;
 
+    private bool _isShowStatisticsForm;
+
     private readonly MemberPageRequestDto _parameters = new MemberPageRequestDto
     {
         PageIndex = 1,
@@ -24,6 +27,8 @@ public sealed partial class Members : BaseComponent
 
     private MemberDto _updatedMember;
 
+    private Guid _memberIdStatistics;
+    
     protected override async Task OnInitializedAsync()
     {
         var getMemberPageResult = await MemberService.GetPageAsync(_parameters);
@@ -105,5 +110,17 @@ public sealed partial class Members : BaseComponent
         
         _updatedMember = null!;
         _isShowUpdateForm = false;
+    }
+
+    private void ShowStatisticsForm(Guid memberId)
+    {
+        _memberIdStatistics = memberId;
+        _isShowStatisticsForm = true;
+    }
+
+    private void CloseStatisticsForm()
+    {
+        _memberIdStatistics = default;
+        _isShowStatisticsForm = false;
     }
 }

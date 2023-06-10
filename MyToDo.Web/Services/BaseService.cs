@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -63,7 +64,9 @@ internal abstract class BaseService
 
     protected static async Task<Result> HandleError(HttpResponseMessage response, CancellationToken cancellationToken = default)
     {
-        var error = await response.Content.ReadFromJsonAsync<Error>(cancellationToken: cancellationToken);
+        var error = response.StatusCode == HttpStatusCode.Forbidden
+            ? DomainErrors.Forbidden
+            : await response.Content.ReadFromJsonAsync<Error>(cancellationToken: cancellationToken);
 
         return Result.Failure(error ?? DomainErrors.FailedToDeserializeObject);
     }

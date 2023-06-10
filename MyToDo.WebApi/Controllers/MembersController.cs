@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyToDo.Application.CQRS.Members.Commands.LoginCommand;
 using MyToDo.Application.CQRS.Members.Commands.RegisterCommand;
@@ -9,6 +8,7 @@ using MyToDo.Application.CQRS.Members.Commands.UpdateMemberCommand;
 using MyToDo.Application.CQRS.Members.Queries.GetAllMembersQuery;
 using MyToDo.Application.CQRS.Members.Queries.GetByIdQuery;
 using MyToDo.Application.CQRS.Members.Queries.GetMemberPageQuery;
+using MyToDo.Application.CQRS.Members.Queries.GetMemberStatisticsQuery;
 using MyToDo.Domain.Enums;
 using MyToDo.Domain.Errors;
 using MyToDo.HttpContracts.Members;
@@ -57,6 +57,23 @@ public sealed class MembersController : BaseController
         }
 
         var query = new GetMemberByIdQuery(id);
+
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return HandleResult(result);
+    }
+
+    [HttpGet("{memberId:guid}/statistics")]
+    [NeededPermission(Permission.UserRead)]
+    public async Task<IActionResult> GetMemberStatisticsAsync([FromRoute] Guid memberId,
+        CancellationToken cancellationToken = default)
+    {
+        if (memberId == default)
+        {
+            return BadRequest(DomainErrors.Member.IdValidationError);
+        }
+
+        var query = new GetMemberStatisticsQuery(memberId);
 
         var result = await Mediator.Send(query, cancellationToken);
 

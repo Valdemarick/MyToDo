@@ -7,6 +7,7 @@
 @using MyToDo.Web.Components
 @using MyToDo.Web.Components.TaskTagsEditDialog
 @inject ITaskService TaskService
+@inject ITagService TagService
 @* @attribute [Authorize] *@
 @inherits MyToDo.Web.Components.BaseComponent
 
@@ -48,6 +49,23 @@
                 @foreach (var priority in _priorities)
                 {
                     <option value="@priority" @onclick="@GetTaskPageAsync">@GetPriorityNameInRussian(priority)</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="container w-50" style="margin-top: 20px">
+    <div class="row">
+        <div class="col w-25">
+                <label for="mytasks">Показать только мои задачи</label>
+                <input type="checkbox" id="mytasks" @bind="_parameters.IsShowOnlyMyTask" @onclick="@(async () => await GetTaskPageAsync())">
+            </div>
+        <div class="col w-25">
+            <select class="form-select" name="roleInput" id="roleInput" >
+                @foreach (var tag in _tags)
+                {
+                    <option value="@tag.Id" @onclick="@GetTaskPageAsync">@tag.Name</option>
                 }
             </select>
         </div>
@@ -106,7 +124,7 @@
 
 @if (IsShowErrorDialog)
 {
-    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+    <ErrorDialog OnClose="@CloseErrorDialog"></ErrorDialog>
 }
 
 @if (_isShowTagEditDialog)

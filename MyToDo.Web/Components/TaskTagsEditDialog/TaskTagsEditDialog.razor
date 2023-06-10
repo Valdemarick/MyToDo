@@ -7,8 +7,8 @@
     <EditForm Model="@_linkTagsToTaskDto" OnValidSubmit="@LinkAsync">
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <div class="mb-3">
-            <label for="executorInput" class="form-label">Исполнитель</label>
-            <select class="form-select" name="executorInput" id="executorInput" multiple @bind="_linkTagsToTaskDto.TagIds">
+            <label for="executorInput" class="form-label">Теги</label>
+            <select class="form-select" name="executorInput" id="executorInput" multiple>
                 <option value=""></option>
                 @foreach (var tag in _tags)
                 {
@@ -29,5 +29,5 @@
 
 @if (IsShowErrorDialog)
 {
-    <ModalDialog Title="Ошибка" Text="@Error.Message" OnClose="@CloseErrorDialog" OnSubmit="CloseErrorDialog" DialogType="ModalDialog.ModalDialogType.Error"></ModalDialog>
+    <ErrorDialog OnClose="@CloseErrorDialog"></ErrorDialog>
 }

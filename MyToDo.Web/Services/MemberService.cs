@@ -95,4 +95,15 @@ internal sealed class MemberService : BaseService, IMemberService
 
         return await HandleResponse<MemberSessionDto>(response, cancellationToken);
     }
+
+    public async Task<Result<MemberStatisticsDto>> GetMemberStatisticsAsync(Guid memberId, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{memberId}/statistics";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<MemberStatisticsDto>(response, cancellationToken);
+    }
 }

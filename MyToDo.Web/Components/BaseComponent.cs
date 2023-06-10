@@ -28,6 +28,11 @@ public abstract class BaseComponent : ComponentBase
         {
             return "Такой пользователь не найден";
         }
+        
+        if (Error == DomainErrors.Forbidden)
+        {
+            return "У вас нет разрешения на это действие. Обратитесь к администратору";
+        }
 
         return "";
     }

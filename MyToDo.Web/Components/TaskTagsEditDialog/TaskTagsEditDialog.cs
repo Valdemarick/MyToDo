@@ -29,14 +29,14 @@ public partial class TaskTagsEditDialog
 
         _tags = getTagsResult.Value;
 
-        var getLinkedTags = await TaskService.GetLinkedTagsAsync(TaskId);
-        if (getLinkedTags.IsFailure)
+        var getLinkedTagsResult = await TaskService.GetLinkedTagsAsync(TaskId);
+        if (getLinkedTagsResult.IsFailure)
         {
             ShowErrorDialog(getTagsResult.Error);
             return;
         }
 
-        _linkedTags = getLinkedTags.Value;
+        _linkedTags = getLinkedTagsResult.Value;
     }
 
     private async Task LinkAsync()

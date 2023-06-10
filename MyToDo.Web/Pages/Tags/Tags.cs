@@ -43,7 +43,12 @@ public partial class Tags
 
     private async Task DeleteTag()
     {
-        await TagService.DeleteAsync(_tagIdToDelete);
+        var deleteResult = await TagService.DeleteAsync(_tagIdToDelete);
+        if (deleteResult.IsFailure)
+        {
+            ShowErrorDialog(deleteResult.Error);
+            return;
+        }
 
         await CloseDeleteDialog();
     }

@@ -34,6 +34,12 @@ internal sealed class UpdateMemberCommandHandler : ICommandHandler<UpdateMemberC
             return Result.Failure(DomainErrors.Member.MemberNotFound);
         }
 
+        var memberWithTheSameEmail = await _memberRepository.GetByEmail(request.Email, cancellationToken);
+        if (memberWithTheSameEmail is not null && memberWithTheSameEmail.Id != request.Id)
+        {
+            return Result.Failure(DomainErrors.Member.EmailIsAlreadyOccupied);
+        }
+
         var role = await _roleRepository.GetByIdAsync(request.RoleId, cancellationToken);
         if (role is null)
         {

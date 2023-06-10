@@ -64,6 +64,11 @@ internal sealed class TaskRepository : BaseRepository<Task>, ITaskRepository
             query = query.Where(t => t.TaskType == request.TaskType);
         }
 
+        if (request.ExecutorId.HasValue)
+        {
+            query = query.Where(t => t.ExecutorId == request.ExecutorId.Value);
+        }
+
         var totalCount = DbSet.Count();
 
         var tags = await query

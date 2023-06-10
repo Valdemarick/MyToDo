@@ -32,7 +32,7 @@ public sealed class TasksController : BaseController
         CancellationToken cancellationToken)
     {
         var query = new GetTaskPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize,
-            dto.TaskStatus, dto.TaskType, dto.Priority);
+            dto.TaskStatus, dto.TaskType, dto.Priority, dto.IsShowOnlyMyTask);
         
         var result = await Mediator.Send(query, cancellationToken);
         
@@ -116,11 +116,18 @@ public sealed class TasksController : BaseController
         return HandleResult(result);
     }
 
-    [HttpPut("close")]
+    [HttpPut("{taskId:guid}/close")]
     [NeededPermission(Permission.TaskManagement)]
-    public async Task<IActionResult> CloseTaskAsync([FromBody] CloseTaskCommand command,
+    public async Task<IActionResult> CloseTaskAsync([FromRoute] Guid taskId,
         CancellationToken cancellationToken)
     {
+        if (taskId == default)
+        {
+            return BadRequest(DomainErrors.Task.IdValidationError);
+        }
+
+        var command = new CloseTaskCommand(taskId);
+        
         var result = await Mediator.Send(command, cancellationToken);
         
         return HandleResult(result);

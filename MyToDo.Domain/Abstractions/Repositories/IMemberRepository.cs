@@ -17,4 +17,5 @@ public interface IMemberRepository : IBaseRepository<Member>
     Task<Member?> GetByIdWithTrackingAsync(Guid memberId, CancellationToken cancellationToken = default);
 
     Task<MemberPagedList> GetMemberPageAsync(MemberPageRequest request, CancellationToken cancellationToken = default);
+    Task<Member?> GetWithTasksAsync(Guid memberId, CancellationToken cancellationToken = default);
 }

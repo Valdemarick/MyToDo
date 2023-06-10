@@ -1,5 +1,7 @@
-﻿using MyToDo.HttpContracts.Common;
+﻿using MyToDo.Domain.ValueObjects.PagedLists;
+using MyToDo.HttpContracts.Common;
 using MyToDo.HttpContracts.Enums;
+using MyToDo.HttpContracts.Tags;
 using MyToDo.HttpContracts.Tasks;
 
 namespace MyToDo.Web.Pages.Tasks;
@@ -16,7 +18,7 @@ public partial class Tasks
     private readonly TaskPageRequestDto _parameters = new TaskPageRequestDto
     {
         PageIndex = 1,
-        PageSize = 10
+        PageSize = 10,
     };
 
     private bool _isShowCreateForm;
@@ -29,7 +31,9 @@ public partial class Tasks
     private readonly List<TaskTypeDto> _taskTypes = new();
     private readonly List<TaskStatusDto> _taskStatuses = new();
     private readonly List<PriorityDto> _priorities = new();
-    
+
+    private List<TagDto> _tags = new();
+
     protected override async Task OnInitializedAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
@@ -45,6 +49,8 @@ public partial class Tasks
         _taskStatuses.AddRange(Enum.GetValues<TaskStatusDto>());
         _taskTypes.AddRange(Enum.GetValues<TaskTypeDto>());
         _priorities.AddRange(Enum.GetValues<PriorityDto>());
+
+        _tags = (await TagService.GetAllAsync()).Value;
     }
 
     private async Task SelectPageAsync(int page)
@@ -146,4 +152,9 @@ public partial class Tasks
         TaskStatusDto.NotChosen => "Не выбрано",
         TaskStatusDto.Reopen => "Переоткрыта"
     };
+    
+    private async Task OnIsShowOnlyMyTasksChanged()
+    {
+        await GetTaskPageAsync();
+    }
 }

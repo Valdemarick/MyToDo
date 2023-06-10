@@ -1,4 +1,7 @@
 ﻿@using MyToDo.HttpContracts.Enums
+@using MyToDo.Web.Services.Abstractions
+@inject ITaskService TaskService
+@inherits BaseComponent
 
 <ModalDialog Title="Полная информация о задаче" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
     <form>
@@ -53,7 +56,10 @@
             </div>
         }
         <div>
-            <button type="button" class="btn btn-primary" @onclick="@CloseTaskAsync">Закрыть</button>
+            @if (Task.Status != TaskStatusDto.Completed)
+            {
+                <button type="button" class="btn btn-primary" @onclick="@CloseTaskAsync">Закрыть</button>
+            }
             @if (Task.Status == TaskStatusDto.Completed)
             {
                 <button type="button" class="btn btn-primary m-1" @onclick="ReopenTaskAsync">Переоткрыть задачу</button>
@@ -65,3 +71,8 @@
         </div>
     </form>
 </ModalDialog>
+
+@if (IsShowErrorDialog)
+{
+    <ErrorDialog OnClose="@CloseErrorDialog"></ErrorDialog>
+}

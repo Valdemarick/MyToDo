@@ -73,4 +73,13 @@ internal sealed class MemberRepository : BaseRepository<Member>, IMemberReposito
 
         return new MemberPagedList(members, totalCount);
     }
+
+    public async Task<Member?> GetWithTasksAsync(Guid memberId, CancellationToken cancellationToken = default)
+    {
+        return await DbSet
+            .Include(m => m.AssignedTasks)
+            .Include(m => m.CreatedTasks)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == memberId, cancellationToken);
+    }
 }

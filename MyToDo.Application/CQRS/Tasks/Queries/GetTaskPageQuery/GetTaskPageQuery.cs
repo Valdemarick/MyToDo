@@ -10,4 +10,5 @@ public sealed record GetTaskPageQuery(
     int PageSize,
     TaskStatusDto TaskStatus,
     TaskTypeDto TaskType,
-    PriorityDto Priority) : IQuery<TaskPagedListDto>;
+    PriorityDto Priority,
+    bool IsShowOnlyMyTasks) : IQuery<TaskPagedListDto>;

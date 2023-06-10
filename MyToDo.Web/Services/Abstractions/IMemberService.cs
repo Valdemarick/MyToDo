@@ -18,4 +18,7 @@ internal interface IMemberService
     Task<Result> UpdateAsync(UpdateMemberDto dto, CancellationToken cancellationToken = default);
 
     Task<Result<MemberSessionDto>> LoginAsync(LoginDto dto, CancellationToken cancellationToken = default);
+
+    Task<Result<MemberStatisticsDto>> GetMemberStatisticsAsync(Guid memberId, 
+        CancellationToken cancellationToken = default);
 }

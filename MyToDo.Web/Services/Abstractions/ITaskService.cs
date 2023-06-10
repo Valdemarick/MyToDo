@@ -12,4 +12,5 @@ internal interface ITaskService
     Task<Result> UpdateAsync(UpdateTaskDto dto, CancellationToken cancellationToken = default);
     Task<Result> LinkTagsToTaskAsync(LinkTagsToTaskDto dto, CancellationToken cancellationToken = default);
     Task<Result<List<TagDto>>> GetLinkedTagsAsync(Guid taskId, CancellationToken cancellationToken = default);
+    Task<Result> CompleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

@@ -14,9 +14,16 @@ public partial class TaskFullInfo
     [Parameter] 
     public EventCallback<bool> OnClose { get; set; }
 
-    private System.Threading.Tasks.Task CloseTaskAsync()
+    private async System.Threading.Tasks.Task CloseTaskAsync()
     {
-        return System.Threading.Tasks.Task.CompletedTask;
+        var closeResult = await TaskService.CompleteAsync(Task.Id);
+        if (closeResult.IsFailure)
+        {
+            ShowErrorDialog(closeResult.Error);
+            return;
+        }
+
+        await OnClose.InvokeAsync();
     }
     
     private System.Threading.Tasks.Task ReopenTaskAsync()

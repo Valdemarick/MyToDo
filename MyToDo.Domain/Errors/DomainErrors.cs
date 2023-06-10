@@ -188,4 +188,8 @@ public static class DomainErrors
     public static readonly Error FailedToParseId = new(
         "Parsing error",
         "Failed to parse id");
+
+    public static readonly Error Forbidden = new(
+        "Forbidden",
+        "You are not allowed to do this");
 }
