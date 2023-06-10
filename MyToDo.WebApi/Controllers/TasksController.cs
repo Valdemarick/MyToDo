@@ -32,7 +32,7 @@ public sealed class TasksController : BaseController
         CancellationToken cancellationToken)
     {
         var query = new GetTaskPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize,
-            dto.TaskStatus, dto.TaskType, dto.Priority, dto.IsShowOnlyMyTask);
+            dto.TaskStatus, dto.TaskType, dto.Priority, dto.IsShowOnlyMyTasks);
         
         var result = await Mediator.Send(query, cancellationToken);
         
@@ -56,6 +56,8 @@ public sealed class TasksController : BaseController
     }
 
     [HttpGet("{taskId:guid}/tags")]
+    [NeededPermission(Permission.TaskRead)]
+    
     public async Task<IActionResult> GetTaskTagsAsync([FromRoute] Guid taskId,
         CancellationToken cancellationToken = default)
     {

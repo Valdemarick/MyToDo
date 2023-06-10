@@ -42,9 +42,11 @@ public sealed class TagsController : BaseController
 
     [HttpPost]
     [NeededPermission(Permission.TagManagement)]
-    public async Task<IActionResult> CreateTagAsync([FromBody] CreateTagCommand command,
+    public async Task<IActionResult> CreateTagAsync([FromBody] CreateTagDto dto,
         CancellationToken cancellationToken)
     {
+        var command = new CreateTagCommand(dto.Name);
+
         var result = await Mediator.Send(command, cancellationToken);
 
         return HandleResult(result);

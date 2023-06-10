@@ -29,7 +29,7 @@
             </form>
         </div>
         <div class="col w-25">
-            <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.TaskType">
+            <select class="form-select" name="roleInput" id="roleInput" @onchange="@SearchByTaskTypeAsync">
                 @foreach (var taskType in _taskTypes)
                 {
                     <option value="@taskType" @onchange="@LoadDataAsync">@GetTaskTypeNameInRussian(taskType)</option>
@@ -37,15 +37,15 @@
             </select>
         </div>
         <div class="col w-25">
-            <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.TaskStatus">
+            <select class="form-select" name="roleInput" id="roleInput" @onchange="@SearchByTaskStatusAsync">
                 @foreach (var taskStatus in _taskStatuses)
                 {
-                    <option value="@taskStatus" @onclick="@LoadDataAsync">@GetTaskStatusInRussian(taskStatus)</option>
+                    <option value="@taskStatus">@GetTaskStatusInRussian(taskStatus)</option>
                 }
             </select>
         </div>
         <div class="col w-25">
-            <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.Priority">
+            <select class="form-select" name="roleInput" id="roleInput" @onchange="@SearchByPriorityAsync">
                 @foreach (var priority in _priorities)
                 {
                     <option value="@priority" @onclick="@LoadDataAsync">@GetPriorityNameInRussian(priority)</option>
@@ -59,7 +59,7 @@
     <div class="row">
         <div class="col w-25">
             <label for="mytasks">Показать только мои задачи</label>
-            <input type="checkbox" id="mytasks" @bind="_parameters.IsShowOnlyMyTask" @onclick="@ShowOnlyMyTasksAsync">
+            <input type="checkbox" id="mytasks" @bind="_parameters.IsShowOnlyMyTasks" @onclick="@ShowOnlyMyTasksAsync">
         </div>
         <div class="col w-25">
             <select class="form-select" name="roleInput" id="roleInput" >

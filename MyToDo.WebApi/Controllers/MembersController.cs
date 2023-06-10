@@ -29,7 +29,9 @@ public sealed class MembersController : BaseController
     [NeededPermission(Permission.UserRead)]
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetAllMembersQuery(), cancellationToken);
+        var query = new GetAllMembersQuery();
+
+        var result = await Mediator.Send(query, cancellationToken);
 
         return HandleResult(result);
     }
@@ -53,7 +55,7 @@ public sealed class MembersController : BaseController
     {
         if (id == default)
         {
-            return BadRequest(Domain.Errors.DomainErrors.Member.IdValidationError);
+            return BadRequest(DomainErrors.Member.IdValidationError);
         }
 
         var query = new GetMemberByIdQuery(id);

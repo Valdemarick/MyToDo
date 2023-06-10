@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using MyToDo.HttpContracts.Tags;
 using MyToDo.HttpContracts.Tasks;
 
@@ -17,6 +18,8 @@ public partial class TaskTagsEditDialog
     private List<TagDto> _tags = new();
 
     private List<TagDto> _linkedTags = new();
+
+    private List<Guid> _tagsToLinkIds = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,6 +44,37 @@ public partial class TaskTagsEditDialog
 
     private async Task LinkAsync()
     {
+        _linkTagsToTaskDto.TaskId = TaskId;
+        _linkTagsToTaskDto.TagIds = _tagsToLinkIds;
+
+        var linkResult = await TaskService.LinkTagsToTaskAsync(_linkTagsToTaskDto);
+        if (linkResult.IsFailure)
+        {
+            ShowErrorDialog(linkResult.Error);
+            return;
+        }
+
+        await OnClose.InvokeAsync();
+    }
+
+    private void UpdateLinkedTagsList(ChangeEventArgs args)
+    {
+        if (args.Value is not string[] listOfStrings)
+        {
+            return;
+        }
+
+        List<Guid> ids = new();
+
+        foreach (var @string in listOfStrings)
+        {
+            if (Guid.TryParse(@string, out var id))
+            {
+                ids.Add(id);
+            }
+        }
         
+        _tagsToLinkIds.Clear();
+        _tagsToLinkIds.AddRange(ids);
     }
 }

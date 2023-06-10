@@ -1,4 +1,4 @@
-﻿using MyToDo.Domain.ValueObjects.PagedLists;
+﻿using Microsoft.AspNetCore.Components;
 using MyToDo.HttpContracts.Common;
 using MyToDo.HttpContracts.Enums;
 using MyToDo.HttpContracts.Tags;
@@ -14,7 +14,7 @@ public partial class Tasks
     private TaskFullInfoDto _taskFullInfoDto;
 
     private TaskFullInfoDto _taskToUpdate;
-    
+
     private readonly TaskPageRequestDto _parameters = new TaskPageRequestDto
     {
         PageIndex = 1,
@@ -39,13 +39,13 @@ public partial class Tasks
         if (firstRender)
         {
             await LoadDataAsync();
-    
+
             _taskStatuses.AddRange(Enum.GetValues<TaskStatusDto>());
             _taskTypes.AddRange(Enum.GetValues<TaskTypeDto>());
             _priorities.AddRange(Enum.GetValues<PriorityDto>());
-    
+
             _tags = (await TagService.GetAllAsync()).Value;
-            
+
             StateHasChanged();
         }
     }
@@ -55,7 +55,7 @@ public partial class Tasks
         _parameters.PageIndex = page;
         await LoadDataAsync();
     }
-    
+
     private async Task LoadDataAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
@@ -64,7 +64,7 @@ public partial class Tasks
             ShowErrorDialog(taskPagedList.Error);
             return;
         }
-        
+
         _tasks = taskPagedList.Value.Items;
         _pageView = taskPagedList.Value.PageView;
     }
@@ -122,14 +122,14 @@ public partial class Tasks
         _taskIdToUpdateTags = default;
         _isShowTagEditDialog = false;
     }
-    
+
     private string GetTaskTypeNameInRussian(TaskTypeDto taskType) => taskType switch
     {
         TaskTypeDto.Bug => "Баг",
         TaskTypeDto.Task => "Задача",
         TaskTypeDto.Idea => "Идея",
         TaskTypeDto.NotChosen => "Не выбрано",
-        _ => "Неизвестно"
+        _ => "Ошибка"
     };
 
     private string GetPriorityNameInRussian(PriorityDto priority) => priority switch
@@ -138,18 +138,20 @@ public partial class Tasks
         PriorityDto.Normal => "Средний",
         PriorityDto.High => "Высокий",
         PriorityDto.Critical => "Критический",
-        PriorityDto.NotChosen => "Не выбрано"
+        PriorityDto.NotChosen => "Не выбрано",
+        _ => "Ошибка"
     };
 
     private string GetTaskStatusInRussian(TaskStatusDto status) => status switch
     {
         TaskStatusDto.Open => "Открыта",
-        TaskStatusDto.InProgress => "В работу",
+        TaskStatusDto.InProgress => "В работе",
         TaskStatusDto.Completed => "Закрыта",
         TaskStatusDto.NotChosen => "Не выбрано",
-        TaskStatusDto.Reopen => "Переоткрыта"
+        TaskStatusDto.Reopen => "Переоткрыта",
+        _ => "Ошибка"
     };
-    
+
     private async Task ShowOnlyMyTasksAsync()
     {
         await LoadDataAsync();
@@ -157,6 +159,42 @@ public partial class Tasks
 
     private async Task SearchAsync()
     {
+        await LoadDataAsync();
+    }
+
+    private async Task SearchByTaskTypeAsync(ChangeEventArgs args)
+    {
+        if (!Enum.TryParse(args.Value as string, out TaskTypeDto taskType))
+        {
+            return;
+        }
+        
+        _parameters.TaskType = taskType;
+
+        await LoadDataAsync();
+    }
+
+    private async Task SearchByTaskStatusAsync(ChangeEventArgs args)
+    {
+        if (!Enum.TryParse(args.Value as string, out TaskStatusDto taskStatus))
+        {
+            return;
+        }
+
+        _parameters.TaskStatus = taskStatus;
+
+        await LoadDataAsync();
+    }
+
+    private async Task SearchByPriorityAsync(ChangeEventArgs args)
+    {
+        if (!Enum.TryParse(args.Value as string, out PriorityDto priority))
+        {
+            return;
+        }
+
+        _parameters.Priority = priority;
+
         await LoadDataAsync();
     }
 }
