@@ -35,7 +35,7 @@ public sealed class MembersController : BaseController
     }
 
     [HttpGet("page")]
-    // [NeededPermission(Permission.UserRead)]
+    [NeededPermission(Permission.UserRead)]
     public async Task<IActionResult> GetPageAsync([FromQuery] MemberPageRequestDto dto,
         CancellationToken cancellationToken = default)
     {

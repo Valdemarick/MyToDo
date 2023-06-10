@@ -34,24 +34,11 @@ public partial class Tasks
 
     private List<TagDto> _tags = new();
 
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     
-    // }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var taskPagedList = await TaskService.GetPageAsync(_parameters);
-            if (taskPagedList.IsFailure)
-            {
-                ShowErrorDialog(taskPagedList.Error);
-                return;
-            }
-        
-            _tasks = taskPagedList.Value.Items;
-            _pageView = taskPagedList.Value.PageView;
+            await LoadDataAsync();
     
             _taskStatuses.AddRange(Enum.GetValues<TaskStatusDto>());
             _taskTypes.AddRange(Enum.GetValues<TaskTypeDto>());
@@ -66,10 +53,10 @@ public partial class Tasks
     private async Task SelectPageAsync(int page)
     {
         _parameters.PageIndex = page;
-        await GetTaskPageAsync();
+        await LoadDataAsync();
     }
     
-    private async Task GetTaskPageAsync()
+    private async Task LoadDataAsync()
     {
         var taskPagedList = await TaskService.GetPageAsync(_parameters);
         if (taskPagedList.IsFailure)
@@ -86,7 +73,7 @@ public partial class Tasks
 
     private async Task CloseCreateForm()
     {
-        await GetTaskPageAsync();
+        await LoadDataAsync();
 
         _isShowCreateForm = false;
     }
@@ -117,7 +104,7 @@ public partial class Tasks
 
     private async Task CloseUpdateDialog()
     {
-        await GetTaskPageAsync();
+        await LoadDataAsync();
 
         _taskToUpdate = null!;
 
@@ -163,8 +150,13 @@ public partial class Tasks
         TaskStatusDto.Reopen => "Переоткрыта"
     };
     
-    private async Task OnIsShowOnlyMyTasksChanged()
+    private async Task ShowOnlyMyTasksAsync()
     {
-        await GetTaskPageAsync();
+        await LoadDataAsync();
+    }
+
+    private async Task SearchAsync()
+    {
+        await LoadDataAsync();
     }
 }

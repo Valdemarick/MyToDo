@@ -24,7 +24,7 @@
             <form method="get" class="d-flex text-center">
                 <div class="input-group">
                     <input class="form-control" type="search" name="name" placeholder="Имя" @bind="_parameters.SearchString"/>
-                    <button type="submit" class="btn btn-primary" @onclick="@GetTaskPageAsync"><i class="bi bi-search"></i></button>
+                    <button type="button" class="btn btn-primary" @onclick="@SearchAsync"><i class="bi bi-search"></i></button>
                 </div>
             </form>
         </div>
@@ -32,7 +32,7 @@
             <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.TaskType">
                 @foreach (var taskType in _taskTypes)
                 {
-                    <option value="@taskType" @onclick="@GetTaskPageAsync">@GetTaskTypeNameInRussian(taskType)</option>
+                    <option value="@taskType" @onchange="@LoadDataAsync">@GetTaskTypeNameInRussian(taskType)</option>
                 }
             </select>
         </div>
@@ -40,7 +40,7 @@
             <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.TaskStatus">
                 @foreach (var taskStatus in _taskStatuses)
                 {
-                    <option value="@taskStatus" @onclick="@GetTaskPageAsync">@GetTaskStatusInRussian(taskStatus)</option>
+                    <option value="@taskStatus" @onclick="@LoadDataAsync">@GetTaskStatusInRussian(taskStatus)</option>
                 }
             </select>
         </div>
@@ -48,7 +48,7 @@
             <select class="form-select" name="roleInput" id="roleInput" @bind="_parameters.Priority">
                 @foreach (var priority in _priorities)
                 {
-                    <option value="@priority" @onclick="@GetTaskPageAsync">@GetPriorityNameInRussian(priority)</option>
+                    <option value="@priority" @onclick="@LoadDataAsync">@GetPriorityNameInRussian(priority)</option>
                 }
             </select>
         </div>
@@ -58,14 +58,14 @@
 <div class="container w-50" style="margin-top: 20px">
     <div class="row">
         <div class="col w-25">
-                <label for="mytasks">Показать только мои задачи</label>
-                <input type="checkbox" id="mytasks" @bind="_parameters.IsShowOnlyMyTask" @onclick="@(async () => await GetTaskPageAsync())">
-            </div>
+            <label for="mytasks">Показать только мои задачи</label>
+            <input type="checkbox" id="mytasks" @bind="_parameters.IsShowOnlyMyTask" @onclick="@ShowOnlyMyTasksAsync">
+        </div>
         <div class="col w-25">
             <select class="form-select" name="roleInput" id="roleInput" >
                 @foreach (var tag in _tags)
                 {
-                    <option value="@tag.Id" @onclick="@GetTaskPageAsync">@tag.Name</option>
+                    <option value="@tag.Id" @onclick="@LoadDataAsync">@tag.Name</option>
                 }
             </select>
         </div>

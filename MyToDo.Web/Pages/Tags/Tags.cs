@@ -23,12 +23,16 @@ public partial class Tags
 
     private Guid _tagIdToDelete;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await GetTagPageAsync();
+        if (firstRender)
+        {
+            await LoadDataAsync();
+            StateHasChanged();
+        }
     }
 
-    private async Task GetTagPageAsync()
+    private async Task LoadDataAsync()
     {
         var tagPage = await TagService.GetPageAsync(_parameters);
         if (tagPage.IsFailure)
@@ -56,14 +60,14 @@ public partial class Tags
     private async Task SelectPageAsync(int page)
     {
         _parameters.PageIndex = page;
-        await GetTagPageAsync();
+        await LoadDataAsync();
     }
 
     private void ShowCreateDialog() => _isShowCreateDialog = true;
 
     private async Task CloseCreateDialog()
     {
-        await GetTagPageAsync();
+        await LoadDataAsync();
 
         _isShowCreateDialog = false;
     }
@@ -76,7 +80,7 @@ public partial class Tags
 
     private async Task CloseUpdateDialog()
     {
-        await GetTagPageAsync();
+        await LoadDataAsync();
         _tagToUpdate = null!;
         _isShowUpdateDialog = false;
     }
@@ -89,8 +93,13 @@ public partial class Tags
 
     private async Task CloseDeleteDialog()
     {
-        await GetTagPageAsync();
+        await LoadDataAsync();
 
         _isShowDeleteDialog = false;
+    }
+
+    private async Task SearchAsync()
+    {
+        await LoadDataAsync();
     }
 }

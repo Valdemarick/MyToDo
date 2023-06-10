@@ -27,10 +27,14 @@ public sealed partial class Members : BaseComponent
     private MemberDto _updatedMember;
 
     private Guid _memberIdStatistics;
-    
-    protected override async Task OnInitializedAsync()
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await LoadData();
+        if (firstRender)
+        {
+            await LoadData();
+            StateHasChanged();
+        }
     }
 
     private async Task OnActActivityUpdateAsync(Guid memberId, bool isActive)
@@ -65,9 +69,7 @@ public sealed partial class Members : BaseComponent
 
     private async Task SearchAsync()
     {
-        _members = _members.Where(x => x.FirstName.Contains(_parameters?.SearchString)).ToList();
-
-        ShouldRender();
+        await LoadData();
     }
 
     private void ShowRegisterForm() => _isShowRegisterForm = true;

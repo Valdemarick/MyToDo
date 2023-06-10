@@ -73,19 +73,8 @@ internal abstract class BaseService
 
     private async Task AddAuthorizationHeader(HttpRequestMessage message)
     {
-        // var token = await _authenticationStateProvider.GetToken();
-        //
-        // if (!message.Headers.Contains("Authorization"))
-        // {
-        //     message.Headers.Authorization ??= new AuthenticationHeaderValue("Bearer", token);
-        // }
-
-        // if (HttpClient.DefaultRequestHeaders.Authorization is null)
-        // {
-        //     var token = await _authenticationStateProvider.GetToken();
-        //
-        //     HttpClient.DefaultRequestHeaders.Authorization =
-        //         new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, token);
-        // }
+        var token = await _authenticationStateProvider.GetToken();
+        
+        message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 }
