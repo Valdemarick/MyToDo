@@ -34,23 +34,33 @@ public partial class Tasks
 
     private List<TagDto> _tags = new();
 
-    protected override async Task OnInitializedAsync()
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     
+    // }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var taskPagedList = await TaskService.GetPageAsync(_parameters);
-        if (taskPagedList.IsFailure)
+        if (firstRender)
         {
-            ShowErrorDialog(taskPagedList.Error);
-            return;
-        }
+            var taskPagedList = await TaskService.GetPageAsync(_parameters);
+            if (taskPagedList.IsFailure)
+            {
+                ShowErrorDialog(taskPagedList.Error);
+                return;
+            }
         
-        _tasks = taskPagedList.Value.Items;
-        _pageView = taskPagedList.Value.PageView;
-
-        _taskStatuses.AddRange(Enum.GetValues<TaskStatusDto>());
-        _taskTypes.AddRange(Enum.GetValues<TaskTypeDto>());
-        _priorities.AddRange(Enum.GetValues<PriorityDto>());
-
-        _tags = (await TagService.GetAllAsync()).Value;
+            _tasks = taskPagedList.Value.Items;
+            _pageView = taskPagedList.Value.PageView;
+    
+            _taskStatuses.AddRange(Enum.GetValues<TaskStatusDto>());
+            _taskTypes.AddRange(Enum.GetValues<TaskTypeDto>());
+            _priorities.AddRange(Enum.GetValues<PriorityDto>());
+    
+            _tags = (await TagService.GetAllAsync()).Value;
+            
+            StateHasChanged();
+        }
     }
 
     private async Task SelectPageAsync(int page)

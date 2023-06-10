@@ -23,7 +23,7 @@
             <form method="get" class="d-flex text-center">
                 <div class="input-group w-50">
                     <input class="form-control" type="search" name="name" placeholder="Искать по полному имени" @bind="_parameters.SearchString"/>
-                    <button type="submit" class="btn btn-primary" @onclick="@GetMemberPageAsync"><i class="bi bi-search"></i></button>
+                    <button type="submit" class="btn btn-primary" @onclick="@SearchAsync"><i class="bi bi-search"></i></button>
                 </div>
             </form>
         </div>

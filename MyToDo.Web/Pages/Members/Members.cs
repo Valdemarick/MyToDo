@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using MyToDo.Domain.ValueObjects.PagedLists;
-using MyToDo.HttpContracts.Common;
+﻿using MyToDo.HttpContracts.Common;
 using MyToDo.HttpContracts.Members;
 using MyToDo.Web.Components;
 
@@ -22,7 +20,8 @@ public sealed partial class Members : BaseComponent
     private readonly MemberPageRequestDto _parameters = new MemberPageRequestDto
     {
         PageIndex = 1,
-        PageSize = 10
+        PageSize = 10,
+        SearchString = string.Empty
     };
 
     private MemberDto _updatedMember;
@@ -31,17 +30,9 @@ public sealed partial class Members : BaseComponent
     
     protected override async Task OnInitializedAsync()
     {
-        var getMemberPageResult = await MemberService.GetPageAsync(_parameters);
-        if (getMemberPageResult.IsFailure)
-        {
-            ShowErrorDialog(getMemberPageResult.Error);
-            return;
-        }
-        
-        _members = getMemberPageResult.Value.Items;
-        _pageView = getMemberPageResult.Value.PageView;
+        await LoadData();
     }
-    
+
     private async Task OnActActivityUpdateAsync(Guid memberId, bool isActive)
     {
         var updateActivityResult = await MemberService.UpdateActivityAsync(memberId, isActive);
@@ -50,26 +41,13 @@ public sealed partial class Members : BaseComponent
             ShowErrorDialog(updateActivityResult.Error);
         }
 
-        await GetMemberPageAsync();
+        await LoadData();
     }
     
     private async Task SelectPageAsync(int page)
     {
         _parameters.PageIndex = page;
-        await GetMemberPageAsync();
-    }
-
-    private async Task GetMemberPageAsync()
-    {
-        var getMemberPageResult = await MemberService.GetPageAsync(_parameters);
-        if (getMemberPageResult.IsFailure)
-        {
-            ShowErrorDialog(getMemberPageResult.Error);
-            return;
-        }
-        
-        _members = getMemberPageResult.Value.Items;
-        _pageView = getMemberPageResult.Value.PageView;
+        await LoadData();
     }
 
     private void SortByName()
@@ -87,14 +65,16 @@ public sealed partial class Members : BaseComponent
 
     private async Task SearchAsync()
     {
-        await GetMemberPageAsync();
+        _members = _members.Where(x => x.FirstName.Contains(_parameters?.SearchString)).ToList();
+
+        ShouldRender();
     }
 
     private void ShowRegisterForm() => _isShowRegisterForm = true;
 
     private async Task CloseRegisterForm()
     {
-       await GetMemberPageAsync();
+       await LoadData();
         _isShowRegisterForm = false;
     }
 
@@ -106,7 +86,7 @@ public sealed partial class Members : BaseComponent
 
     private async Task CloseUpdateForm()
     {
-        await GetMemberPageAsync();
+        await LoadData();
         
         _updatedMember = null!;
         _isShowUpdateForm = false;
@@ -122,5 +102,18 @@ public sealed partial class Members : BaseComponent
     {
         _memberIdStatistics = default;
         _isShowStatisticsForm = false;
+    }
+
+    private async Task LoadData()
+    {
+        var getMemberPageResult = await MemberService.GetPageAsync(_parameters);
+        if (getMemberPageResult.IsFailure)
+        {
+            ShowErrorDialog(getMemberPageResult.Error);
+            return;
+        }
+        
+        _members = getMemberPageResult.Value.Items;
+        _pageView = getMemberPageResult.Value.PageView;
     }
 }

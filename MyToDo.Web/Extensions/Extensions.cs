@@ -4,7 +4,8 @@ namespace MyToDo.Web.Extensions;
 
 internal static class Extensions
 {
-    public static async Task<string> GetQueryFromRequestDtoAsync(this BasePageRequestDto dto)
+    public static async Task<string> GetQueryFromRequestDtoAsync<TDto>(this TDto dto)
+        where TDto : BasePageRequestDto
     {
         var queryParameters = new Dictionary<string, string>();
 
