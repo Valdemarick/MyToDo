@@ -85,8 +85,11 @@ bld/
 # Visual Studo 2015 cache/options directory
 .vs/
 
-# Rider cache/optinons directory 
+# Rider cache/options directory 
 .idea/
+
+# VS Code cache/options directory
+.vscode/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
