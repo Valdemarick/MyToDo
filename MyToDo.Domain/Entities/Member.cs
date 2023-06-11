@@ -1,12 +1,14 @@
 ﻿using MyToDo.Domain.Errors;
 using MyToDo.Domain.Primitives;
 using MyToDo.Domain.Shared;
-using MyToDo.Domain.ValueObjects;
 
 namespace MyToDo.Domain.Entities;
 
 public sealed class Member : AggregateRoot
 {
+    private readonly List<Task> _createdTasks = new();
+    private readonly List<Task> _assignedTasks = new();
+
     internal Member(
         string firstName,
         string lastName,
@@ -21,20 +23,20 @@ public sealed class Member : AggregateRoot
         HashedPassword = hashedPassword;
         IsActive = isActive;
         
-        RoleId = role.Id;
+        Role = role;
     }
 
     private Member()
     {
     }
 
-    public string FirstName { get; private set; }
+    public string FirstName { get; private set; } = string.Empty;
     
-    public string LastName { get; private set; }
+    public string LastName { get; private set; } = string.Empty;
     
-    public string Email { get; private set; }
+    public string Email { get; private set; } = string.Empty;
 
-    public string HashedPassword { get; private set; }
+    public string HashedPassword { get; private set; } = string.Empty;
     
     public bool IsActive { get; private set; }
 
@@ -43,11 +45,11 @@ public sealed class Member : AggregateRoot
     public DateTimeOffset RegisteredOn { get; private set; }
     
     public Guid RoleId { get; private set; }
-    public Role Role { get; private set; }
+    public Role Role { get; private set; } = null!;
     
-    public IEnumerable<Task> CreatedTasks { get; set; }
+    public IReadOnlyCollection<Task> CreatedTasks => _createdTasks;
     
-    public IEnumerable<Task> AssignedTasks { get; set; }
+    public IEnumerable<Task> AssignedTasks => _assignedTasks;
 
     public void SetRegisteredOn(DateTimeOffset dateTimeOffset)
     {

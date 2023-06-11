@@ -5,9 +5,9 @@ using MyToDo.Domain.Shared;
 
 namespace MyToDo.Domain.Factories;
 
-public class TagFactory : ITagFactory
+public sealed class TagFactory : ITagFactory
 {
-    public Result<Tag> Create(string? name)
+    public Result<Tag> Create(string name)
     {
         if (name is null)
         {

@@ -6,21 +6,20 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class Tag : AggregateRoot
 {
+    private readonly List<Task> _tasks = new();
+
     internal Tag(string name) : base(Guid.NewGuid())
     {
         Name = name;
-
-        Tasks = new List<Task>();
     }
 
     private Tag()
     {
-        Tasks = new List<Task>();
     }
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
     
-    public IEnumerable<Task> Tasks { get; }
+    public IReadOnlyCollection<Task> Tasks => _tasks;
     
     public DateTimeOffset CreatedOn { get; private set; }
     
@@ -40,7 +39,7 @@ public sealed class Tag : AggregateRoot
     {
         if (name is null)
         {
-            return Result.Failure(DomainErrors.Tag.TagNameIsAlreadyOccupied);
+            return Result.Failure(DomainErrors.Tag.TagNameValidationError);
         }
 
         Name = name;

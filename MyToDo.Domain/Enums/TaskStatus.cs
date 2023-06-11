@@ -1,8 +1,5 @@
 ﻿namespace MyToDo.Domain.Enums;
 
-/// <summary>
-/// Task statuses.
-/// </summary>
 public enum TaskStatus
 {
     NotChosen = 0,

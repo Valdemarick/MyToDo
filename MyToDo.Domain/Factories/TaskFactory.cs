@@ -8,11 +8,11 @@ using TaskStatus = MyToDo.Domain.Enums.TaskStatus;
 
 namespace MyToDo.Domain.Factories;
 
-public class TaskFactory : ITaskFactory
+public sealed class TaskFactory : ITaskFactory
 {
     public Result<Task> Create(
-        string? title,
-        string? description,
+        string title,
+        string description,
         Priority priority,
         TaskType taskType,
         DateTime deadline,
@@ -27,6 +27,16 @@ public class TaskFactory : ITaskFactory
         if (description is null)
         {
             return Result.Failure(DomainErrors.Task.DescriptionValidationError);
+        }
+
+        if (priority is Priority.NotChosen)
+        {
+            return Result.Failure(DomainErrors.Task.TaskPriorityValidationError);
+        }
+
+        if (taskType is TaskType.NotChosen)
+        {
+            return Result.Failure(DomainErrors.Task.TaskTypeValidationError);
         }
 
         if (deadline < DateTime.Now)

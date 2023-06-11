@@ -5,15 +5,15 @@ using MyToDo.Domain.Shared;
 
 namespace MyToDo.Domain.Factories;
 
-public class MemberFactory : IMemberFactory
+public sealed class MemberFactory : IMemberFactory
 {
     public Result<Member> Create(
-        string? firstName,
-        string? lastName,
-        string? email,
-        string? hashedPassword,
+        string firstName,
+        string lastName,
+        string email,
+        string hashedPassword,
         bool isActive,
-        Role? role)
+        Role role)
     {
         if (firstName is null)
         {

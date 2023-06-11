@@ -23,10 +23,6 @@ public static class DomainErrors
             "Task.TaskIsAlreadyCompleted",
             "Can't complete task due to it's already completed");
 
-        public static readonly Error TaskDoesNotHaveThisComment = new Error(
-            "Task.TaskDoesNotHaveThisComment",
-            "Can't remove comment cause the task does not have it");
-
         public static readonly Error TaskNotFound = new Error(
             "Task.TaskNotFound",
             "There is no such task");
@@ -51,14 +47,6 @@ public static class DomainErrors
             "Task. DescriptionValidationError",
             "Task Description Validation Error");
 
-        public static readonly Error TaskCreatorValidationError = new(
-            "Task. CreatorIdValidationError",
-            "Task CreatorId Validation Error");
-
-        public static readonly Error TaskExecutorIdValidationError = new(
-            "Task. ExecutorIdValidationError",
-            "Task Executor Id Validation Error");
-
         public static readonly Error TaskAlreadyHaveThisTag = new(
             "Task. Tag duplication",
             "Task already have this tag");
@@ -78,22 +66,6 @@ public static class DomainErrors
         public static readonly Error MemberIdValidationError = new(
             "Task. MemberId validation error",
             "MemberId validation error");
-
-        public static readonly Error CreatorIdValidationError = new(
-            "Task. CreatorId validation error",
-            "CreatorId validation error");
-
-        public static readonly Error TypeValidationError = new(
-            "Task. Type validation error",
-            "Type validation error");
-
-        public static readonly Error PriorityValidationError = new(
-            "Task. Priority validation error",
-            "Priority validation error");
-
-        public static readonly Error CommentTextValidationError = new(
-            "Task. CommentText validation error",
-            "CommentText validation error");
 
         public static readonly Error DeadlineValidationError = new(
             "Task. Deadline validation error",
@@ -141,10 +113,6 @@ public static class DomainErrors
         public static readonly Error RoleValidationError = new(
             "Member. Role validation error",
             "Role validation error");
-
-        public static readonly Error RoleIdValidationError = new(
-            "Member. RoleId validation error",
-            "RoleId validation error");
 
         public static readonly Error InactiveUserCannotLogin = new(
             "Member. Inactive user cannot login",

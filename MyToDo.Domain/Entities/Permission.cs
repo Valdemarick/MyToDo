@@ -4,7 +4,10 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class Permission : AggregateRoot
 {
-    public Permission(string name) : base(Guid.NewGuid())
+    private List<Role> _roles = new();
+
+    public Permission(string name) 
+    : base(Guid.NewGuid())
     {
         Name = name;
     }
@@ -13,7 +16,7 @@ public sealed class Permission : AggregateRoot
     {
     }
     
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
     
-    public ICollection<Role> Roles { get; private set; }
+    public IReadOnlyCollection<Role> Roles => _roles;
 }

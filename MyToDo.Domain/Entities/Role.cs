@@ -4,6 +4,9 @@ namespace MyToDo.Domain.Entities;
 
 public sealed class Role : AggregateRoot
 {
+    private readonly List<Member> _members = new();
+    private readonly List<Permission> _permission = new();
+
     public Role(string name) : base(Guid.NewGuid())
     {
         Name = name;
@@ -13,9 +16,9 @@ public sealed class Role : AggregateRoot
     {
     }
     
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
     
-    public ICollection<Member> Members { get; private set; }
+    public IReadOnlyCollection<Member> Members => _members;
     
-    public ICollection<Permission> Permissions { get; private set; }
+    public IReadOnlyCollection<Permission> Permissions => _permission;
 }

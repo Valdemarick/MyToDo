@@ -2,14 +2,10 @@
 using MyToDo.Domain.Errors;
 using MyToDo.Domain.Primitives;
 using MyToDo.Domain.Shared;
-using MyToDo.Domain.ValueObjects;
 using TaskStatus = MyToDo.Domain.Enums.TaskStatus;
 
 namespace MyToDo.Domain.Entities;
 
-/// <summary>
-/// Task entity.
-/// </summary>
 public sealed class Task : AggregateRoot
 {
     private readonly List<Tag> _tags = new();
@@ -30,21 +26,17 @@ public sealed class Task : AggregateRoot
         Priority = priority;
         TaskType = taskType;
         DeadLine = deadLine;
-        CreatorId = creator.Id;
-
-        if (executor is not null)
-        {
-            ExecutorId = executor.Id;
-        }
+        Creator = creator;
+        Executor = executor;
     }
 
     private Task()
     {
     }
     
-    public string Title { get; private set; }
+    public string Title { get; private set; } = string.Empty;
 
-    public string Description { get; private set; }
+    public string Description { get; private set; } = string.Empty;
     
     public TaskStatus Status { get; private set; }
 
@@ -60,13 +52,13 @@ public sealed class Task : AggregateRoot
     
     public DateTime? CompletedOn { get; private set; }
 
-    public Member Creator { get; private set; }
+    public Member Creator { get; private set; } = null!;
     public Guid CreatorId { get; private set; }
 
     public Member? Executor { get; private set; }
     public Guid? ExecutorId { get; private set; }
 
-    public IEnumerable<Tag> Tags => _tags;
+    public IReadOnlyCollection<Tag> Tags => _tags;
 
     public Result Complete()
     {
