@@ -111,4 +111,15 @@ internal sealed class TaskService : BaseService, ITaskService
 
         return await HandleResponse(response, cancellationToken);
     }
+
+    public async Task<Result> AssignToMeAsync(Guid taskId, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{taskId}/assignToMe";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
 }

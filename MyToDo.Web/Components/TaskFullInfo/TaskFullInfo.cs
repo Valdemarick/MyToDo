@@ -2,7 +2,6 @@
 using MyToDo.Domain.Enums;
 using MyToDo.HttpContracts.Enums;
 using MyToDo.HttpContracts.Tasks;
-using Task = MyToDo.Domain.Entities.Task;
 
 namespace MyToDo.Web.Components.TaskFullInfo;
 
@@ -14,7 +13,7 @@ public partial class TaskFullInfo
     [Parameter] 
     public EventCallback<bool> OnClose { get; set; }
 
-    private async System.Threading.Tasks.Task CloseTaskAsync()
+    private async Task CloseTaskAsync()
     {
         var closeResult = await TaskService.CompleteAsync(Task.Id);
         if (closeResult.IsFailure)
@@ -26,7 +25,7 @@ public partial class TaskFullInfo
         await OnClose.InvokeAsync();
     }
     
-    private async System.Threading.Tasks.Task ReopenTaskAsync()
+    private async Task ReopenTaskAsync()
     {
         var reopenResult = await TaskService.ReopenTaskAsync(Task.Id);
         if (reopenResult.IsFailure)
@@ -38,12 +37,24 @@ public partial class TaskFullInfo
         await OnClose.InvokeAsync();
     }
     
-    private async System.Threading.Tasks.Task StartWorkingOnTaskAsync()
+    private async Task StartWorkingOnTaskAsync()
     {
         var startWorkingResult = await TaskService.StartWorkingOnTaskAsync(Task.Id);
         if (startWorkingResult.IsFailure)
         {
             ShowErrorDialog(startWorkingResult.Error);
+            return;
+        }
+
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task AssignToMeAsync()
+    {
+        var assignToMeAsyncResult = await TaskService.AssignToMeAsync(Task.Id);
+        if (assignToMeAsyncResult.IsFailure)
+        {
+            ShowErrorDialog(assignToMeAsyncResult.Error);
             return;
         }
 

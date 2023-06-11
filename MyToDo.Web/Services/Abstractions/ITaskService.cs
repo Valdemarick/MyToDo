@@ -15,4 +15,5 @@ internal interface ITaskService
     Task<Result> CompleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Result> StartWorkingOnTaskAsync(Guid taskId, CancellationToken cancellationToken = default);
     Task<Result> ReopenTaskAsync(Guid taskId, CancellationToken cancellationToken = default);
+    Task<Result> AssignToMeAsync(Guid taskId, CancellationToken cancellationToken = default);
 }

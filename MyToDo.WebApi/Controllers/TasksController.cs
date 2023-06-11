@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
+using MyToDo.Application.CQRS.Tasks.Commands.AssignToMeCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CloseTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.LinkTagsToTaskCommand;
@@ -95,6 +96,23 @@ public sealed class TasksController : BaseController
         var result = await Mediator.Send(command,
             cancellationToken);
         
+        return HandleResult(result);
+    }
+
+    [HttpPut("{taskId:guid}/assignToMe")]
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> AssignToMeAsync([FromRoute] Guid taskId,
+        CancellationToken cancellationToken)
+    {
+        if (taskId == default)
+        {
+            return BadRequest(DomainErrors.Task.IdValidationError);
+        }
+
+        var command = new AssignToMeCommand(taskId);
+
+        var result = await Mediator.Send(command, cancellationToken);
+
         return HandleResult(result);
     }
 
