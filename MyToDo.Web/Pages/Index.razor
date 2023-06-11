@@ -1,0 +1,16 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1 class="h1">Привет, @context.User.Identity?.Name</h1>
+        <p class="text-black">В разделе "Задачи" вы получите всю информацию о задачах, а также функционал для управления ими.</p>
+        <p class="text-black">В разделе "Пользователи" вы получите всю информацию о пользователях, а также функционал для управления ими.</p>
+        <p class="text-black">В разделе "Теги" вы получите всю информацию о тегах, а также функционал для управления ими.</p>
+    </Authorized>
+    <NotAuthorized>
+        <h1 class="h1">Привет, незнакомец</h1>
+        <p class="text-black">Для получения доступа к функциональности приложения <a href="/login">войдите</a> в свой аккаунт.</p>
+    </NotAuthorized>
+</AuthorizeView>

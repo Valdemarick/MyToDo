@@ -1,0 +1,22 @@
+﻿@using MyToDo.Web.Services.Abstractions
+@inject ITagService TagService
+@inherits BaseComponent
+
+<ModalDialog Title="Создание нового тега" Text="Test" OnSubmit="@CreateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
+    <EditForm Model="@_createTagDto" OnValidSubmit="@CreateAsync">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mb-3">
+            <label for="nameInput" class="form-label">Название</label>
+            <input type="text" class="form-control" id="nameInput" @bind="_createTagDto.Name">
+            <ValidationMessage For="@(() => _createTagDto.Name)"></ValidationMessage>
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Создать</button>
+        </div>
+    </EditForm>
+</ModalDialog>
+
+@if (IsShowErrorDialog)
+{
+    <ErrorDialog OnClose="@CloseErrorDialog"></ErrorDialog>
+}

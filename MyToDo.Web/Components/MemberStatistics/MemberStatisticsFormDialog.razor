@@ -1,0 +1,25 @@
+﻿@using MyToDo.Web.Components
+@using MyToDo.Web.Services.Abstractions
+@inject IMemberService MemberService
+@inherits BaseComponent
+
+<ModalDialog Title="Статистика о пользователе" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.Error">
+    <form>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Количество задач в работе</label>
+            <p class="text-black" id="description">@_memberStatisticsDto.TasksInProgressCount</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Количество задач в To Do</label>
+            <p class="text-black" id="description">@_memberStatisticsDto.TasksToDoCount</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Количество закрытых задач</label>
+            <p class="text-black" id="description">@_memberStatisticsDto.ClosedTasksCount</p>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Среднее время закрытия задачи</label>
+            <p class="text-black" id="description">@(_memberStatisticsDto.AverageTimeOfClosingTaskInHours.ToString("F2")) ч.</p>
+        </div>
+    </form>
+</ModalDialog>

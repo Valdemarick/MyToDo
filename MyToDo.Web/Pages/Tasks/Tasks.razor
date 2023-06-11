@@ -1,0 +1,133 @@
+﻿@page "/tasks"
+@using MyToDo.Web.Services.Abstractions
+@using MyToDo.Web.Shared.Pagination
+@using MyToDo.Web.Components.CreateTask
+@using MyToDo.Web.Components.TaskFullInfo
+@using MyToDo.Web.Components.Tasks.UpdateTask
+@using MyToDo.Web.Components
+@using MyToDo.Web.Components.TaskTagsEditDialog
+@inject ITaskService TaskService
+@inject ITagService TagService
+@* @attribute [Authorize] *@
+@inherits MyToDo.Web.Components.BaseComponent
+
+<h3>Задачи</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary" @onclick="@ShowCreateForm">
+                <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
+            </button>
+        </div>
+        <div class="col w-50">
+            <form method="get" class="d-flex text-center">
+                <div class="input-group">
+                    <input class="form-control" type="search" name="name" placeholder="Имя" @bind="_parameters.SearchString"/>
+                    <button type="button" class="btn btn-primary" @onclick="@SearchAsync"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+        <div class="col w-25">
+            <select class="form-select" name="roleInput" id="roleInput" @onchange="@SearchByTaskTypeAsync">
+                @foreach (var taskType in _taskTypes)
+                {
+                    <option value="@taskType" @onchange="@LoadDataAsync">@GetTaskTypeNameInRussian(taskType)</option>
+                }
+            </select>
+        </div>
+        <div class="col w-25">
+            <select class="form-select" name="roleInput" id="roleInput" @onchange="@SearchByTaskStatusAsync">
+                @foreach (var taskStatus in _taskStatuses)
+                {
+                    <option value="@taskStatus">@GetTaskStatusInRussian(taskStatus)</option>
+                }
+            </select>
+        </div>
+        <div class="col w-25">
+            <select class="form-select" name="roleInput" id="roleInput" @onchange="@SearchByPriorityAsync">
+                @foreach (var priority in _priorities)
+                {
+                    <option value="@priority" @onclick="@LoadDataAsync">@GetPriorityNameInRussian(priority)</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="container w-50" style="margin-top: 20px">
+    <div class="row">
+        <div class="col w-25">
+            <label for="mytasks">Показать только мои задачи</label>
+            <input type="checkbox" id="mytasks" @bind="@_parameters.IsShowOnlyMyTasks" @onclick="@ShowOnlyMyTasksAsync">
+        </div>
+        <div class="col w-25">
+            <select class="form-select" name="roleInput" id="roleInput" multiple @onchange="@SearchByTagsAsync">
+                @foreach (var tag in _tags)
+                {
+                    <option value="@tag.Id" @onclick="@LoadDataAsync">@tag.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Создатель</th>
+            <th>Дата создания</th>
+            <th>Срок исполнения</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in _tasks)
+        {
+            <tr>
+                <td @onclick="@(() => ShowFullInfoDialog(task.Id))">@task.Title</td>
+                <td>@task.CreatorName</td>
+                <td>@($"{task.CreatedOn:dd.MM.yyyy HH:mm:ss z}")</td>
+                <td>@($"{task.Deadline:dd.MM.yyyy HH:mm:ss z}")</td>
+                <td><button class="btn btn-warning" @onclick="@(() => ShowUpdateDialog(task.Id))">
+                        <i class="bi bi-pencil-square"></i>Обновить
+                    </button>
+                    <button class="btn btn-warning" @onclick="@(() => ShowTagEditDialog(task.Id))">
+                        <i class="bi bi-pencil-square"></i>Теги
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="row">
+    <div class="col">
+        <Pagination PageView="_pageView" Spread="3" SelectedPage="SelectPageAsync" />
+    </div>
+</div>
+
+@if (_isShowCreateForm)
+{
+    <CreateTask OnClose="CloseCreateForm"></CreateTask>
+}
+
+@if (_isShowFullInfoDialog)
+{
+    <TaskFullInfo Task="_taskFullInfoDto" OnClose="CloseFullInfoDialog"></TaskFullInfo>
+}
+
+@if (_isShowUpdateDialog)
+{
+    <UpdateTask OnClose="CloseUpdateDialog" Task="_taskToUpdate"></UpdateTask>
+}
+
+@if (IsShowErrorDialog)
+{
+    <ErrorDialog OnClose="@CloseErrorDialog"></ErrorDialog>
+}
+
+@if (_isShowTagEditDialog)
+{
+    <TaskTagsEditDialog OnClose="CloseTagEditDialog" TaskId="_taskIdToUpdateTags"></TaskTagsEditDialog>
+}

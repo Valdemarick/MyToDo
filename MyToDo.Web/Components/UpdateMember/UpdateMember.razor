@@ -1,0 +1,47 @@
+﻿@using MyToDo.Web.Services.Abstractions
+@inject IMemberService MemberService
+@inject IRoleService RoleService
+@inherits BaseComponent
+
+<ModalDialog Title="Обновление пользователя" Text="Test" OnSubmit="@UpdateAsync" OnClose="@OnClose" DialogType="ModalDialog.ModalDialogType.CreateOrUpdate">
+    <EditForm Model="@_updateMemberDto" OnValidSubmit="@UpdateAsync">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mb-3">
+            <label for="firstNameInput" class="form-label">Имя</label>
+            <input type="text" class="form-control" id="firstNameInput" @bind="_updateMemberDto.FirstName">
+            <ValidationMessage For="@(() => _updateMemberDto.FirstName)"></ValidationMessage>
+        </div>
+        <div class="mb-3">
+            <label for="lastNameInput" class="form-label">Фамилия</label>
+            <input type="text" class="form-control" id="lastNameInput" @bind="_updateMemberDto.LastName">
+            <ValidationMessage For="@(() => _updateMemberDto.LastName)"></ValidationMessage>
+        </div>
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Почта</label>
+            <input type="email" class="form-control" id="emailInput" @bind="_updateMemberDto.Email">
+            <ValidationMessage For="@(() => _updateMemberDto.Email)"></ValidationMessage>
+        </div>
+        <div class="mb-3">
+            <label for="roleInput" class="form-label">Роль</label>
+            <select class="form-select" name="roleInput" id="roleInput" @bind="_updateMemberDto.RoleId">
+                @foreach (var role in _roles)
+                {
+                    <option value="@role.Id">@role.Name</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => _updateMemberDto.RoleId)"></ValidationMessage>
+        </div>
+        <div class="mb-3">
+            <label for="isActiveInput" class="form-label">Активность</label>
+            <input type="checkbox" class="form-check" id="isActiveInput" @bind="_updateMemberDto.IsActive">
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </EditForm>
+</ModalDialog>
+
+@if (IsShowErrorDialog)
+{
+    <ErrorDialog OnClose="@CloseErrorDialog"></ErrorDialog>
+}

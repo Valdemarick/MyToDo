@@ -1,0 +1,125 @@
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using MyToDo.Domain.Shared;
+using MyToDo.HttpContracts.Tags;
+using MyToDo.HttpContracts.Tasks;
+using MyToDo.Web.Extensions;
+using MyToDo.Web.Services.Abstractions;
+
+namespace MyToDo.Web.Services;
+
+internal sealed class TaskService : BaseService, ITaskService
+{
+    public TaskService(IHttpClientFactory httpClientFactory,
+        AuthenticationStateProvider authenticationStateProvider) : base(httpClientFactory, authenticationStateProvider)
+    {
+    }
+
+    protected override string BaseUrl => "tasks";
+
+    public async Task<Result<TaskPagedListDto>> GetPageAsync(TaskPageRequestDto dto, CancellationToken cancellationToken = default)
+    {
+        // var queryParameters = await dto.GetQueryFromRequestDtoAsync();
+        var url = $"{BaseUrl}/page";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Post, url, dto);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<TaskPagedListDto>(response, cancellationToken);
+    }
+
+    public async Task<Result<TaskFullInfoDto>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{id}";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<TaskFullInfoDto>(response, cancellationToken);
+    }
+
+    public async Task<Result> CreateAsync(CreateTaskDto dto, CancellationToken cancellationToken = default)
+    {
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Post, BaseUrl, dto);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result> UpdateAsync(UpdateTaskDto dto, CancellationToken cancellationToken = default)
+    {
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, BaseUrl, dto);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result> LinkTagsToTaskAsync(LinkTagsToTaskDto dto, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/linkTags";
+        
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url, dto);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result<List<TagDto>>> GetLinkedTagsAsync(Guid taskId, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{taskId}/tags";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Get, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse<List<TagDto>>(response, cancellationToken);
+    }
+
+    public async Task<Result> CompleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{id}/close";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result> StartWorkingOnTaskAsync(Guid taskId, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{taskId}/start";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result> ReopenTaskAsync(Guid taskId, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{taskId}/reopen";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+
+    public async Task<Result> AssignToMeAsync(Guid taskId, CancellationToken cancellationToken = default)
+    {
+        var url = $"{BaseUrl}/{taskId}/assignToMe";
+
+        var httpRequest = await CreateHttpRequestMessage(HttpMethod.Put, url);
+
+        using var response = await HttpClient.SendAsync(httpRequest, cancellationToken);
+
+        return await HandleResponse(response, cancellationToken);
+    }
+}

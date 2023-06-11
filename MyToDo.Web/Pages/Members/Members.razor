@@ -1,0 +1,86 @@
+﻿@page "/members"
+@using MyToDo.Web.Services.Abstractions
+@using MyToDo.Web.Shared.Pagination
+@using MyToDo.Web.Components.RegisterMember
+@using MyToDo.Web.Components
+@using MyToDo.Web.Components.UpdateMember
+@using MyToDo.Web.Components.MemberStatistics
+@inject IMemberService MemberService
+@inject NavigationManager NavigationManager
+@inherits BaseComponent
+@* @attribute [Authorize] *@
+
+<h3>Пользователи</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary" @onclick="@ShowRegisterForm">
+                <i class="bi bi-plus-square-fill"></i>&nbsp; Создать
+            </button>
+        </div>
+        <div class="col">
+            <form method="get" class="d-flex text-center">
+                <div class="input-group w-50">
+                    <input class="form-control" type="search" name="name" placeholder="Искать по полному имени" @bind="_parameters.SearchString"/>
+                    <button type="button" class="btn btn-primary" @onclick="@SearchAsync"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th @onclick="@(() => SortByName())">Имя</th>
+        <th>Почта</th>
+        <th>Активность</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var member in _members)
+    {
+        <tr>
+            <td>@member.FirstName @member.LastName</td>
+            <td>@member.Email</td>
+            <td><input type="checkbox" value="@member.IsActive" checked="@(member.IsActive)"
+                       @onclick="async () => await OnActActivityUpdateAsync(member.Id, !member.IsActive)"/></td>
+            <td>
+                <button class="btn btn-warning" @onclick="() => ShowUpdateForm(member)">
+                    <i class="bi bi-pencil-square"></i> Обновить
+                </button>
+                <button class="btn btn-primary" @onclick="@(() => ShowStatisticsForm(member.Id))">
+                    <i class="bi bi-info-square"></i> Статистика
+                </button>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div class="row">
+    <div class="col">
+        <Pagination PageView="_pageView" Spread="3" SelectedPage="SelectPageAsync" />
+    </div>
+</div>
+
+@if (_isShowRegisterForm)
+{
+    <RegisterMember OnClose="@CloseRegisterForm"></RegisterMember>
+}
+
+@if (_isShowUpdateForm)
+{
+    <UpdateMember OnClose="@CloseUpdateForm" Member="_updatedMember"></UpdateMember>
+}
+
+@if (IsShowErrorDialog)
+{
+    <ErrorDialog OnClose="@CloseErrorDialog"></ErrorDialog>
+}
+
+@if (_isShowStatisticsForm)
+{
+    <MemberStatisticsFormDialog OnClose="@CloseStatisticsForm" MemberId="@_memberIdStatistics"></MemberStatisticsFormDialog>
+}
