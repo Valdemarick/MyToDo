@@ -114,7 +114,7 @@ public sealed class Task : AggregateRoot
 
     public Result Reopen()
     {
-        if (Status is TaskStatus.Open or TaskStatus.InProgress)
+        if (Status is not TaskStatus.Completed)
         {
             return Result.Failure(DomainErrors.Task.TaskIsNotCompleted);
         }
@@ -140,9 +140,16 @@ public sealed class Task : AggregateRoot
         Title = newTitle;
     }
 
-    public void Close()
+    public Result Close()
     {
+        if (Status is TaskStatus.Completed)
+        {
+            return Result.Failure(DomainErrors.Task.TaskIsAlreadyClosed);
+        }
+        
         Status = TaskStatus.Completed;
+
+        return Result.Success();
     }
 
     public void SetCreatedOn(DateTime dateTime)

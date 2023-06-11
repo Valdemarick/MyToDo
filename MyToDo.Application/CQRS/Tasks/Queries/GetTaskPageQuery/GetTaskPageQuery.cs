@@ -11,4 +11,5 @@ public sealed record GetTaskPageQuery(
     TaskStatusDto TaskStatus,
     TaskTypeDto TaskType,
     PriorityDto Priority,
-    bool IsShowOnlyMyTasks) : IQuery<TaskPagedListDto>;
+    bool IsShowOnlyMyTasks,
+    List<Guid> TagIds) : IQuery<TaskPagedListDto>;

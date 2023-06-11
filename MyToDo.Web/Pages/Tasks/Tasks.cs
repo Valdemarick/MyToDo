@@ -18,7 +18,7 @@ public partial class Tasks
     private readonly TaskPageRequestDto _parameters = new TaskPageRequestDto
     {
         PageIndex = 1,
-        PageSize = 10,
+        PageSize = 10
     };
 
     private bool _isShowCreateForm;
@@ -154,6 +154,7 @@ public partial class Tasks
 
     private async Task ShowOnlyMyTasksAsync()
     {
+        _parameters.IsShowOnlyMyTasks = !_parameters.IsShowOnlyMyTasks;
         await LoadDataAsync();
     }
 
@@ -194,6 +195,31 @@ public partial class Tasks
         }
 
         _parameters.Priority = priority;
+
+        await LoadDataAsync();
+    }
+
+    private async Task SearchByTagsAsync(ChangeEventArgs args)
+    {
+        if (args.Value is not string[] listOfStrings)
+        {
+            return;
+        }
+
+        List<Guid> ids = new();
+
+        foreach (var @string in listOfStrings)
+        {
+            if (Guid.TryParse(@string, out var id))
+            {
+                ids.Add(id);
+            }
+        }
+
+        _parameters.TagIds = new();
+        
+        _parameters.TagIds.Clear();
+        _parameters.TagIds.AddRange(ids);
 
         await LoadDataAsync();
     }

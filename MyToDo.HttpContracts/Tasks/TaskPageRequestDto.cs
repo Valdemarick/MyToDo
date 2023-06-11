@@ -12,4 +12,6 @@ public sealed class TaskPageRequestDto : BasePageRequestDto
     public PriorityDto Priority { get; set; } = PriorityDto.NotChosen;
     
     public bool IsShowOnlyMyTasks { get; set; }
+
+    public List<Guid> TagIds { get; set; } = new();
 }

@@ -28,7 +28,12 @@ internal sealed class CloseTaskCommandHandler : ICommandHandler<CloseTaskCommand
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        task.Close();
+        var closeResult = task.Close();
+        if (closeResult.IsFailure)
+        {
+            return Result.Failure(closeResult.Error);
+        }
+        
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

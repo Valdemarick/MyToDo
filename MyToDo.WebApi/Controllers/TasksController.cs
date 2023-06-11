@@ -5,6 +5,8 @@ using MyToDo.Application.CQRS.Tasks.Commands.AssignTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CloseTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.CreateTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.LinkTagsToTaskCommand;
+using MyToDo.Application.CQRS.Tasks.Commands.ReopenTaskCommand;
+using MyToDo.Application.CQRS.Tasks.Commands.StartWorkingOnTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.UpdateDescriptionCommand;
 using MyToDo.Application.CQRS.Tasks.Commands.UpdateTaskCommand;
 using MyToDo.Application.CQRS.Tasks.Queries.GetTaskByIdQuery;
@@ -26,13 +28,13 @@ public sealed class TasksController : BaseController
         _mapper = mapper;
     }
     
-    [HttpGet("page")]
+    [HttpPost("page")]
     [NeededPermission(Permission.TaskRead)]
-    public async Task<IActionResult> GetPageAsync([FromQuery] TaskPageRequestDto dto,
+    public async Task<IActionResult> GetPageAsync([FromBody] TaskPageRequestDto dto,
         CancellationToken cancellationToken)
     {
         var query = new GetTaskPageQuery(dto.SearchString, dto.PageIndex, dto.PageSize,
-            dto.TaskStatus, dto.TaskType, dto.Priority, dto.IsShowOnlyMyTasks);
+            dto.TaskStatus, dto.TaskType, dto.Priority, dto.IsShowOnlyMyTasks, dto.TagIds);
         
         var result = await Mediator.Send(query, cancellationToken);
         
@@ -132,6 +134,40 @@ public sealed class TasksController : BaseController
         
         var result = await Mediator.Send(command, cancellationToken);
         
+        return HandleResult(result);
+    }
+
+    [HttpPut("{taskId:guid}/start")]
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> StartWorkingOnTaskAsync([FromRoute] Guid taskId,
+        CancellationToken cancellationToken = default)
+    {
+        if (taskId == default)
+        {
+            return BadRequest(DomainErrors.Task.IdValidationError);
+        }
+
+        var command = new StartWorkingOnTaskCommand(taskId);
+
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return HandleResult(result);
+    }
+
+    [HttpPut("{taskId:guid}/reopen")]
+    [NeededPermission(Permission.TaskManagement)]
+    public async Task<IActionResult> ReopenTaskAsync([FromRoute] Guid taskId,
+        CancellationToken cancellationToken = default)
+    {
+        if (taskId == default)
+        {
+            return BadRequest(DomainErrors.Task.IdValidationError);
+        }
+
+        var command = new ReopenTaskCommand(taskId);
+
+        var result = await Mediator.Send(command, cancellationToken);
+
         return HandleResult(result);
     }
 

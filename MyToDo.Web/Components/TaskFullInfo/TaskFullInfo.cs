@@ -26,14 +26,28 @@ public partial class TaskFullInfo
         await OnClose.InvokeAsync();
     }
     
-    private System.Threading.Tasks.Task ReopenTaskAsync()
+    private async System.Threading.Tasks.Task ReopenTaskAsync()
     {
-        return System.Threading.Tasks.Task.CompletedTask;
+        var reopenResult = await TaskService.ReopenTaskAsync(Task.Id);
+        if (reopenResult.IsFailure)
+        {
+            ShowErrorDialog(reopenResult.Error);
+            return;
+        }
+
+        await OnClose.InvokeAsync();
     }
     
-    private System.Threading.Tasks.Task StartWorkingOnTaskAsync()
+    private async System.Threading.Tasks.Task StartWorkingOnTaskAsync()
     {
-        return System.Threading.Tasks.Task.CompletedTask;
+        var startWorkingResult = await TaskService.StartWorkingOnTaskAsync(Task.Id);
+        if (startWorkingResult.IsFailure)
+        {
+            ShowErrorDialog(startWorkingResult.Error);
+            return;
+        }
+
+        await OnClose.InvokeAsync();
     }
     
     private string GetTaskTypeInRussian(TaskTypeDto taskTypeDto) => taskTypeDto switch

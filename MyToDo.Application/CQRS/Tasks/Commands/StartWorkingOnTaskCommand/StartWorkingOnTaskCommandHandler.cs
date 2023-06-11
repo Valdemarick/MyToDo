@@ -21,13 +21,18 @@ internal sealed class StartWorkingOnTaskCommandHandler : ICommandHandler<StartWo
 
     public async Task<Result> Handle(StartWorkingOnTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = await _taskRepository.GetByIdAsync(request.Id, cancellationToken);
+        var task = await _taskRepository.GetByIdAsync(request.Id, cancellationToken, isTracking: true);
         if (task is null)
         {
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        task.StartWorkingOnTask();
+        var startResult = task.StartWorkingOnTask();
+        if (startResult.IsFailure)
+        {
+            return Result.Failure(startResult.Error);
+        }
+        
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         return Result.Success();

@@ -1,4 +1,5 @@
-﻿using MyToDo.Domain.Enums;
+﻿using MyToDo.Domain.Entities;
+using MyToDo.Domain.Enums;
 using MyToDo.Domain.ValueObjects.Common;
 using TaskStatus = MyToDo.Domain.Enums.TaskStatus;
 
@@ -13,6 +14,7 @@ public sealed class TaskPageRequest : BasePageRequest
         TaskStatus taskStatus,
         TaskType taskType,
         Priority priority,
+        List<Tag> tags,
         Guid? executorId = null) 
         : base(searchString, pageIndex, pageSize)
     {
@@ -20,6 +22,7 @@ public sealed class TaskPageRequest : BasePageRequest
         TaskType = taskType;
         Priority = priority;
         ExecutorId = executorId;
+        Tags = tags;
     }
 
     public TaskStatus TaskStatus { get; set; }
@@ -29,4 +32,6 @@ public sealed class TaskPageRequest : BasePageRequest
     public TaskType TaskType { get; set; }
 
     public Guid? ExecutorId { get; set; }
+
+    public List<Tag>? Tags { get; set; }
 }

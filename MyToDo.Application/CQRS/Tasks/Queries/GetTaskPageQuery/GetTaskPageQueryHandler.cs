@@ -17,12 +17,18 @@ internal sealed class GetTaskPageQueryHandler : IQueryHandler<GetTaskPageQuery, 
     private readonly ITaskRepository _taskRepository;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ITagRepository _tagRepository;
 
-    public GetTaskPageQueryHandler(ITaskRepository taskRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    public GetTaskPageQueryHandler(
+        ITaskRepository taskRepository, 
+        IMapper mapper, 
+        IHttpContextAccessor httpContextAccessor, 
+        ITagRepository tagRepository)
     {
         _taskRepository = taskRepository;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
+        _tagRepository = tagRepository;
     }
 
     public async Task<Result<TaskPagedListDto>> Handle(GetTaskPageQuery query, CancellationToken cancellationToken)
@@ -37,6 +43,12 @@ internal sealed class GetTaskPageQueryHandler : IQueryHandler<GetTaskPageQuery, 
                 return Result.Failure(DomainErrors.FailedToParseId);
             }
         }
+
+        var tags = await _tagRepository.GetByIdsAsync(query.TagIds, cancellationToken);
+        if (tags.Count != query.TagIds.Count)
+        {
+            return Result.Failure(DomainErrors.Tag.TagNotFound);
+        }
         
         var request = new TaskPageRequest(
             query.SearchString, 
@@ -45,6 +57,7 @@ internal sealed class GetTaskPageQueryHandler : IQueryHandler<GetTaskPageQuery, 
             (TaskStatus)query.TaskStatus,
             (TaskType)query.TaskType,
             (Priority)query.Priority,
+            tags,
             authenticatedMemberId == default ? null : authenticatedMemberId);
         
         var taskPagedList = await _taskRepository.GetPageAsync(request, cancellationToken);

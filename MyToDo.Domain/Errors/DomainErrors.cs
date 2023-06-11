@@ -99,9 +99,13 @@ public static class DomainErrors
             "Task. Deadline validation error",
             "Deadline validation error");
 
-        public static Error TitleIsAlreadyOccupied = new(
+        public static readonly Error TitleIsAlreadyOccupied = new(
             "Task. Title is already occupied",
             "Title is already occupied");
+
+        public static readonly Error TaskIsAlreadyClosed = new(
+            "Task. Task is already closed",
+            "Task is already closed");
     }
     
     public static class Member

@@ -59,10 +59,10 @@
     <div class="row">
         <div class="col w-25">
             <label for="mytasks">Показать только мои задачи</label>
-            <input type="checkbox" id="mytasks" @bind="_parameters.IsShowOnlyMyTasks" @onclick="@ShowOnlyMyTasksAsync">
+            <input type="checkbox" id="mytasks" @bind="@_parameters.IsShowOnlyMyTasks" @onclick="@ShowOnlyMyTasksAsync">
         </div>
         <div class="col w-25">
-            <select class="form-select" name="roleInput" id="roleInput" >
+            <select class="form-select" name="roleInput" id="roleInput" multiple @onchange="@SearchByTagsAsync">
                 @foreach (var tag in _tags)
                 {
                     <option value="@tag.Id" @onclick="@LoadDataAsync">@tag.Name</option>

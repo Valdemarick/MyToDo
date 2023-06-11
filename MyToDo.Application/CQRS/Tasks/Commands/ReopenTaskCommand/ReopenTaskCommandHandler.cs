@@ -25,7 +25,12 @@ internal sealed class ReopenTaskCommandHandler : ICommandHandler<ReopenTaskComma
             return Result.Failure(DomainErrors.Task.TaskNotFound);
         }
 
-        task.Reopen();
+        var reopenResult = task.Reopen();
+        if (reopenResult.IsFailure)
+        {
+            return Result.Failure(reopenResult.Error);
+        }
+        
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         return Result.Success();

@@ -34,6 +34,6 @@ public abstract class BaseComponent : ComponentBase
             return "У вас нет разрешения на это действие. Обратитесь к администратору";
         }
 
-        return "";
+        return "Ошибка на сервере";
     }
 }
